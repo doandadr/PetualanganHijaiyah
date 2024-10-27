@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
+import ktx.assets.async.AssetStorage
 import ktx.assets.disposeSafely
 import ktx.assets.toInternalFile
 import ktx.async.KtxAsync
@@ -34,6 +35,13 @@ class Main : KtxGame<KtxScreen>() {
         Gdx.input.inputProcessor = result
         result
     }
+    val assets: AssetStorage by lazy {
+        KtxAsync.initiate()
+        AssetStorage()
+    }
+    // TODO gameEventManager
+    // TODO audioService
+    // TODO preferences
 
     fun initiateAssetManager(): AssetManager {
         val assetManager = AssetManager()
