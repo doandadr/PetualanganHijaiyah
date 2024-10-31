@@ -1,5 +1,7 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.doandadr.petualanganhijaiyah.Main
@@ -11,7 +13,8 @@ abstract class Screen(
     val gameViewport: Viewport = game.gameViewport,
     val uiViewport: Viewport = game.uiViewport,
     val assets: AssetStorage = game.assets,
-    val stage: Stage = game.stage
+    val stage: Stage = game.stage,
+    val batch: Batch = game.batch
 ): KtxScreen {
 
     override fun resize(width: Int, height: Int) {
