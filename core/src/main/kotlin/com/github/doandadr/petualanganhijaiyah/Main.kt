@@ -2,27 +2,18 @@ package com.github.doandadr.petualanganhijaiyah
 
 import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.Texture.TextureFilter.Linear
+import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
 import com.github.doandadr.petualanganhijaiyah.screen.FirstScreen
-import com.github.doandadr.petualanganhijaiyah.screen.Screen
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
-import ktx.app.clearScreen
 import ktx.assets.async.AssetStorage
 import ktx.assets.disposeSafely
-import ktx.assets.toInternalFile
 import ktx.async.KtxAsync
-import ktx.collections.gdxArrayOf
-import ktx.graphics.use
+import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.log.logger
 
 const val UNIT_SCALE = 1/16f
@@ -37,6 +28,7 @@ class Main : KtxGame<KtxScreen>() {
     val uiViewport = FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat())
     val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val batch: Batch by lazy{SpriteBatch()}
+
     val assets: AssetStorage by lazy {
         KtxAsync.initiate()
         AssetStorage()
@@ -47,16 +39,16 @@ class Main : KtxGame<KtxScreen>() {
         result
     }
 
+    val assetManager: AssetManager by lazy { initiateAssetManager() }
+    fun initiateAssetManager(): AssetManager {
+        val assetManager = AssetManager()
+        assetManager.registerFreeTypeFontLoaders()
+        return assetManager
+    }
+
     // TODO gameEventManager
     // TODO audioService
     // TODO preferences
-//    fun initiateAssetManager(): AssetManager {
-//        val assetManager = AssetManager()
-//        assetManager.registerFreeTypeFontLoaders()
-//        return assetManager
-//    }
-
-
 
     override fun create() {
         KtxAsync.initiate()
