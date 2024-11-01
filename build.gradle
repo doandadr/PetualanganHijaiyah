@@ -11,7 +11,6 @@ buildscript {
   dependencies {
     classpath "com.android.tools.build:gradle:8.1.4"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-
   }
 }
 
@@ -25,6 +24,9 @@ allprojects {
       outputDir file('build/classes/java/main')
       testOutputDir file('build/classes/java/test')
     }
+  }
+  repositories {
+    maven { url 'https://jitpack.io' }
   }
 }
 
@@ -53,7 +55,7 @@ configure(subprojects - project(':android')) {
     }
   }
   compileKotlin.compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-  
+
 }
 
 subprojects {
