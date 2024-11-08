@@ -1,8 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
@@ -11,7 +9,6 @@ import com.ray3k.stripe.FreeTypeSkin
 import ktx.app.clearScreen
 import ktx.log.logger
 import ktx.scene2d.*
-
 
 private val LOG = logger<HomeScreen>()
 
@@ -41,6 +38,7 @@ class HomeScreen(game: Main) : Screen(game) {
                     textButton("MULAI", "board")
                     textButton("MULAI", "board")
                 }
+                label("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيْمِ", style = "arabic")
             }
         }
 
@@ -50,7 +48,7 @@ class HomeScreen(game: Main) : Screen(game) {
         stage.run {
             viewport.apply()
             act()
-            draw()
+        draw()
         }
     }
 }
