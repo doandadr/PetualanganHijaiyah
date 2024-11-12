@@ -12,7 +12,7 @@ import ktx.scene2d.*
 
 private val LOG = logger<HomeScreen>()
 
-class HomeScreen(game: Main) : Screen(game) {
+class HomeScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {
         LOG.debug { "Home Screen is shown" }
@@ -34,11 +34,29 @@ class HomeScreen(game: Main) : Screen(game) {
                 background(TextureRegionDrawable(bgHome))
                 // Table children:
                 verticalGroup {
-                    textButton("MULAI", "board")
-                    textButton("MULAI", "board")
-                    textButton("MULAI", "board")
+                    horizontalGroup {
+                        label("PETUALANGAN\nHIJAIYAH", "primary-gw"){
+                            width = 100f
+                        }
+                        button("coin")
+                        button("book")
+                    }
+                    verticalGroup {
+                        textButton("MULAI", "board") {
+                            isTransform = true
+                            rotation = 10f
+                        }
+                        textButton("PENGATURAN", "board-s")
+                        textButton("KELUAR", "board-s") {
+                            isTransform = true
+                            scaleX = 0.8f
+                            scaleY = 0.8f
+                        }
+                    }
+                    label("Selamat\nDatang!", "primary-gw")
+                    textButton("AZHARA", "sign")
                 }
-                label("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيْمِ", style = "arabic")
+//                label("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيْمِ", style = "arabic")
             }
         }
 
@@ -48,7 +66,16 @@ class HomeScreen(game: Main) : Screen(game) {
         stage.run {
             viewport.apply()
             act()
-        draw()
+            draw()
         }
     }
+
+    override fun hide() {
+
+    }
+
+    private fun doSomething() {
+        TODO("Not yet implemented")
+    }
+
 }

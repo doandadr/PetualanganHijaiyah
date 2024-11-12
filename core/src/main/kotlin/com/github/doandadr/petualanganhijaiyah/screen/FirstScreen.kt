@@ -11,7 +11,7 @@ import ktx.log.logger
 
 private val LOG = logger<FirstScreen>()
 
-class FirstScreen(game: Main) : Screen(game) {
+class FirstScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {
         val old = System.currentTimeMillis()
