@@ -35,6 +35,7 @@ enum class TextureAsset(
     HOME("bg-home.png"),
     STAGE("bg-stage.png"),
     START("bg-start.png"),
+    MAP("bg-map.png")
 }
 
 enum class TextureAtlasAsset(
