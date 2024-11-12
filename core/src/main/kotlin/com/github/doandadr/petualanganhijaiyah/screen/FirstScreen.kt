@@ -36,6 +36,7 @@ class FirstScreen(game: Main) : BaseScreen(game) {
 
     private fun assetsLoaded() {
         game.addScreen(HomeScreen(game))
+        game.addScreen(MapScreen(game))
         game.setScreen<HomeScreen>()
         game.removeScreen<FirstScreen>()
         dispose()

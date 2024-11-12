@@ -1,6 +1,7 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
@@ -26,6 +27,10 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
         stage.actors {
             table {
+                defaults().fillX().expandX()
+                debug()
+                background(TextureRegionDrawable(bgMap))
+
             }
         }
     }
