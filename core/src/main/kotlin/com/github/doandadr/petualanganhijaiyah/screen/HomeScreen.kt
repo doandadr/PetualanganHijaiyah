@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
@@ -36,32 +35,42 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             table {
                 // Table settings:
                 setFillParent(true)
-                defaults().fillX().expandX()
                 debug()
                 background(TextureRegionDrawable(bgHome))
+
                 // Table children:
-                label("PETUALANGAN\nHIJAIYAH", "primary-gw")
-                button("coin")
-                button("book")
-                row()
-                textButton("MULAI", "board") {
-                    isTransform = true
-                    rotation = 10f
-                    setScale(1.2f)
-                }.onClick {
-                    game.setScreen<MapScreen>()
+                horizontalGroup {
+                    center()
+                    label("PETUALANGAN\nHIJAIYAH", "primary-gw")
+                    button("coin")
+                    button("book")
                 }
                 row()
-                textButton("PENGATURAN", "board")
-                row()
-                textButton("KELUAR", "board") {
-                    isTransform = true
-                    setScale(0.85f)
+                verticalGroup {
+                    center()
+                    space(10f)
+                    textButton("MULAI", "board") {
+                        isTransform = true
+                        rotation = 10f
+                        setScale(1.1f)
+                    }.onClick {
+                        game.setScreen<MapScreen>()
+                    }
+                    textButton("PENGATURAN", "board-s")
+                    textButton("KELUAR", "board-s") {
+                        isTransform = true
+                        setScale(0.9f)
+                    }
                 }
                 row()
-                stack {
-                    textButton("AZHARA", "sign")
-                    label("Selamat\nDatang!", "primary-gw")
+                container {
+                    padTop(30f)
+                    stack {
+                        textButton("AZHARA", "sign")
+                        label("Selamat\nDatang!", "primary-gw") {
+                            setAlignment(Align.top)
+                        }
+                    }
                 }
 //                label("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيْمِ", style = "arabic")
             }

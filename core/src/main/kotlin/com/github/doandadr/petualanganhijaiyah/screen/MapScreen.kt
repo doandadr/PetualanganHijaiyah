@@ -9,6 +9,7 @@ import com.ray3k.stripe.FreeTypeSkin
 import ktx.assets.disposeSafely
 import ktx.log.logger
 import ktx.scene2d.actors
+import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.style.defaultStyle
 
@@ -26,11 +27,13 @@ class MapScreen(game: Main) : BaseScreen(game) {
         val bgMap = assets[TextureAsset.MAP.descriptor]
 
         stage.actors {
-            table {
-                defaults().fillX().expandX()
-                debug()
-                background(TextureRegionDrawable(bgMap))
+            scrollPane {
+                setFillParent(true)
+                table {
+                    debug()
+                    background(TextureRegionDrawable(bgMap))
 
+                }
             }
         }
     }
