@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.audio.DefaultAudioService
 import com.github.doandadr.petualanganhijaiyah.screen.FirstScreen
 import com.ray3k.stripe.FreeTypeSkin
 import ktx.app.KtxGame
@@ -30,13 +32,7 @@ class Main : KtxGame<KtxScreen>() {
 
     val uiViewport = FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat())
     val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
-    val batch: Batch by lazy{SpriteBatch()}
-
-    val assets: AssetStorage by lazy {
-        // Initiate storage
-        KtxAsync.initiate()
-        AssetStorage()
-    }
+    val batch: Batch by lazy { SpriteBatch() }
     val stage: Stage by lazy {
         // Set stage to process input
         val result = Stage(uiViewport, batch)
@@ -46,7 +42,12 @@ class Main : KtxGame<KtxScreen>() {
         Scene2DSkin.defaultSkin = skin
         result
     }
-
+    val audioService: AudioService by lazy { DefaultAudioService(assets) }
+    val assets: AssetStorage by lazy {
+        // Initiate storage
+        KtxAsync.initiate()
+        AssetStorage()
+    }
     val assetManager: AssetManager by lazy { initiateAssetManager() }
     fun initiateAssetManager(): AssetManager {
         val assetManager = AssetManager()
@@ -55,7 +56,6 @@ class Main : KtxGame<KtxScreen>() {
     }
 
     // TODO gameEventManager
-    // TODO audioService
     // TODO preferences
 
     override fun create() {

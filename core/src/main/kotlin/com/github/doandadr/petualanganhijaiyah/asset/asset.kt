@@ -9,26 +9,29 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 enum class SoundAsset(
     fileName: String,
     directory: String = "audio/sound",
+    val volumeScale: Float = 1f,
     val descriptor: AssetDescriptor<Sound> = AssetDescriptor("$directory/$fileName", Sound::class.java)
 ) {
     CLICK_BUTTON("button-click.ogg"),
-    COIN("coin.ogg"),
+    COIN_TRING("coin.ogg"),
     COMPLETE("complete-chime.ogg"),
-    CORRECT_1("correct.ogg"),
-    CORRECT_2("correct-2.ogg"),
-    CHEER_1("crowd-cheer.ogg"),
-    DRAW_1("draw.ogg"),
+    CORRECT_DING("correct.ogg"),
+    CORRECT_BLING("correct-2.ogg"),
     INCORRECT("incorrect.ogg"),
     CLICK_MOUSE("mouse-click.ogg"),
     FAILURE("negative-beeps.ogg"),
-    PLOP("plop.ogg"),
-    POP("pop.ogg"),
+    POP_LOW("plop.ogg"),
+    POP_HIGH("pop.ogg"),
     STRETCH("pull-stretch.ogg"),
-    DRAW_2("scribble.ogg"),
-    CHEER_2("small-crowd.ogg"),
-    CHIME_1("up-chime-1.ogg"),
-    CHIME_2("up-chime-2.ogg"),
-    CHIME_3("up-chime-4.ogg"),
+    DRAW_HEAVY("draw.ogg"),
+    DRAW_LIGHT("scribble.ogg"),
+    CHEER_BIG("crowd-cheer.ogg"),
+    CHEER_SMALL("small-crowd.ogg"),
+    CHIME_HALF("up-chime-1.ogg"),
+    CHIME_FULL("up-chime-2.ogg"),
+    CHIME_HIGH("up-chime-4.ogg"),
+    FANFARE_ORCHESTRA("fanfare-1.ogg"),
+    FANFARE_TADA("fanfare-2.ogg"),
     V01_ALIF("v01-alif.ogg"),
     V02_BA("v02-ba.ogg"),
     V03_TA("v03-ta.ogg"),
@@ -64,6 +67,7 @@ enum class SoundAsset(
 enum class MusicAsset(
     fileName: String,
     directory: String = "audio/music",
+    val volumeScale: Float = 0.15f,
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
     DESERT("desert.mp3"),
@@ -99,9 +103,3 @@ enum class TextureAtlasAsset(
     NINEPATCH(true, "ninepatch.atlas"),
     LETTER(true, "hijaiyah.atlas"),
 }
-
-// TODO FreetypeFontAsset
-enum class FreetypeFontAsset (
-    fileName: String,
-    directory: String = "font",
-)
