@@ -18,11 +18,12 @@ import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.log.logger
 import ktx.scene2d.Scene2DSkin
 
-const val UNIT_SCALE = 1/16f
+const val UNIT_SCALE = 1 / 16f
 const val V_WIDTH_PIXELS = 720
 const val V_HEIGHT_PIXELS = 1412
 const val V_WIDTH = 9
 const val V_HEIGHT = 16
+
 private val LOG = logger<Main>()
 
 class Main : KtxGame<KtxScreen>() {
@@ -32,12 +33,15 @@ class Main : KtxGame<KtxScreen>() {
     val batch: Batch by lazy{SpriteBatch()}
 
     val assets: AssetStorage by lazy {
+        // Initiate storage
         KtxAsync.initiate()
         AssetStorage()
     }
     val stage: Stage by lazy {
+        // Set stage to process input
         val result = Stage(uiViewport, batch)
         Gdx.input.inputProcessor = result
+        // Load the skin json file
         val skin = FreeTypeSkin(Gdx.files.internal("skin/skin.json"))
         Scene2DSkin.defaultSkin = skin
         result
