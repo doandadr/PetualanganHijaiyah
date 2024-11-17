@@ -34,7 +34,7 @@ prettyPrint=false
 legacyOutput=false
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:../ninepatch/box.9.png,type:Input,regionName:null},{path:../ninepatch/hijaiyah-button.9.png,type:Input,regionName:null},{path:../ninepatch/textbox-r.9.png,type:Input,regionName:null},{path:../ninepatch/textbox-w-down.9.png,type:Input,regionName:null},{path:../ninepatch/textbox-y-down.9.png,type:Input,regionName:null},{path:../ninepatch/textfield.9.png,type:Input,regionName:null}]
+inputFiles=[{path:../ninepatch,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
 keepInputFileExtensions=false
 
 
