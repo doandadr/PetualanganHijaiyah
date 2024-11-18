@@ -104,12 +104,11 @@ enum class TextureAsset(
 }
 
 enum class TextureAtlasAsset(
-    val isSkinAtlas: Boolean,
     fileName: String,
     directory: String = "graphics/atlas",
     val descriptor: AssetDescriptor<TextureAtlas> = AssetDescriptor("$directory/$fileName", TextureAtlas::class.java)
 ) {
-    DRAWABLE(true, "drawable.atlas"),
-    NINEPATCH(true, "ninepatch.atlas"),
-    LETTER(true, "hijaiyah.atlas"),
+    DRAWABLE("drawable.atlas"),
+    NINEPATCH("ninepatch.atlas"),
+    LETTER("hijaiyah.atlas"),
 }
