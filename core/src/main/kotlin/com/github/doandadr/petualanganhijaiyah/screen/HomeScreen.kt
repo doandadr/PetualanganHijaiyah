@@ -1,28 +1,17 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.scenes.scene2d.ui.Value
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
-import com.ray3k.stripe.FreeTypeSkin
-import ktx.actors.centerPosition
 import ktx.actors.onClick
-import ktx.app.clearScreen
 import ktx.assets.disposeSafely
-import ktx.async.newAsyncContext
-import ktx.log.debug
 import ktx.log.logger
 import ktx.scene2d.*
-import ktx.style.skin
+import javax.swing.text.StyleConstants.setAlignment
 
-const val BUTTON_PADDING = 20f
 const val LARGE_BTN_SCALE = 1.2f
 const val SMALL_BTN_SCALE = 0.9f
 private val LOG = logger<HomeScreen>()
@@ -36,6 +25,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     override fun show() {
         LOG.debug { "Home Screen is shown" }
 
+        audioService.play(MusicAsset.HOME)
         setupUI()
     }
 
@@ -43,48 +33,52 @@ class HomeScreen(game: Main) : BaseScreen(game) {
         val bgHome = assets[TextureAsset.HOME.descriptor]
         stage.isDebugAll = true
         stage.actors {
-            // Background
             image(bgHome)
 
+            container {
+                setFillParent(true)
+                align(Align.topLeft)
+                pad(50f)
+                label("PETUALANGAN\nHIJAIYAH", "primary-gw").setAlignment(Align.center)
+            }
             horizontalGroup {
                 setFillParent(true)
-                top()
-                expand()
-                container {
-//                    align(Align.topLeft)/
-
-                    label("PETUALANGAN\nHIJAIYAH", "primary-gw")
+                align(Align.topRight)
+                pad(50f)
+                space(50f)
+                button("coin") {
+                    isTransform = true
+                    setOrigin(Align.right)
+                    setScale(LARGE_BTN_SCALE)
                 }
-//                container {
-//                    align(Align.topRight)
-                    button("coin")
-//                }
-//                container {
-///                    align(Align.topRight)
-                    button("book")
-//                }
+                button("book") {
+                    // TODO practice screen
+                }
             }
             verticalGroup {
                 setFillParent(true)
                 center()
-                space(10f)
-                padBottom(240f)
+                space(30f)
+                padBottom(250f)
                 textButton("MULAI", "board") {
                     isTransform = true
                     rotation = 10f
-                    centerPosition(parent.width, parent.height)
+                    setOrigin(Align.bottom)
                     setScale(LARGE_BTN_SCALE)
-                    pad(BUTTON_PADDING)
                     onClick {
                         game.setScreen<MapScreen>()
                     }
                 }
                 textButton("PENGATURAN", "board-s") {
-                    centerPosition(parent.width, parent.height)
+                    // TODO onclick open window
+
+
+
                 }
+
                 textButton("KELUAR", "board-s") {
                     isTransform = true
-                    centerPosition(parent.width, parent.height)
+                    setOrigin(Align.center)
                     setScale(SMALL_BTN_SCALE)
                     onClick {
                         // TODO confirm window
@@ -96,12 +90,19 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             }
             verticalGroup {
                 setFillParent(true)
+                left()
                 bottom()
+                container {
+                    top()
+                    setOrigin(Align.center)
+                    rotation = 1f
+                    label("Selamat\nDatang!", "primary-gw") {
 
-                label("Selamat\nDatang!", "primary-gw") {
-                    setAlignment(Align.top)
+                    }
                 }
-                textButton("AZHARA", "sign")
+                textButton("AZHARA", "sign") {
+                    // TODO onclick open window change name
+                }
             }
         }
     }
