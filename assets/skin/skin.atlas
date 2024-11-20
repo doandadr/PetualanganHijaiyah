@@ -6,273 +6,266 @@ filter: Linear, Linear
 repeat: none
 girl-2
   rotate: false
-  xy: 852, 265
+  xy: 802, 459
   size: 96, 138
   orig: 96, 138
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 487, 104
+  xy: 1189, 673
   size: 120, 122
   orig: 120, 122
   offset: 0, 0
   index: -1
 board
   rotate: false
-  xy: 1760, 1943
+  xy: 1, 20
   size: 275, 104
   orig: 275, 104
   offset: 0, 0
   index: -1
 book
   rotate: false
-  xy: 852, 405
+  xy: 1781, 1575
   size: 105, 77
   orig: 105, 77
   offset: 0, 0
   index: -1
 boy
   rotate: false
-  xy: 961, 390
+  xy: 576, 127
   size: 224, 447
   orig: 224, 447
   offset: 0, 0
   index: -1
 boy-select
   rotate: false
-  xy: 520, 1228
+  xy: 1, 126
   size: 327, 325
   orig: 327, 325
   offset: 0, 0
   index: -1
 checkered-flag
   rotate: false
-  xy: 1271, 1326
+  xy: 1175, 797
   size: 196, 356
   orig: 196, 356
   offset: 0, 0
   index: -1
 circle-g
   rotate: false
-  xy: 1590, 1282
+  xy: 1136, 907
   size: 37, 37
   orig: 37, 37
   offset: 0, 0
   index: -1
 circle-gw
   rotate: false
-  xy: 557, 65
+  xy: 1136, 868
   size: 37, 37
   orig: 37, 37
   offset: 0, 0
   index: -1
 circle-y
   rotate: false
-  xy: 1641, 1495
+  xy: 1136, 829
   size: 37, 37
   orig: 37, 37
   offset: 0, 0
   index: -1
 circle-yw
   rotate: false
-  xy: 1710, 1546
+  xy: 1136, 790
   size: 37, 37
   orig: 37, 37
   offset: 0, 0
   index: -1
 coin
   rotate: false
-  xy: 946, 1281
+  xy: 1189, 633
   size: 67, 38
   orig: 67, 38
   offset: 0, 0
   index: -1
 confetti
   rotate: false
-  xy: 1, 521
+  xy: 1, 569
   size: 409, 325
   orig: 409, 325
   offset: 0, 0
   index: -1
 girl
   rotate: false
-  xy: 442, 677
+  xy: 1098, 1155
   size: 271, 457
   orig: 271, 457
   offset: 0, 0
   index: -1
 girl-select
   rotate: false
-  xy: 1, 206
+  xy: 442, 869
   size: 314, 313
   orig: 314, 313
   offset: 0, 0
   index: -1
 hand-pointing
   rotate: false
-  xy: 849, 1228
+  xy: 802, 366
   size: 95, 91
   orig: 95, 91
   offset: 0, 0
   index: -1
 icon-volume
   rotate: false
-  xy: 487, 1
+  xy: 1556, 1106
   size: 62, 47
   orig: 62, 47
   offset: 0, 0
   index: -1
-l01-boulder-willlow
+l01-rock-boulder
   rotate: false
-  xy: 863, 1684
-  size: 473, 363
-  orig: 473, 363
-  offset: 0, 0
-  index: -1
-l01-left-rock
-  rotate: false
-  xy: 849, 1321
-  size: 210, 232
-  orig: 210, 232
+  xy: 1, 1184
+  size: 820, 364
+  orig: 820, 364
   offset: 0, 0
   index: -1
 l02-stones-plant
   rotate: false
-  xy: 715, 484
+  xy: 330, 98
   size: 244, 353
   orig: 244, 353
   offset: 0, 0
   index: -1
 l03-cat-bigrock
   rotate: false
-  xy: 610, 94
+  xy: 1804, 1654
   size: 218, 188
   orig: 218, 188
   offset: 0, 0
   index: -1
 l04-grass-twig
   rotate: false
-  xy: 1, 848
+  xy: 1, 896
   size: 439, 286
   orig: 439, 286
   offset: 0, 0
   index: -1
 l05-pond
   rotate: false
-  xy: 1, 1555
+  xy: 1, 1550
   size: 860, 492
   orig: 860, 492
   offset: 0, 0
   index: -1
 l06-bigstone
   rotate: false
-  xy: 1, 39
+  xy: 1382, 1544
   size: 270, 165
   orig: 270, 165
   offset: 0, 0
   index: -1
 l07-rock-plants
   rotate: false
-  xy: 1760, 1579
+  xy: 823, 1186
   size: 273, 362
   orig: 273, 362
   offset: 0, 0
   index: -1
 l08-cliff
   rotate: false
-  xy: 1338, 1716
+  xy: 1382, 1711
   size: 420, 331
   orig: 420, 331
   offset: 0, 0
   index: -1
 l09-cactus-stone
   rotate: false
-  xy: 610, 284
+  xy: 1804, 1844
   size: 240, 198
   orig: 240, 198
   offset: 0, 0
   index: -1
 left
   rotate: false
-  xy: 412, 522
+  xy: 873, 607
   size: 156, 153
   orig: 156, 153
   offset: 0, 0
   index: -1
 line
   rotate: false
-  xy: 1338, 1705
+  xy: 863, 1614
   size: 377, 9
   orig: 377, 9
   offset: 0, 0
   index: -1
 magnifier
   rotate: false
-  xy: 570, 540
+  xy: 1654, 1574
   size: 125, 135
   orig: 125, 135
   offset: 0, 0
   index: -1
 right
   rotate: false
-  xy: 1432, 1166
+  xy: 1031, 623
   size: 156, 153
   orig: 156, 153
   offset: 0, 0
   index: -1
 salute
   rotate: false
-  xy: 863, 1568
+  xy: 1, 453
   size: 389, 114
   orig: 389, 114
   offset: 0, 0
   index: -1
 sign
   rotate: false
-  xy: 273, 1
+  xy: 758, 979
   size: 212, 203
   orig: 212, 203
   offset: 0, 0
   index: -1
 sign-sharp
   rotate: false
-  xy: 520, 1142
+  xy: 1373, 1069
   size: 181, 84
   orig: 181, 84
   offset: 0, 0
   index: -1
 slider-knob-g
   rotate: false
-  xy: 63, 3
+  xy: 933, 1578
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 small-firework
   rotate: false
-  xy: 715, 930
+  xy: 1371, 1246
   size: 252, 296
   orig: 252, 296
   offset: 0, 0
   index: -1
 speech-bubble
   rotate: false
-  xy: 1, 1136
+  xy: 863, 1625
   size: 517, 417
   orig: 517, 417
   offset: 0, 0
   index: -1
 wood-scroll
   rotate: false
-  xy: 715, 839
+  xy: 1371, 1155
   size: 248, 89
   orig: 248, 89
   offset: 0, 0
   index: -1
 box
   rotate: false
-  xy: 1469, 1321
+  xy: 968, 778
   size: 166, 166
   split: 59, 58, 58, 60
   pad: 35, 35, 38, 38
@@ -281,7 +274,7 @@ box
   index: -1
 hijaiyah-button
   rotate: false
-  xy: 317, 228
+  xy: 412, 576
   size: 291, 291
   split: 77, 77, 77, 77
   pad: 26, 26, 25, 26
@@ -290,7 +283,7 @@ hijaiyah-button
   index: -1
 slider-before-g
   rotate: false
-  xy: 1015, 1285
+  xy: 278, 90
   size: 44, 34
   split: 18, 0, 0, 0
   pad: 0, 0, 0, 0
@@ -299,7 +292,7 @@ slider-before-g
   index: -1
 slider-y
   rotate: false
-  xy: 1, 3
+  xy: 1888, 1618
   size: 60, 34
   split: 17, 17, 0, 0
   pad: 0, 0, 0, 0
@@ -308,7 +301,7 @@ slider-y
   index: -1
 slidervert-before-g
   rotate: false
-  xy: 946, 1235
+  xy: 705, 823
   size: 34, 44
   split: 0, 0, 0, 19
   pad: 0, 0, 0, 0
@@ -317,7 +310,7 @@ slidervert-before-g
   index: -1
 slidervert-y
   rotate: false
-  xy: 1590, 1220
+  xy: 278, 28
   size: 34, 60
   split: 0, 0, 18, 18
   pad: 0, 0, 0, 0
@@ -326,7 +319,7 @@ slidervert-y
   index: -1
 textbox-r
   rotate: false
-  xy: 487, 50
+  xy: 863, 1560
   size: 68, 52
   split: 22, 22, 23, 23
   pad: 7, 7, 9, 8
@@ -335,7 +328,7 @@ textbox-r
   index: -1
 textbox-w-down
   rotate: false
-  xy: 1641, 1585
+  xy: 1311, 677
   size: 114, 118
   split: 33, 70, 33, 77
   pad: 11, 10, 11, 56
@@ -344,7 +337,7 @@ textbox-w-down
   index: -1
 textbox-y-down
   rotate: false
-  xy: 1264, 1163
+  xy: 705, 599
   size: 166, 161
   split: 40, 115, 39, 109
   pad: 16, 15, 13, 84
@@ -353,7 +346,7 @@ textbox-y-down
   index: -1
 textfield
   rotate: false
-  xy: 1641, 1534
+  xy: 1373, 802
   size: 67, 49
   split: 22, 20, 21, 22
   pad: 9, 8, 8, 8
@@ -362,7 +355,7 @@ textfield
   index: -1
 window-trans
   rotate: false
-  xy: 1061, 1142
+  xy: 972, 946
   size: 201, 207
   split: 97, 98, 99, 102
   pad: 28, 29, 30, 30
@@ -371,21 +364,21 @@ window-trans
   index: -1
 f01-alif
   rotate: false
-  xy: 969, 925
+  xy: 802, 149
   size: 41, 215
   orig: 41, 215
   offset: 0, 0
   index: -1
 f13-syin
   rotate: false
-  xy: 1061, 1351
+  xy: 758, 762
   size: 208, 215
   orig: 208, 215
   offset: 0, 0
   index: -1
-f17-zha
+f17-dho
   rotate: false
-  xy: 1469, 1489
+  xy: 1373, 853
   size: 170, 214
   orig: 170, 214
   offset: 0, 0

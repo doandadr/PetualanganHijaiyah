@@ -1,29 +1,7 @@
 package com.github.doandadr.petualanganhijaiyah.data
 
-import com.badlogic.gdx.Preferences
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
-import kotlinx.coroutines.handleCoroutineException
-import java.util.*
 
-// TODO user save data (id, name, gender, game progress [levels completed, score, record, collectables], tooltips)
-class SaveData(
-    var userName: String? = null,
-    var userGender: String? = null,
-    var levelCompleteStatus: EnumMap<PrefKey, Boolean> = EnumMap<PrefKey, Boolean>(PrefKey::class.java),
-    var levelScores: EnumMap<PrefKey, Int> = EnumMap<PrefKey, Int>(PrefKey::class.java),
-    var highScore: Int? = null,
-    var tooltipDone: EnumMap<PrefKey, Boolean> = EnumMap<PrefKey, Boolean>(PrefKey::class.java),
-) {
-    fun setLevelCompleteStatus(level: PrefKey, isComplete: Boolean) {
-        if (isComplete) {
-            levelCompleteStatus[level] = true
-        }
-    }
-
-    fun setLevelScore(level: PrefKey, score: Int) {
-
-    }
-}
 enum class PrefKey {
     USER_NAME,
     USER_GENDER,
@@ -79,7 +57,6 @@ enum class LevelImg(
 // TODO stage def
 
 // TODO level data (type, )
-
 
 enum class Hijaiyah(
     val image: String,
