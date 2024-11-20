@@ -1,7 +1,7 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog
+import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
@@ -10,10 +10,9 @@ import ktx.actors.onClick
 import ktx.assets.disposeSafely
 import ktx.log.logger
 import ktx.scene2d.*
-import javax.swing.text.StyleConstants.setAlignment
 
-const val LARGE_BTN_SCALE = 1.2f
-const val SMALL_BTN_SCALE = 0.9f
+const val SCALE_BTN_LARGE = 1.2f
+const val SCALE_BTN_SMALL = 0.9f
 private val LOG = logger<HomeScreen>()
 
 class HomeScreen(game: Main) : BaseScreen(game) {
@@ -24,12 +23,21 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {
         LOG.debug { "Home Screen is shown" }
-
-        audioService.play(MusicAsset.HOME)
         setupUI()
+
+        // play music
+//         audioService.play(MusicAsset.HOME, volume = 0.5f)
     }
 
     private fun setupUI() {
+        val skin = Scene2DSkin.defaultSkin
+        // TODO tooltips
+        val tooltip: TextTooltip =
+            TextTooltip("This is a book tooltip",skin, "tooltip-gy")
+
+        // TODO settings window: volume, gender
+
+
         val bgHome = assets[TextureAsset.HOME.descriptor]
         stage.isDebugAll = true
         stage.actors {
@@ -46,13 +54,16 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                 align(Align.topRight)
                 pad(50f)
                 space(50f)
+                // TODO coin functionalities
                 button("coin") {
                     isTransform = true
                     setOrigin(Align.right)
-                    setScale(LARGE_BTN_SCALE)
+                    setScale(SCALE_BTN_LARGE)
+                    isVisible = false
                 }
                 button("book") {
                     // TODO practice screen
+                    addListener(tooltip)
                 }
             }
             verticalGroup {
@@ -64,7 +75,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                     isTransform = true
                     rotation = 10f
                     setOrigin(Align.bottom)
-                    setScale(LARGE_BTN_SCALE)
+                    setScale(SCALE_BTN_LARGE)
                     onClick {
                         game.setScreen<MapScreen>()
                     }
@@ -79,7 +90,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                 textButton("KELUAR", "board-s") {
                     isTransform = true
                     setOrigin(Align.center)
-                    setScale(SMALL_BTN_SCALE)
+                    setScale(SCALE_BTN_SMALL)
                     onClick {
                         // TODO confirm window
                         // TODO save game

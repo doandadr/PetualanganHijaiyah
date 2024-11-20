@@ -48,12 +48,6 @@ class Main : KtxGame<KtxScreen>() {
         KtxAsync.initiate()
         AssetStorage()
     }
-    val assetManager: AssetManager by lazy { initiateAssetManager() }
-    fun initiateAssetManager(): AssetManager {
-        val assetManager = AssetManager()
-        assetManager.registerFreeTypeFontLoaders()
-        return assetManager
-    }
 
     // TODO gameEventManager
     // TODO preferences

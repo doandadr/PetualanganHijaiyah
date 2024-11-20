@@ -13,7 +13,7 @@ fun main() {
       return
     Lwjgl3Application(Main(), Lwjgl3ApplicationConfiguration().apply {
         setTitle("PetualanganHijaiyah")
-        setWindowedMode(640, 1080)
+        setWindowedMode(540, 960)
         setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
     })
 }
