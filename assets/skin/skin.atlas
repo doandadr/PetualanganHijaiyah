@@ -27,7 +27,7 @@ board
   index: -1
 book
   rotate: false
-  xy: 1781, 1575
+  xy: 1189, 594
   size: 105, 77
   orig: 105, 77
   offset: 0, 0
@@ -83,7 +83,7 @@ circle-yw
   index: -1
 coin
   rotate: false
-  xy: 1189, 633
+  xy: 802, 326
   size: 67, 38
   orig: 67, 38
   offset: 0, 0
@@ -118,7 +118,7 @@ hand-pointing
   index: -1
 icon-volume
   rotate: false
-  xy: 1556, 1106
+  xy: 933, 1565
   size: 62, 47
   orig: 62, 47
   offset: 0, 0
@@ -230,14 +230,14 @@ sign
   index: -1
 sign-sharp
   rotate: false
-  xy: 1373, 1069
-  size: 181, 84
-  orig: 181, 84
+  xy: 1373, 1081
+  size: 172, 72
+  orig: 172, 72
   offset: 0, 0
   index: -1
 slider-knob-g
   rotate: false
-  xy: 933, 1578
+  xy: 802, 290
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
@@ -254,6 +254,20 @@ speech-bubble
   xy: 863, 1625
   size: 517, 417
   orig: 517, 417
+  offset: 0, 0
+  index: -1
+star-outline
+  rotate: false
+  xy: 1373, 750
+  size: 116, 113
+  orig: 116, 113
+  offset: 0, 0
+  index: -1
+star-outline-grey
+  rotate: false
+  xy: 1781, 1539
+  size: 116, 113
+  orig: 116, 113
   offset: 0, 0
   index: -1
 wood-scroll
@@ -292,7 +306,7 @@ slider-before-g
   index: -1
 slider-y
   rotate: false
-  xy: 1888, 1618
+  xy: 1311, 761
   size: 60, 34
   split: 17, 17, 0, 0
   pad: 0, 0, 0, 0
@@ -310,7 +324,7 @@ slidervert-before-g
   index: -1
 slidervert-y
   rotate: false
-  xy: 278, 28
+  xy: 1491, 803
   size: 34, 60
   split: 0, 0, 18, 18
   pad: 0, 0, 0, 0
@@ -328,7 +342,7 @@ textbox-r
   index: -1
 textbox-w-down
   rotate: false
-  xy: 1311, 677
+  xy: 1899, 1534
   size: 114, 118
   split: 33, 70, 33, 77
   pad: 11, 10, 11, 56
@@ -346,7 +360,7 @@ textbox-y-down
   index: -1
 textfield
   rotate: false
-  xy: 1373, 802
+  xy: 1547, 1104
   size: 67, 49
   split: 22, 20, 21, 22
   pad: 9, 8, 8, 8
@@ -364,7 +378,7 @@ window-trans
   index: -1
 f01-alif
   rotate: false
-  xy: 802, 149
+  xy: 1625, 1327
   size: 41, 215
   orig: 41, 215
   offset: 0, 0
@@ -378,7 +392,7 @@ f13-syin
   index: -1
 f17-dho
   rotate: false
-  xy: 1373, 853
+  xy: 1373, 865
   size: 170, 214
   orig: 170, 214
   offset: 0, 0

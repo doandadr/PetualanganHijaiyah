@@ -1,48 +1,65 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
-import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Button
+import com.badlogic.gdx.scenes.scene2d.ui.Container
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup
-import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
-import ktx.scene2d.KGroup
-import ktx.scene2d.KWidget
-import ktx.scene2d.Scene2DSkin
-import ktx.scene2d.actor
+import com.badlogic.gdx.utils.Align
+import ktx.scene2d.*
 
 class LevelWidget(
-    // skin
     skin: Skin,
-    // label
     val labelLevel: Label,
-    // images
-    val imageLevel: Image,
-    // offsets and rotations
-) : WidgetGroup(labelLevel, imageLevel), KGroup {
-    val labelOffsetX: Float = 0.0f
-    val labelOffsetY: Float = 0.0f
-    val imageOffsetX: Float = 0.0f
-    val imageOffsetY: Float = 0.0f
-    val labelScale: Float = 0.0f
-    val imageScale:Float = 0.0f
-
+    val buttonLevel: Button,
+    val container: Container<Label>,
+) : WidgetGroup(buttonLevel, container), KGroup {
     init {
-        isTransform = true
-//        labelLevel.setPosition()
+        // TODO init
     }
 
-//    fun setLabelOffset()
+    // TODO handle star graphics
 
+    fun setPositions(x: Float = 0f, y: Float = 0f, textX: Float = 0f, textY: Float = 0f) {
+        container.setPosition(textX, textY)
+        setPosition(x, y)
+    }
+
+    fun setTextScale(scale: Float) {
+        labelLevel.setFontScale(scale)
+    }
+
+    fun setTextRotation(degrees: Float) {
+        container.isTransform = true
+        container.setOrigin(Align.center)
+        container.rotation = degrees
+    }
+
+    fun setButtonScale(scale:Float) {
+        buttonLevel.isTransform = true
+        buttonLevel.setOrigin(Align.center)
+        buttonLevel.setScale(scale)
+    }
+
+    fun setButtonRotation(degrees:Float) {
+        buttonLevel.rotation = degrees
+    }
 }
 
 inline fun <S> KWidget<S>.levelWidget(
-    skin: Skin = Scene2DSkin.defaultSkin
-    ,
-    labelLevel: Label,
-    imageLevel: Image,
+    labelText: String,
+    labelStyle: String,
+    buttonStyle: String,
+    skin: Skin = Scene2DSkin.defaultSkin,
+    labelLevel: Label = Label(labelText, skin, labelStyle),
+    buttonLevel: Button = Button(skin, buttonStyle),
+    containerLevel: Container<Label> = Container(labelLevel),
     init: LevelWidget.(S) -> Unit = {}
-) = actor(LevelWidget(
-    skin,
-    labelLevel,
-    imageLevel,
-), init)
+) = actor(
+    LevelWidget(
+        skin,
+        labelLevel,
+        buttonLevel,
+        containerLevel
+    ), init
+)
