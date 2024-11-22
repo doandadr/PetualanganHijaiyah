@@ -14,10 +14,6 @@ class LevelWidget(
     val buttonLevel: Button,
     val container: Container<Label>,
 ) : WidgetGroup(buttonLevel, container), KGroup {
-    init {
-        // TODO init
-    }
-
     // TODO handle star graphics
 
     fun setPositions(x: Float = 0f, y: Float = 0f, textX: Float = 0f, textY: Float = 0f) {
