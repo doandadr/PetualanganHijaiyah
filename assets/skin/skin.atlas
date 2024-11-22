@@ -244,7 +244,7 @@ sign-sharp
   index: -1
 slider-knob-g
   rotate: false
-  xy: 623, 123
+  xy: 903, 1708
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
@@ -263,16 +263,23 @@ speech-bubble
   orig: 517, 417
   offset: 0, 0
   index: -1
+star
+  rotate: false
+  xy: 1398, 1030
+  size: 108, 105
+  orig: 108, 105
+  offset: 0, 0
+  index: -1
+star-grey
+  rotate: false
+  xy: 1545, 1150
+  size: 108, 105
+  orig: 108, 105
+  offset: 0, 0
+  index: -1
 star-outline
   rotate: false
   xy: 1261, 761
-  size: 116, 113
-  orig: 116, 113
-  offset: 0, 0
-  index: -1
-star-outline-grey
-  rotate: false
-  xy: 1429, 1142
   size: 116, 113
   orig: 116, 113
   offset: 0, 0
@@ -322,7 +329,7 @@ slider-y
   index: -1
 slidervert-before-g
   rotate: false
-  xy: 903, 1698
+  xy: 1508, 1091
   size: 34, 44
   split: 0, 0, 0, 19
   pad: 0, 0, 0, 0
@@ -349,7 +356,7 @@ textbox-r
   index: -1
 textbox-w-down
   rotate: false
-  xy: 1547, 1137
+  xy: 1429, 1137
   size: 114, 118
   split: 33, 70, 33, 77
   pad: 11, 10, 11, 56
