@@ -101,6 +101,7 @@ enum class TextureAsset(
     SNOW_2("bg-snow2.jpg"),
     MOUNTAIN_1("bg-mountain1.jpg"),
     MOUNTAIN_2("bg-mountain2.jpg"),
+    WOODEN_FRAME("bg-wooden-frame.png")
 }
 
 enum class TextureAtlasAsset(
@@ -113,6 +114,7 @@ enum class TextureAtlasAsset(
     LETTER("hijaiyah.atlas"),
 }
 
+// TODO delete if unused. not updated
 enum class AtlasRegion(
     val region: String,
 ) {

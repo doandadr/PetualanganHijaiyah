@@ -1,11 +1,16 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
+import com.github.doandadr.petualanganhijaiyah.asset.ButtonStyles
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.ui.widget.levelDotsWidget
-import com.github.doandadr.petualanganhijaiyah.ui.widget.levelWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.levelDots
+import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stars
+import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.assets.disposeSafely
 import ktx.log.logger
@@ -16,6 +21,8 @@ const val SCALE_FONT_BIG = 1.75f
 private val log = logger<MapScreen>()
 
 class MapScreen(game: Main) : BaseScreen(game) {
+    // TODO define variables (such as levels data[stars, score, done]) in here
+    // TODO handle in event or data manager
 
     override fun show() {
         log.debug { "Map Screen is shown" }
@@ -26,7 +33,9 @@ class MapScreen(game: Main) : BaseScreen(game) {
     private fun setupUI() {
         val bgMap = assets[TextureAsset.MAP.descriptor]
 
-        stage.isDebugAll = true
+//        stage.isDebugAll = true
+        // TODO setStates based on data, do in screen
+
         stage.actors {
             scrollPane {
                 setFillParent(true)
@@ -40,67 +49,92 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     floatingGroup {
                         setFillParent(true)
 
-
-                        levelWidget("LEVEL 1", "primary-gw", "level1") {
-                            setPositions(-30f, -40f, 600f, 380f)
-                            setTextScale(SCALE_FONT_BIG)
+                        levelButton("LEVEL 1", ButtonStyles.LEVEL1.styleName) {
+                            setPositions(-30f, -40f, 570f, 380f)
                             setTextRotation(5f)
-                            buttonLevel.onChange { }
+                            levelDots { setPosition(centerX(width) - 20f, 100f) }
+                            stars { setPosition(450f, 200f) }
+                            button.onChange {
+                                if (isChecked){
+                                    game.setScreen<LevelScreen>()
+                                }
+                            }
                         }
 
-                        levelWidget("LEVEL 2", "primary-gw", "level2") {
-                            setPositions(50f, 400f, 200f, 150f)
-                            setTextScale(SCALE_FONT_BIG)
+                        levelButton("LEVEL 2", ButtonStyles.LEVEL2.styleName) {
+                            setPositions(30f, 440f, 200f, 150f)
                             setTextRotation(-5f)
-                            buttonLevel.onChange { }
+                            levelDots {
+                                setPosition(centerX(width) - 10f, -80f)
+                                flipHorizontal()
+                            }
+                            stars { setPosition(0f, -50f) }
+                            button.onChange { }
                         }
 
-                        levelWidget("LEVEL 3", "primary-gw", "level3") {
+                        levelButton("LEVEL 3", ButtonStyles.LEVEL3.styleName) {
                             setPositions(450f, 750f, 100f, 230f)
-                            setTextScale(SCALE_FONT_BIG)
                             setTextRotation(-8f)
-                            setButtonScale(1.2f)
-                            buttonLevel.onChange { }
+                            levelDots { setPosition(-130f, -100f) }
+                            stars { setPosition(0f, -50f) }
+                            button.onChange { }
                         }
 
-                        levelWidget("LEVEL 4", "primary-gw", "level4") {
+                        levelButton("LEVEL 4", ButtonStyles.LEVEL4.styleName) {
                             setPositions(-100f, 1000f, 300f, 150f)
-                            setTextScale(SCALE_FONT_BIG)
                             setTextRotation(5f)
-                            buttonLevel.onChange { }
+                            levelDots {
+                                setPosition(centerX(width) + 120f, -50f)
+                                flipHorizontal()
+                            }
+                            stars { setPosition(150f, -50f) }
+                            button.onChange { }
                         }
-                        levelWidget("LEVEL 5", "primary-gw", "level5") {
-                            setPositions(-10f, 1370f, 390f, 160f)
-                            setTextScale(SCALE_FONT_BIG)
-                            buttonLevel.onChange { }
+
+                        levelButton("LEVEL 5", ButtonStyles.LEVEL5.styleName) {
+                            setPositions(-10f, 1370f, 370f, 300f)
+                            levelDots { setPosition(centerX(width) - 100f, -100f) }
+                            stars { setPosition(250f, 150f) }
+                            button.onChange { }
                         }
-                        levelWidget("LEVEL 6", "primary-gw", "level6") {
-                            setPositions(440f, 1850f, 120f, 100f)
-                            setTextScale(SCALE_FONT_BIG)
+
+                        levelButton("LEVEL 6", ButtonStyles.LEVEL6.styleName) {
+                            setPositions(420f, 1850f, 120f, 200f)
                             setTextRotation(5f)
-                            buttonLevel.onChange { }
+                            levelDots { setPosition(-120f, -120f) }
+                            stars { setPosition(20f, -50f) }
+                            button.onChange { }
                         }
-                        levelWidget("LEVEL 7", "primary-gw", "level7") {
+
+                        levelButton("LEVEL 7", ButtonStyles.LEVEL7.styleName) {
                             setPositions(30f, 2000f, 200f, 200f)
-                            setTextScale(SCALE_FONT_BIG)
                             setTextRotation(-10f)
-                            buttonLevel.onChange { }
+                            levelDots {
+                                setPosition(centerX(width) - 30f, -30f)
+                                flipHorizontal()
+                            }
+                            stars { setPosition(20f, 0f) }
+                            button.onChange { }
                         }
-                        levelWidget("LEVEL 8", "primary-gw", "level8") {
-                            setPositions(350f, 2400f, 200f, 70f)
-                            setTextScale(SCALE_FONT_BIG)
+
+                        levelButton("LEVEL 8", ButtonStyles.LEVEL8.styleName) {
+                            setPositions(350f, 2400f, 200f, 100f)
                             setTextRotation(8f)
-                            buttonLevel.onChange { }
+                            levelDots { setPosition(0f, -180f) }
+                            stars { setPosition(100f, -50f) }
+                            button.onChange { }
                         }
-                        levelWidget("LEVEL 9", "primary-gw", "level9") {
+
+                        levelButton("LEVEL 9", ButtonStyles.LEVEL9.styleName) {
                             setPositions(50f, 2600f, 100f, 100f)
-                            setTextScale(SCALE_FONT_BIG)
                             setTextRotation(-5f)
-                            buttonLevel.onChange { }
+                            levelDots {
+                                setPosition(centerX(width) - 40f, -120f)
+                                flipHorizontal()
+                            }
+                            stars { setPosition(0f, -50f) }
+                            button.onChange { }
                         }
-
-                        levelDotsWidget()
-
                     }
                 }
                 validate()
@@ -121,6 +155,17 @@ class MapScreen(game: Main) : BaseScreen(game) {
             viewport.apply()
             act()
             draw()
+        }
+
+        debugMode()
+    }
+
+    private fun debugMode() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            hide()
+            show()
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            // TODO do something
         }
     }
 

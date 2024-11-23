@@ -10,7 +10,6 @@ import ktx.assets.async.AssetStorage
 
 abstract class BaseScreen(
     val game: Main,
-    val gameViewport: Viewport = game.gameViewport,
     val uiViewport: Viewport = game.uiViewport,
     val assets: AssetStorage = game.assets,
     val audioService: AudioService = game.audioService,
@@ -18,7 +17,6 @@ abstract class BaseScreen(
 ): KtxScreen {
 
     override fun resize(width: Int, height: Int) {
-        gameViewport.update(width, height, true)
         uiViewport.update(width, height, true)
     }
 }
