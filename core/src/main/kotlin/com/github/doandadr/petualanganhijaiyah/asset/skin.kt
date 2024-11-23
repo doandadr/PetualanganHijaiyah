@@ -1,6 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.asset
 
-enum class ButtonStyles(val styleName: String) {
+enum class Buttons(val style: String) {
     LEFT("left"),
     RIGHT("right"),
     COIN("coin"),
@@ -17,7 +17,7 @@ enum class ButtonStyles(val styleName: String) {
     LEVEL9("level9"),
 }
 
-enum class LabelStyles(val styleName: String) {
+enum class Labels(val style: String) {
     MAP("map"),
     PRIMARY_GREEN_L("primary-gw"),
     SECONDARY_WHITE_M("secondary-wb"),
@@ -30,7 +30,7 @@ enum class LabelStyles(val styleName: String) {
     PRIMARY_YELLOW_L("primary-yw"),
 }
 
-enum class TextButtonStyles(val styleName: String) {
+enum class TextButtons(val style: String) {
     HINT("hint"),
     BOARD_M("board"),
     LEVEL1("level1"),
@@ -39,12 +39,12 @@ enum class TextButtonStyles(val styleName: String) {
     BOARD_S("board-s"),
 }
 
-enum class TextTooltipStyles(val styleName: String) {
+enum class TextTooltips(val style: String) {
     GREEN_YELLOW("tooltip-gy"),
     GREEN_WHITE("tooltip-gw"),
 }
 
-enum class Fonts(val fontName: String) {
+enum class Fonts(val font: String) {
     PRIMARY_GREEN_L("omegle-gw-40"),
     PRIMARY_GREY_L("omegle-sw-40"),
     PRIMARY_YELLOW_L("omegle-yw-40"),
@@ -57,7 +57,7 @@ enum class Fonts(val fontName: String) {
 }
 
 // Skin Atlas Drawables
-enum class Images(val imageName: String) {
+enum class Images(val image: String) {
     GIRL_2("girl-2"),
     BACK("back"),
     BOARD("board"),
@@ -114,7 +114,11 @@ enum class Images(val imageName: String) {
     F17_DHO("f17-dho"),
 }
 
-enum class Colors(val colorName: String) {
-
+enum class Colors(val color: String) {
+    BLACK("RGBA_0_0_0_255"),
+    GREY("RGBA_165_165_165_255"),
+    YELLOW("RGBA_255_187_0_255"),
+    WHITE("RGBA_255_255_255_255"),
+    GREEN("RGBA_88_129_87_255"),
 }
 

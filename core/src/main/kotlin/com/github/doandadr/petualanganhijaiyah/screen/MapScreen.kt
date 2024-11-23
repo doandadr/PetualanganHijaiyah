@@ -2,14 +2,15 @@ package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.show
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.ButtonStyles
+import com.github.doandadr.petualanganhijaiyah.asset.Buttons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.ui.widget.levelDots
-import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
-import com.github.doandadr.petualanganhijaiyah.ui.widget.stars
+import com.github.doandadr.petualanganhijaiyah.ui.widget.*
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.assets.disposeSafely
@@ -23,6 +24,7 @@ private val log = logger<MapScreen>()
 class MapScreen(game: Main) : BaseScreen(game) {
     // TODO define variables (such as levels data[stars, score, done]) in here
     // TODO handle in event or data manager
+    lateinit var testButton: Level
 
     override fun show() {
         log.debug { "Map Screen is shown" }
@@ -49,91 +51,98 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     floatingGroup {
                         setFillParent(true)
 
-                        levelButton("LEVEL 1", ButtonStyles.LEVEL1.styleName) {
-                            setPositions(-30f, -40f, 570f, 380f)
-                            setTextRotation(5f)
-                            levelDots { setPosition(centerX(width) - 20f, 100f) }
-                            stars { setPosition(450f, 200f) }
+                        testButton = levelButton("LEVEL 1", Buttons.LEVEL1.style) {
+                            setPosition(-30f, -40f)
+                            text.setPosition(570f, 380f)
+                            rotateText(5f)
+                            dots.setPosition(centerX(width) - 20f, 100f)
+                            stars.setPosition(450f, 200f)
                             button.onChange {
-                                if (isChecked){
+                                if (isChecked) {
+                                    //
                                     game.setScreen<LevelScreen>()
                                 }
                             }
                         }
 
-                        levelButton("LEVEL 2", ButtonStyles.LEVEL2.styleName) {
-                            setPositions(30f, 440f, 200f, 150f)
-                            setTextRotation(-5f)
-                            levelDots {
-                                setPosition(centerX(width) - 10f, -80f)
-                                flipHorizontal()
-                            }
-                            stars { setPosition(0f, -50f) }
+                        levelButton("LEVEL 2", Buttons.LEVEL2.style) {
+                            setPosition(30f, 440f)
+                            text.setPosition(200f, 150f)
+                            rotateText(-5f)
+                            dots.setPosition(centerX(width) - 10f, -80f)
+                            dots.flipHorizontal()
+                            stars.setPosition(0f, -50f)
                             button.onChange { }
                         }
 
-                        levelButton("LEVEL 3", ButtonStyles.LEVEL3.styleName) {
-                            setPositions(450f, 750f, 100f, 230f)
-                            setTextRotation(-8f)
-                            levelDots { setPosition(-130f, -100f) }
-                            stars { setPosition(0f, -50f) }
+                        levelButton("LEVEL 3", Buttons.LEVEL3.style) {
+                            setPosition(450f, 750f)
+                            text.setPosition(100f, 230f)
+                            rotateText(-8f)
+                            dots.setPosition(-130f, -100f)
+                            stars.setPosition(0f, -50f)
                             button.onChange { }
                         }
 
-                        levelButton("LEVEL 4", ButtonStyles.LEVEL4.styleName) {
-                            setPositions(-100f, 1000f, 300f, 150f)
-                            setTextRotation(5f)
-                            levelDots {
-                                setPosition(centerX(width) + 120f, -50f)
-                                flipHorizontal()
-                            }
-                            stars { setPosition(150f, -50f) }
+                        levelButton("LEVEL 4", Buttons.LEVEL4.style) {
+                            setPosition(-100f, 1000f)
+                            text.setPosition(300f, 150f)
+                            rotateText(5f)
+                            dots.setPosition(centerX(width) + 120f, -50f)
+                            dots.flipHorizontal()
+                            stars.setPosition(150f, -50f)
                             button.onChange { }
                         }
 
-                        levelButton("LEVEL 5", ButtonStyles.LEVEL5.styleName) {
-                            setPositions(-10f, 1370f, 370f, 300f)
-                            levelDots { setPosition(centerX(width) - 100f, -100f) }
-                            stars { setPosition(250f, 150f) }
+                        levelButton("LEVEL 5", Buttons.LEVEL5.style) {
+                            setPosition(-10f, 1370f)
+                            text.setPosition(370f, 300f)
+                            dots.setPosition(centerX(width) - 100f, -100f)
+                            stars.setPosition(250f, 150f)
                             button.onChange { }
                         }
 
-                        levelButton("LEVEL 6", ButtonStyles.LEVEL6.styleName) {
-                            setPositions(420f, 1850f, 120f, 200f)
-                            setTextRotation(5f)
-                            levelDots { setPosition(-120f, -120f) }
-                            stars { setPosition(20f, -50f) }
+                        levelButton("LEVEL 6", Buttons.LEVEL6.style) {
+                            setPosition(420f, 1850f)
+                            text.setPosition(120f, 200f)
+                            rotateText(5f)
+                            dots.setPosition(-120f, -120f)
+                            stars.setPosition(20f, -50f)
                             button.onChange { }
                         }
 
-                        levelButton("LEVEL 7", ButtonStyles.LEVEL7.styleName) {
-                            setPositions(30f, 2000f, 200f, 200f)
-                            setTextRotation(-10f)
-                            levelDots {
-                                setPosition(centerX(width) - 30f, -30f)
-                                flipHorizontal()
-                            }
-                            stars { setPosition(20f, 0f) }
+                        levelButton("LEVEL 7", Buttons.LEVEL7.style) {
+                            setPosition(30f, 2000f)
+                            text.setPosition(200f, 200f)
+                            rotateText(-10f)
+                            dots.setPosition(centerX(width) - 30f, -30f)
+                            dots.flipHorizontal()
+                            stars.setPosition(20f, 0f)
                             button.onChange { }
                         }
 
-                        levelButton("LEVEL 8", ButtonStyles.LEVEL8.styleName) {
-                            setPositions(350f, 2400f, 200f, 100f)
-                            setTextRotation(8f)
-                            levelDots { setPosition(0f, -180f) }
-                            stars { setPosition(100f, -50f) }
+                        levelButton("LEVEL 8", Buttons.LEVEL8.style) {
+                            setPosition(350f, 2400f)
+                            text.setPosition(200f, 100f)
+                            rotateText(8f)
+                            dots.setPosition(0f, -180f)
+                            stars.setPosition(100f, -50f)
                             button.onChange { }
                         }
 
-                        levelButton("LEVEL 9", ButtonStyles.LEVEL9.styleName) {
-                            setPositions(50f, 2600f, 100f, 100f)
-                            setTextRotation(-5f)
-                            levelDots {
-                                setPosition(centerX(width) - 40f, -120f)
-                                flipHorizontal()
-                            }
-                            stars { setPosition(0f, -50f) }
+                        levelButton("LEVEL 9", Buttons.LEVEL9.style) {
+                            setPosition(50f, 2600f)
+                            text.setPosition(100f, 100f)
+                            rotateText(-5f)
+                            dots.setPosition(centerX(width) - 40f, -120f)
+                            dots.flipHorizontal()
+                            stars.setPosition(0f, -50f)
                             button.onChange { }
+                        }
+
+                        label("MULAI" ,Labels.PRIMARY_GREEN_L.style) {
+                            setPosition(centerX(width)-20f, 50f)
+                            setFontScale(SCALE_FONT_BIG)
                         }
                     }
                 }
@@ -165,7 +174,21 @@ class MapScreen(game: Main) : BaseScreen(game) {
             hide()
             show()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            // TODO do something
+            testButton.setState(LevelState.INACCESSIBLE)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            testButton.setState(LevelState.AVAILABLE)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            testButton.setState(LevelState.PASSED)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            testButton.stars.setState(StarState.HIDDEN)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+            testButton.stars.setState(StarState.ZERO)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+            testButton.stars.setState(StarState.ONE)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
+            testButton.stars.setState(StarState.TWO)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
+            testButton.stars.setState(StarState.THREE)
         }
     }
 
