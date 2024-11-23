@@ -2,7 +2,6 @@ package com.github.doandadr.petualanganhijaiyah
 
 import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -16,22 +15,17 @@ import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.assets.disposeSafely
 import ktx.async.KtxAsync
-import ktx.freetype.registerFreeTypeFontLoaders
 import ktx.log.logger
 import ktx.scene2d.Scene2DSkin
 
-const val UNIT_SCALE = 1 / 16f
-const val V_WIDTH_PIXELS = 720
-const val V_HEIGHT_PIXELS = 1412
-const val V_WIDTH = 9
-const val V_HEIGHT = 16
+const val SCREEN_W = 720
+const val SCREEN_H = 1412
 
 private val LOG = logger<Main>()
 
 class Main : KtxGame<KtxScreen>() {
 
-    val uiViewport = FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat())
-    val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
+    val uiViewport = FitViewport(SCREEN_W.toFloat(), SCREEN_H.toFloat())
     val batch: Batch by lazy { SpriteBatch() }
     val stage: Stage by lazy {
         // Set stage to process input
