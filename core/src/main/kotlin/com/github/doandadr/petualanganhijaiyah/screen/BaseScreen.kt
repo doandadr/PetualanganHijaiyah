@@ -1,11 +1,14 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.compression.lzma.Base
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.event.GameEventListener
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
@@ -20,7 +23,14 @@ abstract class BaseScreen(
     val assets: AssetStorage = game.assets,
     val audioService: AudioService = game.audioService,
     val stage: Stage = game.stage,
-): KtxScreen {
+    val gameEventManager: GameEventManager = game.gameEventManager,
+    val preferences: Preferences = game.preferences,
+    ): KtxScreen, GameEventListener {
+
+    override fun show() {
+        // TODO register event for screen
+        gameEventManager.addGameEventListener(this)
+    }
 
     override fun resize(width: Int, height: Int) {
         uiViewport.update(width, height, true)
@@ -30,6 +40,6 @@ abstract class BaseScreen(
         log.debug { "Hide ${this::class.simpleName}" }
         stage.clear()
         audioService.stop()
-
+        gameEventManager.removeGameEventListener(this)
     }
 }
