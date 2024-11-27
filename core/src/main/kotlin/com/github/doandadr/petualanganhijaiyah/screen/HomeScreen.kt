@@ -1,66 +1,69 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.SCREEN_H
-import com.github.doandadr.petualanganhijaiyah.SCREEN_W
-import com.github.doandadr.petualanganhijaiyah.asset.ButtonStyles
-import com.github.doandadr.petualanganhijaiyah.asset.LabelStyles
-import com.github.doandadr.petualanganhijaiyah.asset.TextTooltipStyles
-import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import ktx.actors.onChange
+import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.*
+import com.kotcrab.vis.ui.layout.FloatingGroup
 import ktx.assets.disposeSafely
 import ktx.log.logger
 import ktx.scene2d.*
 import ktx.scene2d.vis.floatingGroup
+import ktx.actors.*
 
-const val SCALE_BTN_LARGE = 1.2f
-const val SCALE_BTN_SMALL = 0.9f
-const val SCALE_FONT_MEDIUM = 1.25f
 
-private val LOG = logger<HomeScreen>()
+private val log = logger<HomeScreen>()
 
 class HomeScreen(game: Main) : BaseScreen(game) {
-    override fun resize(width: Int, height: Int) {
-        super.resize(width, height);
-        stage.viewport.update(width, height, true);
-    }
+    private lateinit var nameChange: Table
+    private lateinit var homeLayout: Table
+    private lateinit var homeUI: FloatingGroup
+    private lateinit var settingsPopup: SettingsPopup
+    private lateinit var characterSelectPopup: CharacterSelectPopup
 
     override fun show() {
-        LOG.debug { "Home Screen is shown" }
+        log.debug { "Home Screen is shown" }
         setupUI()
 
+        audioService.enabled = true
         // play music
-//         audioService.play(MusicAsset.HOME, volume = 0.5f)
+         audioService.play(MusicAsset.HOME, 0.5f)
     }
 
     private fun setupUI() {
         val skin = Scene2DSkin.defaultSkin
         // TODO tooltips
         val tooltip: TextTooltip =
-            TextTooltip("This is a book tooltip", skin, TextTooltipStyles.GREEN_YELLOW.styleName)
+            TextTooltip("This is a book tooltip", skin, TextTooltips.GREEN_YELLOW.style)
 
         // TODO settings window: volume, gender
-
         val bgHome = assets[TextureAsset.HOME.descriptor]
+        val bgHomeDim = assets[TextureAsset.HOME_DIM.descriptor]
+
+        // Setup actions and animations
+
         stage.actors {
 
-            table {
-                setFillParent(true)
+            homeLayout = table {
                 background(TextureRegionDrawable(bgHome))
+                setFillParent(true)
                 align(Align.bottomLeft)
 
-                floatingGroup {
+                homeUI = floatingGroup {
                     setFillParent(true)
 
                     container {
                         setFillParent(true)
                         align(Align.topLeft)
                         pad(50f)
-                        label("PETUALANGAN\nHIJAIYAH", LabelStyles.PRIMARY_GREEN_L.styleName) {
+                        label("PETUALANGAN\nHIJAIYAH", Labels.PRIMARY_GREEN_L.style) {
                             setAlignment(Align.center)
                             setOrigin(Align.center)
                             setFontScale(SCALE_FONT_MEDIUM)
@@ -72,15 +75,19 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                         pad(50f)
                         space(50f)
                         // TODO coin functionalities
-                        button(ButtonStyles.COIN.styleName) {
+                        button(Buttons.COIN.style) {
                             isTransform = true
                             setOrigin(Align.right)
-                            setScale(SCALE_BTN_LARGE)
+                            setScale(SCALE_BTN_MEDIUM)
                             isVisible = false
                         }
-                        button(ButtonStyles.BOOK.styleName) {
+                        button(Buttons.BOOK.style) {
                             // TODO practice screen
                             addListener(tooltip)
+                            onChange {
+                                game.setScreen<PracticeScreen>()
+                                audioService.play(SoundAsset.CLICK_BUTTON)
+                            }
                         }
                     }
                     verticalGroup {
@@ -92,17 +99,17 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             isTransform = true
                             rotation = 10f
                             setOrigin(Align.bottom)
-                            setScale(SCALE_BTN_LARGE)
+                            setScale(SCALE_BTN_MEDIUM)
+
                             onChange {
                                 game.setScreen<MapScreen>()
                             }
                         }
                         textButton("PENGATURAN", "board-s") {
-                            // TODO onChange open window
                             onChange {
-                                if (isChecked) {
-
-                                }
+                                homeUI.isVisible = false
+                                homeLayout.background = TextureRegionDrawable(bgHomeDim)
+                                settingsPopup.isVisible = true
                             }
                         }
                         textButton("KELUAR", "board-s") {
@@ -111,6 +118,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             setScale(SCALE_BTN_SMALL)
                             onChange {
                                 if (isChecked) {
+                                    // TODO dispatch save game event
                                     Gdx.app.exit()
                                     System.exit(0)
                                 }
@@ -124,31 +132,50 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                         container {
                             isTransform = true
                             setOrigin(Align.center)
-                            rotation = 5f
+                            rotation = 10f
                             label("Selamat\nDatang!", "primary-gw")
                         }
                         textButton("AZHARA", "sign") {
                             // TODO onclick open window change name
                         }
                     }
-
-
                 }
             }
-            window("WINDOW") {
-                isVisible = false
-                setSize(SCREEN_W * 0.8f, SCREEN_H * 0.8f)
-                setPosition(SCREEN_W / 2 - width / 2, SCREEN_H / 2 - height / 2)
-                align(Align.center)
-                textField {
+
+            // TODO settings data interaction
+            settingsPopup = settingsPopup {
+                volumeSlider.onChange {
+                    // TODO onchange volume slider
+                }
+                confirmButton.onChange {
+
+                    // TODO popup on and off system
+                    homeUI.isVisible = true
+                    settingsPopup.isVisible = false
+                    homeLayout.background = TextureRegionDrawable(bgHome)
+                }
+            }
+
+            characterSelectPopup = characterSelectPopup {
+                girlButton.onChange {
+                    // TODO CHANGE GENDER ON PREFERENCE
+                }
+                boyButton.onChange {
+                    // TODO CHANGE GENDER ON PREFERENCE
+                }
+            }
+
+            nameChange  = nameChangePopup {
+                confirmButton.onChange {
+
+                }
+                nameField.onChange {
 
                 }
             }
 
             // TODO TextTooltip sequence on first play; better to just have floating TT pointing to those
-            floatingGroup {
 
-            }
         }
     }
 
@@ -158,6 +185,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             act()
             draw()
         }
+
     }
 
     override fun hide() {

@@ -1,14 +1,11 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
-import com.badlogic.gdx.graphics.g2d.GlyphLayout
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.LabelStyles
-import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.util.centerX
-import com.github.doandadr.petualanganhijaiyah.util.centerY
 import ktx.assets.disposeSafely
 import ktx.log.logger
 import ktx.scene2d.*
@@ -47,12 +44,12 @@ class LevelScreen(game: Main): BaseScreen(game) {
                     setFillParent(true)
                     // TODO custom StageBoard widget
                     // TODO level name
-                    label(levelName, LabelStyles.PRIMARY_GREEN_L.styleName) {
+                    label(levelName, Labels.PRIMARY_GREEN_L.style) {
                         setAlignment(Align.center)
                         setPosition(0f, 1000f, )
                     }
                     // TODO sign name
-                    label(userName, LabelStyles.SIGN_NAME.styleName) {
+                    label(userName, Labels.SIGN_NAME.style) {
                         setAlignment(Align.topRight)
                         setPosition(-20f, -20f)
                     }
@@ -73,9 +70,6 @@ class LevelScreen(game: Main): BaseScreen(game) {
         }
     }
 
-    override fun hide() {
-        stage.clear()
-    }
 
     override fun dispose() {
         stage.disposeSafely()

@@ -10,6 +10,7 @@ import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_BIG
 import com.github.doandadr.petualanganhijaiyah.ui.widget.*
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
@@ -18,7 +19,6 @@ import ktx.log.logger
 import ktx.scene2d.*
 import ktx.scene2d.vis.floatingGroup
 
-const val SCALE_FONT_BIG = 1.75f
 private val log = logger<MapScreen>()
 
 class MapScreen(game: Main) : BaseScreen(game) {

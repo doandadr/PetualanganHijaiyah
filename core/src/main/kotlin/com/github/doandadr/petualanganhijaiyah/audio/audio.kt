@@ -1,11 +1,11 @@
 package com.github.doandadr.petualanganhijaiyah.audio
 
-import com.badlogic.gdx.Audio
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Pool
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import jdk.incubator.vector.VectorOperators.LOG
 import kotlinx.coroutines.launch
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
@@ -13,13 +13,13 @@ import ktx.log.logger
 import java.util.*
 import kotlin.math.max
 
-private val LOG = logger<AudioService>()
+private val log = logger<AudioService>()
 private const val MAX_SOUND_INSTANCES = 8
 
 interface AudioService {
     var enabled: Boolean
-    fun play(soundAsset: SoundAsset, volume: Float = 1f) = Unit
-    fun play(musicAsset: MusicAsset, volume: Float = 1f, loop: Boolean = true) = Unit
+    fun play(soundAsset: SoundAsset, volume: Float = soundAsset.volume) = Unit
+    fun play(musicAsset: MusicAsset, volume: Float = musicAsset.volume, loop: Boolean = true) = Unit
     fun pause() = Unit
     fun resume() = Unit
     fun stop(clearSounds: Boolean = true) = Unit
@@ -56,29 +56,32 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
     private var currentMusicAsset = MusicAsset.HOME
 
     override fun play(soundAsset: SoundAsset, volume: Float) {
+        if (!enabled) return
+
         when {
             soundAsset in soundRequests -> {
                 // same sound request is done in one frame multiple times
                 // play sound only once with the highest volume of both request
+                log.debug { "Duplicated sound request for sound $soundAsset" }
                 soundRequests[soundAsset]?.let { request ->
                     request.volume = max(request.volume, volume)
                 }
             }
 
             soundRequests.size >= MAX_SOUND_INSTANCES -> {
-                LOG.debug { "Maximum sound request reached" }
-                return
+                log.debug { "Maximum sound request reached" }
             }
 
             else -> {
                 if (soundAsset.descriptor !in assets) {
-                    LOG.error { "Trying to play a sound which is not loaded: $soundAsset" }
+                    log.error { "Trying to play a sound which is not loaded: $soundAsset" }
                     return
                 } else if (soundAsset !in soundCache) {
+                    log.debug { "Adding sound $soundAsset to sound cache" }
                     soundCache[soundAsset] = assets[soundAsset.descriptor]
                 }
 
-                // play the sound
+                // get request instance from pool and add it to the queue
                 soundRequests[soundAsset] = soundRequestPool.obtain().apply {
                     this.soundAsset = soundAsset
                     this.volume = volume
@@ -129,6 +132,7 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
 
     override fun update() {
         if (soundRequests.isNotEmpty()) {
+            log.debug { "Playing ${soundRequests.size} sound(s)" }
             soundRequests.values.forEach { request ->
                 soundCache[request.soundAsset]?.play(request.volume)
                 soundRequestPool.free(request)
