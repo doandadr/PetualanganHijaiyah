@@ -15,6 +15,9 @@ enum class Buttons(val style: String) {
     LEVEL7("level7"),
     LEVEL8("level8"),
     LEVEL9("level9"),
+    GIRL_SELECT("girl-select"),
+    BOY_SELECT("boy-select"),
+    VOICE("voice"),
 }
 
 enum class Labels(val style: String) {
@@ -28,6 +31,7 @@ enum class Labels(val style: String) {
     SIGN("sign"),
     PRIMARY_GREY_L("primary-sw"),
     PRIMARY_YELLOW_L("primary-yw"),
+    BOARD("board"),
 }
 
 enum class TextButtons(val style: String) {
@@ -37,6 +41,7 @@ enum class TextButtons(val style: String) {
     LEVEL2("level2"),
     SIGN("sign"),
     BOARD_S("board-s"),
+    CONFIRM("confirm"),
 }
 
 enum class TextTooltips(val style: String) {
@@ -57,7 +62,7 @@ enum class Fonts(val font: String) {
 }
 
 // Skin Atlas Drawables
-enum class Images(val image: String) {
+enum class Drawables(val drawable: String) {
     GIRL_2("girl-2"),
     BACK("back"),
     BOARD("board"),
@@ -108,10 +113,7 @@ enum class Images(val image: String) {
     TEXTBOX_W_DOWN("textbox-w-down"),
     TEXTBOX_Y_DOWN("textbox-y-down"),
     TEXTFIELD("textfield"),
-    WINDOW_TRANSN("window-trans"),
-    F01_ALIF("f01-alif"),
-    F13_SYIN("f13-syin"),
-    F17_DHO("f17-dho"),
+    WINDOW_TRANS("window-trans"),
 }
 
 enum class Colors(val color: String) {
@@ -120,5 +122,6 @@ enum class Colors(val color: String) {
     YELLOW("RGBA_255_187_0_255"),
     WHITE("RGBA_255_255_255_255"),
     GREEN("RGBA_88_129_87_255"),
+    // TODO add more colors to use for font tint
 }
 

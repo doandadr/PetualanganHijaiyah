@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 
 enum class SoundAsset(
     fileName: String,
+    val volume: Float = 1f,
     directory: String = "audio/sound",
-    val volumeScale: Float = 1f,
     val descriptor: AssetDescriptor<Sound> = AssetDescriptor("$directory/$fileName", Sound::class.java)
 ) {
     CLICK_BUTTON("button-click.ogg"),
@@ -20,8 +20,8 @@ enum class SoundAsset(
     INCORRECT("incorrect.ogg"),
     CLICK_MOUSE("mouse-click.ogg"),
     FAILURE("negative-beeps.ogg"),
-    POP_LOW("plop.ogg"),
-    POP_HIGH("pop.ogg"),
+    POP_LOW("plop.ogg", 0.5f),
+    POP_HIGH("pop.ogg", 0.5f),
     STRETCH("pull-stretch.ogg"),
     DRAW_HEAVY("draw.ogg"),
     DRAW_LIGHT("scribble.ogg"),
@@ -32,6 +32,19 @@ enum class SoundAsset(
     CHIME_HIGH("up-chime-4.ogg"),
     FANFARE_ORCHESTRA("fanfare-1.ogg"),
     FANFARE_TADA("fanfare-2.ogg"),
+    INCORRECT_BIG("incorrect-big.ogg"),
+    LEVEL_SELECT("level-select.ogg"),
+    MAX_HIGH("max-1.ogg"),
+    MAX_LOW("max-2.ogg"),
+    MIN_HIGH("min-1.ogg"),
+    MIN_LOW("min-2.ogg"),
+    PICK("pickup.ogg"),
+    QUESTION("question.ogg"),
+    TOUCH("touch.ogg"),
+    CANCEL("cancel.ogg"),
+    CONFIRM_1("confirm-1.ogg"),
+    CONFIRM_2("confirm-2.ogg"),
+    DROP("drop.ogg"),
     V01_ALIF("v01-alif.ogg"),
     V02_BA("v02-ba.ogg"),
     V03_TA("v03-ta.ogg"),
@@ -67,7 +80,7 @@ enum class SoundAsset(
 enum class MusicAsset(
     fileName: String,
     directory: String = "audio/music",
-    val volumeScale: Float = 0.15f,
+    val volume: Float = 0.5f,
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
     DESERT("desert.mp3"),
@@ -88,6 +101,7 @@ enum class TextureAsset(
     FIELD("bg-field.png"),
     FINISH("bg-finish.png"),
     HOME("bg-home.png"),
+    HOME_DIM("bg-home-dim.png"),
     STAGE("bg-stage.png"),
     START("bg-start.png"),
     MAP("bg-map.png"),
@@ -111,11 +125,44 @@ enum class TextureAtlasAsset(
 ) {
     DRAWABLE("drawable.atlas"),
     NINEPATCH("ninepatch.atlas"),
-    LETTER("hijaiyah.atlas"),
+    HIJAIYAH("hijaiyah.atlas"),
+}
+
+enum class HijaiyahRegion(
+    val region: String
+) {
+    F01_ALIF("f01-alif.png"),
+    F02_BA("f02-ba.png"),
+    F03_TA("f03-ta.png"),
+    F04_TSA("f04-tsa.png"),
+    F05_JIM("f05-jim.png"),
+    F06_KHA("f06-kha.png"),
+    F07_KHO("f07-kho.png"),
+    F08_DAL("f08-dal.png"),
+    F09_DZAL("f09-dzal.png"),
+    F10_RA("f10-ra.png"),
+    F11_ZA("f11-za.png"),
+    F12_SIN("f12-sin.png"),
+    F13_SYIN("f13-syin.png"),
+    F14_SHOD("f14-shod.png"),
+    F15_DHOD("f15-dhod.png"),
+    F16_THO("f16-tho.png"),
+    F17_DHO("f17-dho.png"),
+    F18_AIN("f18-ain.png"),
+    F19_GHOIN("f19-ghoin.png"),
+    F20_FA("f20-fa.png"),
+    F21_QOF("f21-qof.png"),
+    F22_KAF("f22-kaf.png"),
+    F23_LAM("f23-lam.png"),
+    F24_MIM("f24-mim.png"),
+    F25_NUN("f25-nun.png"),
+    F26_WAWU("f26-wawu.png"),
+    F27_HA("f27-ha.png"),
+    F28_YA("f28-ya.png"),
 }
 
 // TODO delete if unused. not updated
-enum class AtlasRegion(
+enum class DrawableRegion(
     val region: String,
 ) {
     BACK("back"),
