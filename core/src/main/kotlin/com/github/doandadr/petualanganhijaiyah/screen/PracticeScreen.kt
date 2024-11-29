@@ -3,10 +3,14 @@ package com.github.doandadr.petualanganhijaiyah.screen
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.Buttons
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_HEIGHT
+import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_WIDTH
 import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.practiceStage
 import ktx.actors.onChange
 import ktx.assets.disposeSafely
@@ -24,6 +28,7 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setupUI() {
+        val skin = Scene2DSkin.defaultSkin
         val bgPractice = assets[TextureAsset.STAGE.descriptor]
 
         audioService.play(MusicAsset.FIELD)
@@ -33,29 +38,34 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 background(TextureRegionDrawable(bgPractice))
                 setFillParent(true)
 
-                button(Buttons.BACK.style) {
+                imageButton(ImageButtons.BACK.style) {
                     onChange {
                         game.setScreen<HomeScreen>()
                     }
-                    it.align(Align.topLeft)
-                }
-                row()
-                container {
-                    label("Ayo Belajar!", Labels.PRIMARY_GREEN_L.style)
-                    isTransform = true
-                    setOrigin(Align.center)
-
-                    it.padBottom(0f)
-                    // TODO test
+                    it.expand().align(Align.topLeft).padTop(PADDING_INNER_SCREEN).padLeft(PADDING_INNER_SCREEN)
                 }
                 row()
 
-                practiceStage(assets, audioService)
+                label("Ayo Belajar!", Labels.TEXTBOX_WHITE_SQUARE_LARGE.style) {
+                    setAlignment(Align.center)
+                    setFontScale(SCALE_BTN_MEDIUM)
+                }
+                row()
+
+                practiceStage(assets, audioService) {
+                    it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT-200)
+                }
+                row()
+
+                imageButton(ImageButtons.QUESTION.style) {
+                    it.expand().align(Align.bottomRight).padBottom(PADDING_INNER_SCREEN).padRight(PADDING_INNER_SCREEN)
+                }
             }
         }
     }
 
     override fun render(delta: Float) {
+        super.render(delta)
         stage.run {
             viewport.apply()
             act()

@@ -26,6 +26,7 @@ class SplashScreen(val game: Main) : KtxScreen {
             },
             TextureAtlasAsset.entries.map { game.assets.loadAsync(it.descriptor) },
             SoundAsset.entries.map { game.assets.loadAsync(it.descriptor) }
+
         ).flatten()
 
         // once assets are loaded -> change to HomeScreen
@@ -42,6 +43,8 @@ class SplashScreen(val game: Main) : KtxScreen {
         // TODO Loading Screen UI
         // TODO wait 1 second
     }
+
+
 
     private fun assetsLoaded() {
         game.addScreen(HomeScreen(game))
