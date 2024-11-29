@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.audio.DefaultAudioService
-import com.github.doandadr.petualanganhijaiyah.data.PrefKeyString
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.screen.SplashScreen
 import com.ray3k.stripe.FreeTypeSkin
@@ -22,7 +21,7 @@ import ktx.log.logger
 import ktx.scene2d.Scene2DSkin
 
 const val SCREEN_W = 720
-const val SCREEN_H = 1412
+const val SCREEN_H = 1280
 private const val PREF_NAME = "petualangan-hijaiyah"
 
 private val LOG = logger<Main>()
