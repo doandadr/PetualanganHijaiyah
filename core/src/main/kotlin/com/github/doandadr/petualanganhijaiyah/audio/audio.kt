@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Pool
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
-import jdk.incubator.vector.VectorOperators.LOG
 import kotlinx.coroutines.launch
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
