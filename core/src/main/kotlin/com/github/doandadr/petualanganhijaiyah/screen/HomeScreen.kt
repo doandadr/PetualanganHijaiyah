@@ -10,14 +10,14 @@ import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.*
 import com.kotcrab.vis.ui.layout.FloatingGroup
+import ktx.actors.onChange
 import ktx.assets.disposeSafely
 import ktx.log.logger
 import ktx.scene2d.*
 import ktx.scene2d.vis.floatingGroup
-import ktx.actors.*
-
 
 private val log = logger<HomeScreen>()
 
@@ -95,7 +95,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                         center()
                         space(40f)
                         padBottom(250f)
-                        textButton("MULAI", "board") {
+                        textButton("MULAI", TextButtons.BOARD.style) {
                             isTransform = true
                             rotation = 10f
                             setOrigin(Align.bottom)
@@ -105,14 +105,16 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 game.setScreen<MapScreen>()
                             }
                         }
-                        textButton("PENGATURAN", "board-s") {
+                        textButton("PENGATURAN", TextButtons.BOARD.style) {
+                            this.label.setFontScale(SCALE_FONT_SMALL)
                             onChange {
                                 homeUI.isVisible = false
                                 homeLayout.background = TextureRegionDrawable(bgHomeDim)
                                 settingsPopup.isVisible = true
                             }
                         }
-                        textButton("KELUAR", "board-s") {
+                        textButton("KELUAR", TextButtons.BOARD.style) {
+                            this.label.setFontScale(SCALE_FONT_SMALL)
                             isTransform = true
                             setOrigin(Align.center)
                             setScale(SCALE_BTN_SMALL)
@@ -133,9 +135,9 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             isTransform = true
                             setOrigin(Align.center)
                             rotation = 10f
-                            label("Selamat\nDatang!", "primary-gw")
+                            label("Selamat\nDatang!", Labels.PRIMARY_GREEN_L.style)
                         }
-                        textButton("AZHARA", "sign") {
+                        textButton("AZHARA", TextButtons.SIGN.style) {
                             // TODO onclick open window change name
                         }
                     }
