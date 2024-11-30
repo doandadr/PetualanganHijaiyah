@@ -33,11 +33,11 @@ class PracticeStage(
 
     init {
         this@PracticeStage.prevButton = imageButton(ImageButtons.PREVIOUS.style) {
-            toFront()
             it.padRight(-50f)
         }
 
         container {
+            toBack()
             background = skin.getDrawable(Drawables.HIJAIYAH_FRAME_LARGE.drawable)
             prefSize(215f)
             this@PracticeStage.hijaiyahImage = image(this@PracticeStage.currentEntry.image) {
@@ -46,13 +46,11 @@ class PracticeStage(
         }
 
         this@PracticeStage.nextButton = imageButton(ImageButtons.NEXT.style) {
-            toFront()
             it.padLeft(-50f)
         }
         row()
 
         this@PracticeStage.voiceButton = imageButton(ImageButtons.VOICE.style) {
-            toFront()
             it.padTop(-50f).colspan(3)
         }
         row()
@@ -62,8 +60,6 @@ class PracticeStage(
             setFontScale(SCALE_BTN_MEDIUM)
             it.spaceTop(50f).colspan(3)
         }
-
-        pack()
 
         voiceButton.onChangeEvent {
             this@PracticeStage.apply {

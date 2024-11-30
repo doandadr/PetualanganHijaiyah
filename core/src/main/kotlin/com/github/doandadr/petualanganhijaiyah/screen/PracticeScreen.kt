@@ -53,7 +53,7 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 row()
 
                 practiceStage(assets, audioService) {
-                    it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT-200)
+                    it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT-200).spaceTop(100f)
                 }
                 row()
 
