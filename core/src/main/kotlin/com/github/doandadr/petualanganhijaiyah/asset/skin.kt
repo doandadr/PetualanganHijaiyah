@@ -17,6 +17,7 @@ enum class Buttons(val style: String) {
     MENU("menu"),
     X("x"),
     CHECK("check"),
+    HIJAIYAH("hijaiyah"),
 }
 
 enum class CheckBoxes(val style: String) {
@@ -42,6 +43,10 @@ enum class ImageButtons(val style: String) {
     SCORE("score"),
 }
 
+enum class ImageTextButtons(val style: String) {
+    LEVEL_FINISH_SCORE("level-finish-score"),
+}
+
 enum class Labels(val style: String) {
     PRIMARY("primary"),
     PRIMARY_BLACK_BORDER("primary-wb"),
@@ -56,8 +61,14 @@ enum class Labels(val style: String) {
     MAP("map"),
     SIGN_NAME("sign-name"),
     BANNER_ORANGE("banner-orange"),
-    TEXTBOX_ORANGE("textbox-orange"),
     TIMER_COUNTER("timer-counter"),
+    TEXTBOX_ORANGE_ROUNDED("textbox-orange-rounded"),
+    TEXTBOX_BLUE_ROUNDED("textbox-blue-rounded"),
+    TEXTBOX_WHITE_SQUARE_LARGE("textbox-white-square-large"),
+    TEXTBOX_ORANGE_SQUARE_LARGE("textbox-orange-square-large"),
+    TEXTBOX_GREEN_SQUARE_LARGE("textbox-green-square-large"),
+    TEXTBOX_WHITE_SQUARE_SMALL("textbox-white-square-small"),
+    DROP_FRAME("drop-frame"),
 }
 
 enum class TextButtons(val style: String) {
@@ -77,8 +88,8 @@ enum class TextTooltips(val style: String) {
 enum class Drawables(val drawable: String) {
     BISMILLAH("bismillah"),
     BOOK("book"),
-    BOX_WHITE_ROUNDED("box-orange-rounded"),
-    BOX_ORANGE_ROUNDED("box-rounded"),
+    BOX_WHITE_ROUNDED("box-rounded"),
+    BOX_ORANGE_ROUNDED("box-orange-rounded"),
     BOY("boy"),
     BOY_SELECT("boy-select"),
     CHECKERED_FLAG("checkered-flag"),
@@ -95,9 +106,11 @@ enum class Drawables(val drawable: String) {
     HIJAIYAH_FRAME_LARGE("hijaiyah-frame-large"),
     HIJAIYAH_FRAME_MEDIUM("hijaiyah-frame-medium"),
     HIJAIYAH_FRAME_SMALL("hijaiyah-frame-small"),
+    HIJAIYAH_FRAME_MEDIUM_MOLD("hijaiyah-frame-medium-mold"),
     ICON_AUDIO("icon-audio"),
     ICON_AUDIOOFF("icon-audiooff"),
     ICON_COIN("icon-coin"),
+    ICON_BOOK("icon-book"),
     ICON_DIAMOND("icon-diamond"),
     ICON_HEART_EMPTY("icon-heart-empty"),
     ICON_HEART_FULL("icon-heart-full"),
@@ -120,8 +133,6 @@ enum class Drawables(val drawable: String) {
     SIGN_SHARP("sign-sharp"),
     SPEECH_BUBBLE("speech-bubble"),
 }
-
-
 
 enum class Colors(val color: String) {
     BLACK("RGBA_0_0_0_255"),
