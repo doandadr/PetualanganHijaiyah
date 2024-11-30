@@ -3,27 +3,23 @@ package com.github.doandadr.petualanganhijaiyah.ui.widget
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import ktx.scene2d.KGroup
 import ktx.scene2d.KWidget
 import ktx.scene2d.Scene2DSkin
 import ktx.scene2d.actor
 
 
-enum class DotState {
-    INACCESSIBLE,
-    AVAILABLE,
-    PASSED
-}
-
 class LevelDots(
     val skin: Skin,
-    val dot1: Image = Image(skin.getDrawable("circle-grey-border")),
-    val dot2: Image = Image(skin.getDrawable("circle-grey-border")),
-    val dot3: Image = Image(skin.getDrawable("circle-grey-border")),
-    val dot4: Image = Image(skin.getDrawable("circle-grey-border"))
+    val dot1: Image = Image(skin.getDrawable(Drawables.CIRCLE_GREY.drawable)),
+    val dot2: Image = Image(skin.getDrawable(Drawables.CIRCLE_GREY.drawable)),
+    val dot3: Image = Image(skin.getDrawable(Drawables.CIRCLE_GREY.drawable)),
+    val dot4: Image = Image(skin.getDrawable(Drawables.CIRCLE_GREY.drawable))
 ) : WidgetGroup(dot1, dot2, dot3 ,dot4), KGroup {
     init {
         setInitPosition()
+        setScale(0.9f)
     }
 
     private fun setInitPosition() {
@@ -56,10 +52,17 @@ class LevelDots(
 
 
     fun setState(state: DotState) {
+        if (state == DotState.HIDDEN) {
+            isVisible = false
+            return
+        }
+        isVisible = true
+
         when (state) {
-            DotState.INACCESSIBLE -> setDrawables("circle-grey-border")
-            DotState.AVAILABLE -> setDrawables("circle-green-border")
-            DotState.PASSED -> setDrawables("circle-yellow-border")
+            DotState.INACCESSIBLE -> setDrawables(Drawables.CIRCLE_GREY.drawable)
+            DotState.AVAILABLE -> setDrawables(Drawables.CIRCLE_GREEN.drawable)
+            DotState.PASSED -> setDrawables(Drawables.CIRCLE_ORANGE.drawable)
+            else -> {}
         }
     }
 
@@ -68,6 +71,14 @@ class LevelDots(
         dot2.setDrawable(skin, drawable)
         dot3.setDrawable(skin, drawable)
     }
+
+    enum class DotState {
+        HIDDEN,
+        INACCESSIBLE,
+        AVAILABLE,
+        PASSED
+    }
+
     // TODO animate change state one by one
 }
 

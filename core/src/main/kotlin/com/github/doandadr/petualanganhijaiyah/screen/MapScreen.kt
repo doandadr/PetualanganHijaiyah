@@ -2,16 +2,14 @@ package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.show
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
-import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_BIG
-import com.github.doandadr.petualanganhijaiyah.ui.widget.*
+import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
+import com.github.doandadr.petualanganhijaiyah.ui.widget.Stars
+import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.assets.disposeSafely
@@ -24,7 +22,7 @@ private val log = logger<MapScreen>()
 class MapScreen(game: Main) : BaseScreen(game) {
     // TODO define variables (such as levels data[stars, score, done]) in here
     // TODO handle in event or data manager
-    lateinit var testButton: Level
+    lateinit var testButton: LevelButton
 
     override fun show() {
         log.debug { "Map Screen is shown" }
@@ -51,21 +49,20 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     floatingGroup {
                         setFillParent(true)
 
-                        testButton = levelButton("LEVEL 1", Buttons.LEVEL1.style) {
+                        levelButton("LEVEL 1", Buttons.LEVEL1.style) {
                             setPosition(-30f, -40f)
                             text.setPosition(570f, 380f)
                             rotateText(5f)
                             dots.setPosition(centerX(width) - 20f, 100f)
                             stars.setPosition(450f, 200f)
                             button.onChange {
-                                if (isChecked) {
-                                    //
+                                if (isPressed) {
                                     game.setScreen<LevelScreen>()
                                 }
                             }
                         }
 
-                        levelButton("LEVEL 2", Buttons.LEVEL2.style) {
+                        testButton = levelButton("LEVEL 2", Buttons.LEVEL2.style) {
                             setPosition(30f, 440f)
                             text.setPosition(200f, 150f)
                             rotateText(-5f)
@@ -139,11 +136,6 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             stars.setPosition(0f, -50f)
                             button.onChange { }
                         }
-
-                        label("MULAI" ,Labels.PRIMARY_GREEN_L.style) {
-                            setPosition(centerX(width)-20f, 50f)
-                            setFontScale(SCALE_FONT_BIG)
-                        }
                     }
                 }
                 validate()
@@ -160,6 +152,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
     }
 
     override fun render(delta: Float) {
+        super.render(delta)
         stage.run {
             viewport.apply()
             act()
@@ -174,21 +167,24 @@ class MapScreen(game: Main) : BaseScreen(game) {
             hide()
             show()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            testButton.setState(LevelState.INACCESSIBLE)
+            testButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            testButton.setState(LevelState.AVAILABLE)
+            testButton.setState(LevelButton.LevelButtonState.AVAILABLE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            testButton.setState(LevelState.PASSED)
+            testButton.setState(LevelButton.LevelButtonState.PASSED)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            testButton.stars.setState(StarState.HIDDEN)
+            testButton.stars.setState(Stars.StarState.HIDDEN)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            testButton.stars.setState(StarState.ZERO)
+            testButton.stars.setState(Stars.StarState.ZERO)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            testButton.stars.setState(StarState.ONE)
+            testButton.stars.setState(Stars.StarState.ONE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-            testButton.stars.setState(StarState.TWO)
+            testButton.stars.setState(Stars.StarState.TWO)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            testButton.stars.setState(StarState.THREE)
+            testButton.stars.setState(Stars.StarState.THREE)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
+            testButton.stars.setState(Stars.StarState.HIDDEN)
+            testButton.setState(LevelButton.LevelButtonState.HIDDEN)
         }
     }
 
