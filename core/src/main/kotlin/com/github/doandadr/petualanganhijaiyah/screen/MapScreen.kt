@@ -8,6 +8,7 @@ import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.data.getLevelModelDemo
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_MAP_STAR
 import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
@@ -62,6 +63,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             starWidget.setPosition(450f, 200f)
                             button.onChange {
                                 if (isPressed) {
+                                    game.removeScreen<LevelScreen>()
+                                    game.addScreen(LevelScreen(game, getLevelModelDemo()))
                                     game.setScreen<LevelScreen>()
                                 }
                             }
