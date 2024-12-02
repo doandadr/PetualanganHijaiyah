@@ -18,16 +18,19 @@ class NameChangePopup(
     init {
         isVisible = false
 
-        setFillParent(true)
-        label("UBAH NAMA", Labels.BOARD.style).setAlignment(Align.center)
-        row()
-        add().padBottom(50f).row()
-        nameField = textField("Ubah Nama"){
-            it.prefWidth(480f).prefHeight(80f)
+        label("Ubah Nama", Labels.BOARD.style) {
+            setAlignment(Align.center)
         }
         row()
-        add().padBottom(50f).row()
-        confirmButton = textButton("OK", TextButtons.CONFIRM.style)
+
+        this@NameChangePopup.nameField = textField {
+            alignment = Align.center
+            messageText = "Nama"
+            it.spaceTop(50.0f).spaceBottom(50.0f).prefWidth(480.0f)
+        }
+        row()
+
+        this@NameChangePopup.confirmButton = textButton("OK", TextButtons.GREEN_LARGE.style)
     }
 }
 
