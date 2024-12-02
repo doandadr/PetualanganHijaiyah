@@ -1,52 +1,54 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import ktx.scene2d.*
 
-class PlayerInfo(
+class PlayerInfoWidget(
     private val playerName: String,
-    private val maxHeart: Int,
+    maxHeart: Int,
     playerGender: String,
     skin: Skin = Scene2DSkin.defaultSkin,
 ): Table(skin), KTable {
+    private val nameSign: Label
+    private val portrait: Image
     private val heartView = mutableListOf<Image>()
 
     init {
-        // table
-            // label
-            // heart info -> HorizontalGroup with n number of hearts
-        // image of player, get from user gender
         table {
-            label(this@PlayerInfo.playerName, Labels.SIGN_NAME.style) {
+            this@PlayerInfoWidget.nameSign = label(this@PlayerInfoWidget.playerName, Labels.SIGN_NAME.style) {
                 setAlignment(Align.center)
-                setFontScale(5f/this@PlayerInfo.playerName.length)
+                setFontScale(5f/this@PlayerInfoWidget.playerName.length)
+                setScale(SCALE_BTN_SMALL)
 
-                it.padRight(-50f).growX()
+                it.padRight(-50f)
             }
 
             row()
             table {
-                for (i in  0 until this@PlayerInfo.maxHeart) {
-                    this@PlayerInfo.heartView += image(skin.getDrawable(Drawables.ICON_HEART_EMPTY.drawable)) {
+                for (i in  0 until maxHeart) {
+                    this@PlayerInfoWidget.heartView += image(skin.getDrawable(Drawables.ICON_HEART_EMPTY.drawable)) {
                         setOrigin(Align.center)
                         it.prefSize(40f)
                     }
                 }
+                it.padRight(10f)
             }
         }
-        image(skin.getDrawable(
-            if (playerGender == "male") Drawables.BOY_SELECT.drawable else Drawables.GIRL_SELECT.drawable
-        )) {
-            it.prefSize(150f)
+        this@PlayerInfoWidget.portrait = image {
+            it.prefSize(120f)
         }
 
-        setHeartCount(5)
+        setPlayerPortrait(playerGender)
+        setHeartCount(maxHeart)
     }
+
     fun setHeartCount(hearts: Int) {
         heartView.forEach {
             it.drawable = skin.getDrawable(Drawables.ICON_HEART_EMPTY.drawable)
@@ -54,18 +56,22 @@ class PlayerInfo(
         heartView.take(hearts).forEach { it.drawable = skin.getDrawable(Drawables.ICON_HEART_FULL.drawable) }
     }
 
-    fun setPlayerPortrait() {
-
+    private fun setPlayerPortrait(playerGender: String) {
+        if (playerGender == "male") {
+            portrait.drawable = skin.getDrawable(Drawables.BOY_SELECT.drawable)
+        } else {
+            portrait.drawable = skin.getDrawable(Drawables.GIRL_SELECT.drawable)
+        }
     }
 }
 
-inline fun <S> KWidget<S>.playerInfo(
+inline fun <S> KWidget<S>.playerInfoWidget(
     playerName: String,
     maxHeart: Int,
     playerGender: String,
-    init: PlayerInfo.(S) -> Unit = {}
+    init: PlayerInfoWidget.(S) -> Unit = {}
 ) = actor(
-    PlayerInfo(
+    PlayerInfoWidget(
         playerName,
         maxHeart,
         playerGender
