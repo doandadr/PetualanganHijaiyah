@@ -1,61 +1,88 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.popup
 
-import com.badlogic.gdx.scenes.scene2d.ui.Button
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.scenes.scene2d.ui.Slider
-import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
+import com.github.doandadr.petualanganhijaiyah.asset.CheckBoxes
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.TextButtons
-import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
-import com.github.doandadr.petualanganhijaiyah.util.centerX
-import ktx.actors.onChange
+import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
+import ktx.actors.onChangeEvent
+import ktx.actors.onTouchEvent
+import ktx.log.logger
 import ktx.scene2d.*
 
+private val log = logger<SettingsPopup>()
+
 class SettingsPopup(
+    val audioService: AudioService,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
+    val confirmButton: TextButton
     val volumeSlider: Slider
-    val confirmButton: Button
+    val volumeToggle: CheckBox
 
     init {
-        setFillParent(true)
-        container {
-            isTransform = true
-            setOrigin(Align.center)
-            setScale(SCALE_BTN_MEDIUM)
-            setPosition(centerX(prefWidth), 0f)
-            label("PENGATURAN", Labels.BOARD.style).setAlignment(Align.center)
+        debugAll()
+        label("PENGATURAN", Labels.BOARD.style) {
+            setAlignment(Align.center)
+            setFontScale(SCALE_FONT_SMALL)
         }
         row()
         table {
-            background = skin.getDrawable(Drawables.WINDOW_TRANS.drawable)
+            background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
             align(Align.top)
-            image(skin.getDrawable(Drawables.ICON_AUDIO.drawable))
-            this@SettingsPopup.volumeSlider = slider(
-                0f, 100f, 1f
-            ) {
-                it.prefWidth(300f).spaceLeft(10f).row()
-                onChange {
-                }
-            }
-            add().expand().row()
-            this@SettingsPopup.confirmButton = textButton("OK", TextButtons.CONFIRM.style) {
-                it.colspan(2).align(Align.bottom)
 
+            this@SettingsPopup.volumeToggle = checkBox("", CheckBoxes.AUDIO.style) {
+                it.padTop(50f).prefSize(100f)
             }
-            it.spaceTop(20f).padTop(50f).prefWidth(500f).prefHeight(600f)
+            this@SettingsPopup.volumeSlider = slider {
+
+                it.padTop(50.0f).prefWidth(300.0f)
+            }
+
+            row()
+            add().expandY().colspan(1)
+            row()
+
+            this@SettingsPopup.confirmButton = textButton("OK", TextButtons.GREEN_LARGE.style) {
+                it.padBottom(30f).colspan(2)
+            }
+
+            it.spaceTop(20f).spaceTop(40f).prefWidth(500f).prefHeight(600f)
+        }
+        volumeToggle.onChangeEvent {
+            audioService.enabled = isChecked
+        }
+        volumeSlider.onChangeEvent {
+            // TODO change volume with $value
+        }
+        volumeSlider.onTouchEvent(
+            onDown = { _ ->
+            },
+            onUp = {
+                // TODO set volume value preferences
+            },
+        )
+        onChangeEvent {
+            // TODO confirm go back to home screen
         }
         isVisible = false
     }
 }
 
+fun doNothing() {
+
+}
+
 inline fun <S> KWidget<S>.settingsPopup(
+    audioService: AudioService,
     skin: Skin = Scene2DSkin.defaultSkin,
     init: SettingsPopup.(S) -> Unit = {}
 ) = actor(
     SettingsPopup(
+        audioService,
         skin,
     ), init
 )
