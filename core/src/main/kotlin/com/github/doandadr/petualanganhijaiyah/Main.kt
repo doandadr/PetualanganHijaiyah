@@ -48,9 +48,6 @@ class Main : KtxGame<KtxScreen>() {
     val preferences: Preferences by lazy { Gdx.app.getPreferences(PREF_NAME) }
     val gameEventManager by lazy { GameEventManager() }
 
-    // TODO gameEventManager
-    // TODO preferences
-
     override fun create() {
         KtxAsync.initiate()
         Gdx.app.logLevel = LOG_DEBUG

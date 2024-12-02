@@ -73,4 +73,7 @@ class GameEventManager : KtxInputAdapter {
     fun dispatchShowTutorialEvent(tutorialKey: String) =
         gameEventListeners.forEach { it.showTutorial(tutorialKey) }
 
+    fun dispatchLevelFailEvent(elapsedSeconds: Float) =
+        gameEventListeners.forEach { it.levelFailed(elapsedSeconds) }
+
 }
