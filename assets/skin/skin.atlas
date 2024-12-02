@@ -6,35 +6,35 @@ filter: Linear, Linear
 repeat: none
 girl-2
   rotate: false
-  xy: 1876, 855
+  xy: 1826, 578
   size: 96, 138
   orig: 96, 138
   offset: 0, 0
   index: -1
 star-outline-grey
   rotate: false
-  xy: 1784, 1415
+  xy: 1505, 761
   size: 116, 113
   orig: 116, 113
   offset: 0, 0
   index: -1
 f01-alif
   rotate: false
-  xy: 1579, 571
+  xy: 1990, 788
   size: 41, 215
   orig: 41, 215
   offset: 0, 0
   index: -1
 l09-cactus-stone
   rotate: false
-  xy: 1165, 999
+  xy: 722, 177
   size: 240, 198
   orig: 240, 198
   offset: 0, 0
   index: -1
 banner-orange
   rotate: false
-  xy: 1679, 1876
+  xy: 879, 1060
   size: 285, 115
   orig: 285, 115
   offset: 0, 0
@@ -48,21 +48,21 @@ bismillah
   index: -1
 board
   rotate: false
-  xy: 722, 266
+  xy: 1029, 518
   size: 275, 104
   orig: 275, 104
   offset: 0, 0
   index: -1
 book
   rotate: false
-  xy: 1091, 101
+  xy: 620, 5
   size: 105, 77
   orig: 105, 77
   offset: 0, 0
   index: -1
 boy
   rotate: false
-  xy: 1298, 317
+  xy: 1623, 1346
   size: 224, 447
   orig: 224, 447
   offset: 0, 0
@@ -76,28 +76,28 @@ boy-select
   index: -1
 checkered-flag
   rotate: false
-  xy: 1586, 1437
+  xy: 1307, 604
   size: 196, 356
   orig: 196, 356
   offset: 0, 0
   index: -1
 circle-green
   rotate: false
-  xy: 1524, 441
+  xy: 1946, 851
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 circle-grey
   rotate: false
-  xy: 1564, 1393
+  xy: 1946, 807
   size: 41, 42
   orig: 41, 42
   offset: 0, 0
   index: -1
 circle-orange
   rotate: false
-  xy: 1149, 57
+  xy: 1946, 895
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
@@ -111,7 +111,7 @@ confetti
   index: -1
 girl
   rotate: false
-  xy: 1025, 180
+  xy: 1096, 1195
   size: 271, 457
   orig: 271, 457
   offset: 0, 0
@@ -125,7 +125,7 @@ girl-select
   index: -1
 hand-pointing
   rotate: false
-  xy: 1774, 793
+  xy: 727, 5
   size: 99, 96
   orig: 99, 96
   offset: 0, 0
@@ -139,294 +139,294 @@ hijaiyah-frame-large
   index: -1
 hijaiyah-frame-medium
   rotate: false
-  xy: 1402, 830
+  xy: 1849, 1411
   size: 164, 164
   orig: 164, 164
   offset: 0, 0
   index: -1
 hijaiyah-frame-medium-mold
   rotate: false
-  xy: 1607, 1274
+  xy: 1857, 1248
   size: 161, 161
   orig: 161, 161
   offset: 0, 0
   index: -1
 hijaiyah-frame-small
   rotate: false
-  xy: 1784, 1530
+  xy: 1505, 876
   size: 123, 123
   orig: 123, 123
   offset: 0, 0
   index: -1
 icon-audio
   rotate: false
-  xy: 1524, 550
+  xy: 1272, 284
   size: 50, 58
   orig: 50, 58
   offset: 0, 0
   index: -1
 icon-audiooff
   rotate: false
-  xy: 506, 19
+  xy: 1288, 1661
   size: 63, 63
   orig: 63, 63
   offset: 0, 0
   index: -1
 icon-book
   rotate: false
-  xy: 1288, 1660
+  xy: 1986, 1005
   size: 59, 70
   orig: 59, 70
   offset: 0, 0
   index: -1
 icon-check
   rotate: false
-  xy: 1350, 1337
+  xy: 1272, 344
   size: 55, 54
   orig: 55, 54
   offset: 0, 0
   index: -1
 icon-coin
   rotate: false
-  xy: 1288, 1732
+  xy: 1986, 1077
   size: 60, 61
   orig: 60, 61
   offset: 0, 0
   index: -1
 icon-diamond
   rotate: false
-  xy: 1905, 1817
+  xy: 683, 757
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 icon-heartempty
   rotate: false
-  xy: 1161, 642
+  xy: 828, 44
   size: 65, 57
   orig: 65, 57
   offset: 0, 0
   index: -1
 icon-heartfull
   rotate: false
-  xy: 1228, 642
+  xy: 999, 62
   size: 64, 57
   orig: 64, 57
   offset: 0, 0
   index: -1
 icon-hearthalf
   rotate: false
-  xy: 439, 25
+  xy: 1206, 135
   size: 65, 57
   orig: 65, 57
   offset: 0, 0
   index: -1
 icon-help
   rotate: false
-  xy: 1524, 383
+  xy: 1273, 161
   size: 39, 56
   orig: 39, 56
   offset: 0, 0
   index: -1
 icon-home
   rotate: false
-  xy: 1920, 1756
+  xy: 960, 1
   size: 57, 59
   orig: 57, 59
   offset: 0, 0
   index: -1
 icon-info
   rotate: false
-  xy: 1944, 794
+  xy: 2015, 1516
   size: 25, 59
   orig: 25, 59
   offset: 0, 0
   index: -1
 icon-left
   rotate: false
-  xy: 571, 24
+  xy: 895, 14
   size: 63, 58
   orig: 63, 58
   offset: 0, 0
   index: -1
 icon-lock
   rotate: false
-  xy: 1524, 485
+  xy: 1271, 219
   size: 49, 63
   orig: 49, 63
   offset: 0, 0
   index: -1
 icon-lookingglass
   rotate: false
-  xy: 1966, 1921
+  xy: 1969, 1921
   size: 69, 70
   orig: 69, 70
   offset: 0, 0
   index: -1
 icon-menu
   rotate: false
-  xy: 807, 766
+  xy: 1883, 726
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 icon-repeat
   rotate: false
-  xy: 1508, 135
+  xy: 1829, 718
   size: 52, 56
   orig: 52, 56
   offset: 0, 0
   index: -1
 icon-right
   rotate: false
-  xy: 636, 24
+  xy: 1895, 518
   size: 63, 58
   orig: 63, 58
   offset: 0, 0
   index: -1
 icon-star-large
   rotate: false
-  xy: 976, 69
+  xy: 1505, 539
   size: 113, 109
   orig: 113, 109
   offset: 0, 0
   index: -1
 icon-star-medium
   rotate: false
-  xy: 1198, 96
+  xy: 1132, 1663
   size: 85, 82
   orig: 85, 82
   offset: 0, 0
   index: -1
 icon-star-small
   rotate: false
-  xy: 370, 17
+  xy: 1137, 127
   size: 67, 65
   orig: 67, 65
   offset: 0, 0
   index: -1
 icon-stargrey-large
   rotate: false
-  xy: 1770, 1304
+  xy: 1505, 650
   size: 113, 109
   orig: 113, 109
   offset: 0, 0
   index: -1
 icon-stargrey-medium
   rotate: false
-  xy: 1132, 1663
+  xy: 964, 190
   size: 85, 82
   orig: 85, 82
   offset: 0, 0
   index: -1
 icon-stargrey-small
   rotate: false
-  xy: 1974, 859
+  xy: 1068, 127
   size: 67, 65
   orig: 67, 65
   offset: 0, 0
   index: -1
 icon-x
   rotate: false
-  xy: 1091, 43
+  xy: 1019, 4
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 iconbutton-background-circle
   rotate: false
-  xy: 1671, 891
+  xy: 1620, 512
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-background-rounded
   rotate: false
-  xy: 1770, 1201
+  xy: 1630, 821
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-blue-circle
   rotate: false
-  xy: 1873, 1201
+  xy: 1170, 297
   size: 100, 101
   orig: 100, 101
   offset: 0, 0
   index: -1
 iconbutton-blue-rounded
   rotate: false
-  xy: 1769, 1098
+  xy: 1733, 821
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-circle
   rotate: false
-  xy: 1671, 788
+  xy: 1723, 512
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-green-circle
   rotate: false
-  xy: 1916, 995
+  xy: 1067, 194
   size: 100, 101
   orig: 100, 101
   offset: 0, 0
   index: -1
 iconbutton-green-rounded
   rotate: false
-  xy: 1607, 994
+  xy: 1623, 718
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-grey-rounded
   rotate: false
-  xy: 1568, 891
+  xy: 1726, 718
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-orange-circle
   rotate: false
-  xy: 1813, 995
+  xy: 964, 274
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-orange-rounded
   rotate: false
-  xy: 1568, 788
+  xy: 1620, 615
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-red-circle
   rotate: false
-  xy: 1872, 1098
+  xy: 1067, 297
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-red-rounded
   rotate: false
-  xy: 1710, 994
+  xy: 1723, 615
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
   index: -1
 iconbutton-white-circle
   rotate: false
-  xy: 1774, 891
+  xy: 1169, 194
   size: 100, 101
   orig: 100, 101
   offset: 0, 0
   index: -1
 iconbutton-white-rounded
   rotate: false
-  xy: 747, 658
+  xy: 896, 74
   size: 101, 101
   orig: 101, 101
   offset: 0, 0
@@ -440,14 +440,14 @@ l01-rock-boulder
   index: -1
 l02-stones-plant
   rotate: false
-  xy: 1407, 1070
+  xy: 1849, 1577
   size: 198, 321
   orig: 198, 321
   offset: 0, 0
   index: -1
 l03-cat-bigrock
   rotate: false
-  xy: 1350, 1598
+  xy: 1407, 1001
   size: 234, 195
   orig: 234, 195
   offset: 0, 0
@@ -468,14 +468,14 @@ l05-pond
   index: -1
 l06-bigstone
   rotate: false
-  xy: 879, 1011
+  xy: 879, 891
   size: 284, 167
   orig: 284, 167
   offset: 0, 0
   index: -1
 l07-rock-plants
   rotate: false
-  xy: 879, 639
+  xy: 747, 444
   size: 280, 370
   orig: 280, 370
   offset: 0, 0
@@ -489,14 +489,14 @@ l08-cliff
   index: -1
 l09-cactus-stone
   rotate: false
-  xy: 722, 58
+  xy: 1369, 1587
   size: 252, 206
   orig: 252, 206
   offset: 0, 0
   index: -1
 label-level-score
   rotate: false
-  xy: 1656, 1809
+  xy: 747, 377
   size: 247, 65
   orig: 247, 65
   offset: 0, 0
@@ -524,14 +524,14 @@ premade-button-check
   index: -1
 premade-button-menu
   rotate: false
-  xy: 1966, 1852
+  xy: 1288, 1726
   size: 67, 67
   orig: 67, 67
   offset: 0, 0
   index: -1
 premade-button-xred
   rotate: false
-  xy: 1974, 926
+  xy: 999, 121
   size: 67, 67
   orig: 67, 67
   offset: 0, 0
@@ -545,21 +545,21 @@ salute
   index: -1
 sign
   rotate: false
-  xy: 1350, 1393
+  xy: 1643, 1141
   size: 212, 203
   orig: 212, 203
   offset: 0, 0
   index: -1
 sign-sharp
   rotate: false
-  xy: 1407, 996
+  xy: 722, 103
   size: 172, 72
   orig: 172, 72
   offset: 0, 0
   index: -1
 small-firework
   rotate: false
-  xy: 1096, 1356
+  xy: 1369, 1289
   size: 252, 296
   orig: 252, 296
   offset: 0, 0
@@ -573,7 +573,7 @@ speech-bubble
   index: -1
 textbox-blue-rounded
   rotate: false
-  xy: 1093, 1199
+  xy: 370, 18
   size: 248, 64
   orig: 248, 64
   offset: 0, 0
@@ -592,16 +592,23 @@ textbox-large-orange-square
   orig: 291, 94
   offset: 0, 0
   index: -1
+textbox-large-red-square
+  rotate: false
+  xy: 803, 1269
+  size: 291, 94
+  orig: 291, 94
+  offset: 0, 0
+  index: -1
 textbox-large-white-square
   rotate: false
-  xy: 803, 1180
+  xy: 1679, 1900
   size: 288, 91
   orig: 288, 91
   offset: 0, 0
   index: -1
 textbox-small-white-square
   rotate: false
-  xy: 1402, 773
+  xy: 1853, 994
   size: 131, 55
   orig: 131, 55
   offset: 0, 0
@@ -615,21 +622,21 @@ textbutton-green-large-round
   index: -1
 textbutton-green-small-round
   rotate: false
-  xy: 1161, 701
+  xy: 879, 826
   size: 135, 63
   orig: 135, 63
   offset: 0, 0
   index: -1
 textbutton-orange-large-round
   rotate: false
-  xy: 803, 1273
+  xy: 803, 1177
   size: 290, 90
   orig: 290, 90
   offset: 0, 0
   index: -1
 textbutton-orange-small-round
   rotate: false
-  xy: 1784, 1744
+  xy: 1165, 897
   size: 134, 63
   orig: 134, 63
   offset: 0, 0
@@ -643,14 +650,14 @@ timer-background-empty
   index: -1
 timer-counter-dots
   rotate: false
-  xy: 999, 323
+  xy: 1468, 555
   size: 21, 47
   orig: 21, 47
   offset: 0, 0
   index: -1
 timer-counter-frame
   rotate: false
-  xy: 1875, 786
+  xy: 1826, 509
   size: 67, 67
   orig: 67, 67
   offset: 0, 0
@@ -669,6 +676,13 @@ timer-frame-white
   orig: 367, 54
   offset: 0, 0
   index: -1
+star-finish
+  rotate: false
+  xy: 1029, 400
+  size: 262, 116
+  orig: 262, 116
+  offset: 0, 0
+  index: -1
 timer
   rotate: false
   xy: 1, 33
@@ -678,21 +692,21 @@ timer
   index: -1
 timer counter
   rotate: false
-  xy: 1607, 1097
+  xy: 1306, 535
   size: 160, 67
   orig: 160, 67
   offset: 0, 0
   index: -1
 wood-scroll
   rotate: false
-  xy: 1095, 1265
+  xy: 1369, 1198
   size: 248, 89
   orig: 248, 89
   offset: 0, 0
   index: -1
 box-orange-rounded
   rotate: false
-  xy: 1161, 766
+  xy: 1166, 962
   size: 239, 231
   split: 70, 70, 70, 70
   pad: 16, 17, 18, 15
@@ -701,7 +715,7 @@ box-orange-rounded
   index: -1
 box-rounded
   rotate: false
-  xy: 747, 372
+  xy: 1029, 624
   size: 276, 265
   split: 90, 90, 90, 90
   pad: 16, 16, 16, 16
@@ -719,7 +733,7 @@ slider-orange
   index: -1
 slider-orange-before
   rotate: false
-  xy: 683, 761
+  xy: 1853, 939
   size: 122, 53
   split: 30, 0, 0, 0
   pad: 0, 0, 0, 0
@@ -728,7 +742,7 @@ slider-orange-before
   index: -1
 slider-orange-before-vert
   rotate: false
-  xy: 1508, 193
+  xy: 1836, 800
   size: 53, 122
   split: 0, 0, 0, 30
   pad: 0, 0, 0, 0
@@ -737,7 +751,7 @@ slider-orange-before-vert
   index: -1
 slider-orange-vert
   rotate: false
-  xy: 1524, 610
+  xy: 1891, 776
   size: 53, 161
   split: 0, 0, 40, 40
   pad: 0, 0, 0, 0
@@ -746,7 +760,7 @@ slider-orange-vert
   index: -1
 textbox-left-up
   rotate: false
-  xy: 1607, 1166
+  xy: 1857, 1140
   size: 160, 106
   split: 100, 40, 0, 0
   pad: 5, 5, 36, 5
@@ -755,7 +769,7 @@ textbox-left-up
   index: -1
 textfield-white
   rotate: false
-  xy: 1784, 1655
+  xy: 1853, 1051
   size: 131, 87
   split: 50, 50, 0, 0
   pad: 0, 0, 0, 0
@@ -764,7 +778,7 @@ textfield-white
   index: -1
 timer-background-green
   rotate: false
-  xy: 701, 52
+  xy: 345, 1
   size: 19, 30
   split: 0, 18, 0, 0
   pad: 0, 0, 0, 0
@@ -773,7 +787,7 @@ timer-background-green
   index: -1
 f13-syin
   rotate: false
-  xy: 1298, 100
+  xy: 1643, 924
   size: 208, 215
   orig: 208, 215
   offset: 0, 0

@@ -18,6 +18,8 @@ enum class Buttons(val style: String) {
     X("x"),
     CHECK("check"),
     HIJAIYAH("hijaiyah"),
+    HIJAIYAH_DROP("hijaiyah-drop"),
+    HIJAIYAH_STATE("hijaiyah-state"),
 }
 
 enum class CheckBoxes(val style: String) {
@@ -45,16 +47,17 @@ enum class ImageButtons(val style: String) {
 
 enum class ImageTextButtons(val style: String) {
     LEVEL_FINISH_SCORE("level-finish-score"),
+    SKIP("skip"),
 }
 
 enum class Labels(val style: String) {
     PRIMARY("primary"),
-    PRIMARY_BLACK_BORDER("primary-wb"),
+    PRIMARY_BORDER("primary-wb"),
     PRIMARY_GREEN_WHITE_BORDER("primary-gw"),
     PRIMARY_GREY_WHITE_BORDER("primary-sw"),
     PRIMARY_ORANGE_WHITE_BORDER("primary-ow"),
     SECONDARY("secondary"),
-    SECONDARY_BLACK_BORDER("secondary-wb"),
+    SECONDARY_BORDER("secondary-wb"),
     SECONDARY_GREEN_WHITE_BORDER("secondary-gw"),
     ARABIC("arabic"),
     BOARD("board"),
@@ -78,6 +81,8 @@ enum class TextButtons(val style: String) {
     GREEN_SMALL("green-small"),
     ORANGE_LARGE("orange-large"),
     ORANGE_SMALL("orange-small"),
+    JOIN("join"),
+    JOIN_STATE("join-state")
 }
 
 enum class TextTooltips(val style: String) {
@@ -112,9 +117,9 @@ enum class Drawables(val drawable: String) {
     ICON_COIN("icon-coin"),
     ICON_BOOK("icon-book"),
     ICON_DIAMOND("icon-diamond"),
-    ICON_HEART_EMPTY("icon-heart-empty"),
-    ICON_HEART_FULL("icon-heart-full"),
-    ICON_HEART_HALF("icon-heart-half"),
+    ICON_HEART_EMPTY("icon-heartempty"),
+    ICON_HEART_FULL("icon-heartfull"),
+    ICON_HEART_HALF("icon-hearthalf"),
     ICON_LOCK("icon-lock"),
     ICON_LOOKING_GLASS("icon-looking-glass"),
     ICON_STAR_LARGE("icon-star-large"),
@@ -123,6 +128,8 @@ enum class Drawables(val drawable: String) {
     ICON_STARGREY_LARGE("icon-stargrey-large"),
     ICON_STARGREY_MEDIUM("icon-stargrey-medium"),
     ICON_STARGREY_SMALL("icon-stargrey-small"),
+    ICONBUTTON_BACKGROUND_ROUNDED("iconbutton-background-rounded"),
+    LEVEL_FINISH_STARBOX("level-finish-starbox"),
     TIMER_BACKGROUND_EMPTY("timer-background-empty"),
     TIMER_BACKGROUND_GREEN("timer-background-green"),
     TIMER_COUNTER_DOTS("timer-counter-dots"),

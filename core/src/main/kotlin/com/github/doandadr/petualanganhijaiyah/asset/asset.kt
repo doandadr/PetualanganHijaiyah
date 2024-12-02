@@ -79,14 +79,14 @@ enum class SoundAsset(
 
 enum class MusicAsset(
     fileName: String,
-    directory: String = "audio/music",
     val volume: Float = 0.5f,
+    directory: String = "audio/music",
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
     DESERT("desert.mp3"),
     DESERT_ALT("desert-2.mp3"),
     FIELD("forest.mp3"),
-    HOME("home.mp3"),
+    HOME("home.mp3", 0.5f),
     MAP("map.mp3"),
     SNOW("snow.mp3"),
     VICTORY("victory.mp3"),
@@ -101,7 +101,7 @@ enum class TextureAsset(
     FIELD("bg-field.png"),
     FINISH("bg-finish.png"),
     HOME("bg-home.png"),
-    HOME_DIM("bg-home-dim.png"),
+    DIM("bg-dim.png"),
     STAGE("bg-stage.png"),
     START("bg-start.png"),
     MAP("bg-map.png"),
@@ -115,7 +115,6 @@ enum class TextureAsset(
     SNOW_2("bg-snow2.jpg"),
     MOUNTAIN_1("bg-mountain1.jpg"),
     MOUNTAIN_2("bg-mountain2.jpg"),
-    WOODEN_FRAME("bg-wooden-frame.png")
 }
 
 enum class TextureAtlasAsset(
