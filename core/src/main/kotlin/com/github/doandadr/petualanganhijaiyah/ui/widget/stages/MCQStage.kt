@@ -44,7 +44,7 @@ class MCQStage(
         }
 
         row()
-        this@MCQStage.answerLabel = label(correctAnswer.name.uppercase(), Labels.TEXTBOX_WHITE_SQUARE_LARGE.style) {
+        this@MCQStage.answerLabel = label("", Labels.TEXTBOX_WHITE_SQUARE_LARGE.style) {
             setAlignment(Align.center)
             setFontScale(SCALE_FONT_MEDIUM)
             it.spaceTop(20f)

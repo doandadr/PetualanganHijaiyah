@@ -17,17 +17,17 @@ import ktx.scene2d.*
 
 // TODO fix layout
 class PracticeStage(
-    assets: AssetStorage,
-    val audioService: AudioService,
+    private val assets: AssetStorage,
+    private val audioService: AudioService,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
     private val hijaiyahEntries = Hijaiyah.entries
-    var currentEntry: Hijaiyah = Hijaiyah.ALIF
-    val prevButton: ImageButton
-    val nextButton: ImageButton
-    val voiceButton: ImageButton
-    val hijaiyahImage: Image
-    val hijaiyahText: Label
+    private var currentEntry: Hijaiyah = Hijaiyah.ALIF
+    private val prevButton: ImageButton
+    private val nextButton: ImageButton
+    private val voiceButton: ImageButton
+    private val hijaiyahImage: Image
+    private val hijaiyahText: Label
 
     private val textAtlas = assets[TextureAtlasAsset.HIJAIYAH.descriptor]
 
@@ -77,7 +77,6 @@ class PracticeStage(
                 updateEntry(hijaiyahEntries[hijaiyahEntries.indexOf(currentEntry) + 1])
             }
         }
-
 
         updateEntry(currentEntry)
     }

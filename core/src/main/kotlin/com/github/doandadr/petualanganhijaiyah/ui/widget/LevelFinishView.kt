@@ -17,6 +17,7 @@ class LevelFinishView(
     // star, score, time, levelName
     skin: Skin = Scene2DSkin.defaultSkin
 ): Table(skin), KTable {
+    // When level is finished through an event, we get the stage, add levelfinish view to it, construct and animate all of the elements, we do not keep track of it, if we move on to a different screen,
 
     private val nextButton: ImageButton
     private val repeatButton: ImageButton
@@ -24,6 +25,9 @@ class LevelFinishView(
     private val scoreView: ImageTextButton
     private val stars: StarWidget
     private val starStack: Stack
+
+    private var currentScore: Float = 0f
+    private var currentStars: Int = 0
 
     private val starState: StarWidget.StarState = StarWidget.StarState.THREE // TODO get from levelData
     private val scoreValue: Float = 1000f // TODO get from levelData
@@ -45,13 +49,8 @@ class LevelFinishView(
                     setScaling(Scaling.none)
                 }
                 this@LevelFinishView.stars = starWidget {
-                    setFillParent(true)
-//                    val whatit = it
-//                    val whatthis = this
-                    // TODO position widgetGroup star in the middle of Stack
-//                    setPosition(parent.width/2f -this.width/2, parent.height/2f -this.height/2, Align.center)
+                    setFillParent(true) // TODO check if stars is centered
                 }
-//                image("star-finish")
                 it.expandY().align(Align.center)
             }
 
@@ -73,6 +72,11 @@ class LevelFinishView(
         }
 
         setupHandlers()
+    }
+
+    fun update(score: Float, stars: Int) {
+        // score and stars, and maybe highscore
+
     }
 
     private fun setupHandlers() {

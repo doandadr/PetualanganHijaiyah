@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup
@@ -11,7 +12,7 @@ import ktx.scene2d.Scene2DSkin
 import ktx.scene2d.actor
 
 
-class Stars(
+class StarWidget(
     val skin: Skin,
     val star1: Image = Image(skin.getDrawable(Drawables.ICON_STARGREY_MEDIUM.drawable)),
     val star2: Image = Image(skin.getDrawable(Drawables.ICON_STARGREY_LARGE.drawable)),
@@ -22,7 +23,7 @@ class Stars(
         setInitPosition()
         setState(StarState.ZERO)
         setOrigin(Align.center)
-        setScale(0.8f)
+        touchable = Touchable.disabled
     }
 
     private fun setInitPosition() {
@@ -75,11 +76,11 @@ class Stars(
 }
 
 
-inline fun <S> KWidget<S>.stars(
+inline fun <S> KWidget<S>.starWidget(
     skin: Skin = Scene2DSkin.defaultSkin,
-    init: Stars.(S) -> Unit = {}
+    init: StarWidget.(S) -> Unit = {}
 ) = actor(
-    Stars(
+    StarWidget(
         skin,
     ), init
 )

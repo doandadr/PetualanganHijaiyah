@@ -49,7 +49,7 @@ class SplashScreen(val game: Main) : KtxScreen {
     private fun assetsLoaded() {
         game.addScreen(HomeScreen(game))
         game.addScreen(MapScreen(game))
-        game.addScreen(LevelScreen(game))
+//        game.addScreen(LevelScreen(game)) TODO test levelScreen transition
         game.addScreen(PracticeScreen(game))
         game.setScreen<HomeScreen>()
         game.removeScreen<SplashScreen>()
