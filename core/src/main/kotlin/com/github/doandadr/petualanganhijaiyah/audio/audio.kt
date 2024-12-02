@@ -2,6 +2,7 @@ package com.github.doandadr.petualanganhijaiyah.audio
 
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Pool
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
@@ -17,6 +18,8 @@ private const val MAX_SOUND_INSTANCES = 8
 
 interface AudioService {
     var enabled: Boolean
+    var soundVolume: Float
+    var musicVolume: Float
     fun play(soundAsset: SoundAsset, volume: Float = soundAsset.volume) = Unit
     fun play(musicAsset: MusicAsset, volume: Float = musicAsset.volume, loop: Boolean = true) = Unit
     fun pause() = Unit
@@ -40,6 +43,11 @@ private class SoundRequestPool :
 }
 
 class DefaultAudioService(private val assets: AssetStorage) : AudioService {
+    private val soundCache = EnumMap<SoundAsset, Sound>(SoundAsset::class.java)
+    private val soundRequestPool = SoundRequestPool()
+    private val soundRequests = EnumMap<SoundAsset, SoundRequest>(SoundAsset::class.java)
+    private var currentMusic: Music? = null
+    private var currentMusicAsset = MusicAsset.HOME
     override var enabled = true
         set(value) {
             when (value) {
@@ -48,11 +56,15 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
             }
             field = value
         }
-    private val soundCache = EnumMap<SoundAsset, Sound>(SoundAsset::class.java)
-    private val soundRequestPool = SoundRequestPool()
-    private val soundRequests = EnumMap<SoundAsset, SoundRequest>(SoundAsset::class.java)
-    private var currentMusic: Music? = null
-    private var currentMusicAsset = MusicAsset.HOME
+    override var soundVolume = 1f
+        set(value) {
+            field = MathUtils.clamp(value, 0f, 1f)
+        }
+    override var musicVolume = 1f
+        set(value) {
+            field = MathUtils.clamp(value, 0f, 1f)
+            currentMusic?.volume = field * currentMusicAsset.volume
+        }
 
     override fun play(soundAsset: SoundAsset, volume: Float) {
         if (!enabled) return
@@ -104,7 +116,7 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
                 currentMusicAsset = musicAsset
                 if (!enabled) return@launch
                 currentMusic = assets[musicAsset.descriptor].apply {
-                    this.volume = volume
+                    this.volume = musicVolume * volume
                     this.isLooping = loop
                     play()
                 }
@@ -133,7 +145,7 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
         if (soundRequests.isNotEmpty()) {
             log.debug { "Playing ${soundRequests.size} sound(s)" }
             soundRequests.values.forEach { request ->
-                soundCache[request.soundAsset]?.play(request.volume)
+                soundCache[request.soundAsset]?.play(soundVolume * request.volume)
                 soundRequestPool.free(request)
             }
             soundRequests.clear()
