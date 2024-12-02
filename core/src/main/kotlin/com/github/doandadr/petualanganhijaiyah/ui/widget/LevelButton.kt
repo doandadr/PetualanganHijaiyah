@@ -18,8 +18,8 @@ class LevelButton(
     val button: Button = Button(skin, buttonStyle),
     val text: Container<Label> = Container(label),
     val dots: LevelDots = LevelDots(skin),
-    val stars: Stars = Stars(skin),
-) : WidgetGroup(button, text, dots, stars), KGroup {
+    val starWidget: StarWidget = StarWidget(skin),
+) : WidgetGroup(button, text, dots, starWidget), KGroup {
     init {
         // TODO set state based on save data
         setState(LevelButtonState.INACCESSIBLE)

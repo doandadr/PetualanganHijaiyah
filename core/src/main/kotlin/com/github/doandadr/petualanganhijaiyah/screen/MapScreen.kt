@@ -6,9 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_MAP_STAR
 import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
-import com.github.doandadr.petualanganhijaiyah.ui.widget.Stars
+import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
@@ -26,6 +28,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {
         log.debug { "Map Screen is shown" }
+
+        audioService.play(MusicAsset.MAP)
 
         setupUI()
     }
@@ -54,7 +58,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             text.setPosition(570f, 380f)
                             rotateText(5f)
                             dots.setPosition(centerX(width) - 20f, 100f)
-                            stars.setPosition(450f, 200f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(450f, 200f)
                             button.onChange {
                                 if (isPressed) {
                                     game.setScreen<LevelScreen>()
@@ -68,7 +73,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(-5f)
                             dots.setPosition(centerX(width) - 10f, -80f)
                             dots.flipHorizontal()
-                            stars.setPosition(0f, -50f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(0f, -50f)
                             button.onChange { }
                         }
 
@@ -77,7 +83,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             text.setPosition(100f, 230f)
                             rotateText(-8f)
                             dots.setPosition(-130f, -100f)
-                            stars.setPosition(0f, -50f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(0f, -50f)
                             button.onChange { }
                         }
 
@@ -87,7 +94,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(5f)
                             dots.setPosition(centerX(width) + 120f, -50f)
                             dots.flipHorizontal()
-                            stars.setPosition(150f, -50f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(150f, -50f)
                             button.onChange { }
                         }
 
@@ -95,7 +103,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             setPosition(-10f, 1370f)
                             text.setPosition(370f, 300f)
                             dots.setPosition(centerX(width) - 100f, -100f)
-                            stars.setPosition(250f, 150f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(250f, 150f)
                             button.onChange { }
                         }
 
@@ -104,7 +113,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             text.setPosition(120f, 200f)
                             rotateText(5f)
                             dots.setPosition(-120f, -120f)
-                            stars.setPosition(20f, -50f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(20f, -50f)
                             button.onChange { }
                         }
 
@@ -114,7 +124,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(-10f)
                             dots.setPosition(centerX(width) - 30f, -30f)
                             dots.flipHorizontal()
-                            stars.setPosition(20f, 0f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(20f, 0f)
                             button.onChange { }
                         }
 
@@ -123,7 +134,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             text.setPosition(200f, 100f)
                             rotateText(8f)
                             dots.setPosition(0f, -180f)
-                            stars.setPosition(100f, -50f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(100f, -50f)
                             button.onChange { }
                         }
 
@@ -133,7 +145,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(-5f)
                             dots.setPosition(centerX(width) - 40f, -120f)
                             dots.flipHorizontal()
-                            stars.setPosition(0f, -50f)
+                            starWidget.setScale(SCALE_MAP_STAR)
+                            starWidget.setPosition(0f, -50f)
                             button.onChange { }
                         }
                     }
@@ -141,8 +154,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                 validate()
                 scrollPercentY = 1f
             }
-            // top sign
-            container {
+            // top ui
+            horizontalGroup {
                 setFillParent(true)
                 top()
                 pad(50f)
@@ -173,17 +186,17 @@ class MapScreen(game: Main) : BaseScreen(game) {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             testButton.setState(LevelButton.LevelButtonState.PASSED)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            testButton.stars.setState(Stars.StarState.HIDDEN)
+            testButton.starWidget.setState(StarWidget.StarState.HIDDEN)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            testButton.stars.setState(Stars.StarState.ZERO)
+            testButton.starWidget.setState(StarWidget.StarState.ZERO)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            testButton.stars.setState(Stars.StarState.ONE)
+            testButton.starWidget.setState(StarWidget.StarState.ONE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-            testButton.stars.setState(Stars.StarState.TWO)
+            testButton.starWidget.setState(StarWidget.StarState.TWO)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            testButton.stars.setState(Stars.StarState.THREE)
+            testButton.starWidget.setState(StarWidget.StarState.THREE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
-            testButton.stars.setState(Stars.StarState.HIDDEN)
+            testButton.starWidget.setState(StarWidget.StarState.HIDDEN)
             testButton.setState(LevelButton.LevelButtonState.HIDDEN)
         }
     }
