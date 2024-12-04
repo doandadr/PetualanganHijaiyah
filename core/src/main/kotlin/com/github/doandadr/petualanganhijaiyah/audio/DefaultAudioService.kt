@@ -3,7 +3,6 @@ package com.github.doandadr.petualanganhijaiyah.audio
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.utils.Pool
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import kotlinx.coroutines.launch
@@ -13,41 +12,13 @@ import ktx.log.logger
 import java.util.*
 import kotlin.math.max
 
-private val log = logger<AudioService>()
-private const val MAX_SOUND_INSTANCES = 8
-
-interface AudioService {
-    var enabled: Boolean
-    var soundVolume: Float
-    var musicVolume: Float
-    fun play(soundAsset: SoundAsset, volume: Float = soundAsset.volume) = Unit
-    fun play(musicAsset: MusicAsset, volume: Float = musicAsset.volume, loop: Boolean = true) = Unit
-    fun pause() = Unit
-    fun resume() = Unit
-    fun stop(clearSounds: Boolean = true) = Unit
-    fun update() = Unit
-}
-
-private class SoundRequest : Pool.Poolable {
-    lateinit var soundAsset: SoundAsset
-    var volume = 1f
-
-    override fun reset() {
-        volume = 1f
-    }
-}
-
-private class SoundRequestPool :
-    Pool<SoundRequest>() {
-    override fun newObject(): SoundRequest = SoundRequest()
-}
-
 class DefaultAudioService(private val assets: AssetStorage) : AudioService {
     private val soundCache = EnumMap<SoundAsset, Sound>(SoundAsset::class.java)
     private val soundRequestPool = SoundRequestPool()
     private val soundRequests = EnumMap<SoundAsset, SoundRequest>(SoundAsset::class.java)
     private var currentMusic: Music? = null
     private var currentMusicAsset = MusicAsset.HOME
+
     override var enabled = true
         set(value) {
             when (value) {
@@ -95,7 +66,7 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
                 // get request instance from pool and add it to the queue
                 soundRequests[soundAsset] = soundRequestPool.obtain().apply {
                     this.soundAsset = soundAsset
-                    this.volume = volume
+                    this.volume = randomize(volume, MIN_MULTIPLIER, MAX_MULTIPLIER)
                 }
             }
         }
@@ -124,6 +95,9 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
         }
     }
 
+    override fun randomize(volume: Float, min: Float, max: Float): Float =
+        min * volume + MathUtils.random() * (max * volume - min * volume)
+
     override fun pause() {
         currentMusic?.pause()
     }
@@ -150,5 +124,13 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
             }
             soundRequests.clear()
         }
+    }
+
+    companion object {
+        private val log = logger<DefaultAudioService>()
+
+        private const val MIN_MULTIPLIER = 0.8f
+        private const val MAX_MULTIPLIER = 1.2f
+        private const val MAX_SOUND_INSTANCES = 2
     }
 }
