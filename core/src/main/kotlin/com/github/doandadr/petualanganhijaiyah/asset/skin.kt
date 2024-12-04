@@ -1,7 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.asset
 
 enum class Buttons(val style: String) {
-    BOOK("book"),
     LEVEL1("level1"),
     LEVEL2("level2"),
     LEVEL3("level3"),
@@ -13,7 +12,6 @@ enum class Buttons(val style: String) {
     LEVEL9("level9"),
     GIRL_SELECT("girl-select"),
     BOY_SELECT("boy-select"),
-    VOICE("voice"), // TODO
     MENU("menu"),
     X("x"),
     CHECK("check"),
@@ -23,7 +21,8 @@ enum class Buttons(val style: String) {
 }
 
 enum class CheckBoxes(val style: String) {
-    AUDIO("audio"),
+    SOUND("sound"),
+    MUSIC("music"),
 }
 
 enum class ImageButtons(val style: String) {
@@ -89,7 +88,6 @@ enum class TextTooltips(val style: String) {
     LEFT_UP("left-up"),
 }
 
-// Skin Atlas Drawables
 enum class Drawables(val drawable: String) {
     BISMILLAH("bismillah"),
     BOOK("book"),
@@ -101,6 +99,7 @@ enum class Drawables(val drawable: String) {
     CIRCLE_GREEN("circle-green"),
     CIRCLE_GREY("circle-grey"),
     CIRCLE_ORANGE("circle-orange"),
+    CIRCLE_BRUSH("circle-brush"),
     EFFECT_CONFETTI("confetti"),
     EFFECT_SALUTE("salute"),
     EFFECT_SMALL_FIREWORK("small-firework"),
@@ -109,9 +108,6 @@ enum class Drawables(val drawable: String) {
     GIRL_SELECT("girl-select"),
     HAND_POINTING("hand-pointing"),
     HIJAIYAH_FRAME_LARGE("hijaiyah-frame-large"),
-    HIJAIYAH_FRAME_MEDIUM("hijaiyah-frame-medium"),
-    HIJAIYAH_FRAME_SMALL("hijaiyah-frame-small"),
-    HIJAIYAH_FRAME_MEDIUM_MOLD("hijaiyah-frame-medium-mold"),
     ICON_AUDIO("icon-audio"),
     ICON_AUDIOOFF("icon-audiooff"),
     ICON_COIN("icon-coin"),
