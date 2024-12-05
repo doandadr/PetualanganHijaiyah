@@ -6,7 +6,7 @@ import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.audio.DefaultAudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
@@ -20,15 +20,14 @@ import ktx.async.KtxAsync
 import ktx.log.logger
 import ktx.scene2d.Scene2DSkin
 
-const val SCREEN_W = 720
-const val SCREEN_H = 1280
+const val SCREEN_W = 720f
+const val SCREEN_H = 1280f
 private const val PREF_NAME = "petualangan-hijaiyah"
 
 private val LOG = logger<Main>()
 
 class Main : KtxGame<KtxScreen>() {
-
-    val uiViewport = FitViewport(SCREEN_W.toFloat(), SCREEN_H.toFloat())
+    val uiViewport = ExtendViewport(SCREEN_W, SCREEN_H)
     val batch: Batch by lazy { SpriteBatch() }
     val stage: Stage by lazy {
         // Set stage to process input
@@ -44,7 +43,7 @@ class Main : KtxGame<KtxScreen>() {
         KtxAsync.initiate()
         AssetStorage()
     }
-    val audioService: AudioService by lazy { DefaultAudioService(assets)}
+    val audioService: AudioService by lazy { DefaultAudioService(assets) }
     val preferences: Preferences by lazy { Gdx.app.getPreferences(PREF_NAME) }
     val gameEventManager by lazy { GameEventManager() }
 
