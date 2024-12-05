@@ -17,7 +17,7 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
     private val soundRequestPool = SoundRequestPool()
     private val soundRequests = EnumMap<SoundAsset, SoundRequest>(SoundAsset::class.java)
     private var currentMusic: Music? = null
-    private var currentMusicAsset = MusicAsset.HOME
+    private var currentMusicAsset :MusicAsset = MusicAsset.HOME
 
     override var enabled = true
         set(value) {

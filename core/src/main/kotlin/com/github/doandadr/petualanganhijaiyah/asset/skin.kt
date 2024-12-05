@@ -124,6 +124,7 @@ enum class Drawables(val drawable: String) {
     ICON_STARGREY_LARGE("icon-stargrey-large"),
     ICON_STARGREY_MEDIUM("icon-stargrey-medium"),
     ICON_STARGREY_SMALL("icon-stargrey-small"),
+    ICONBUTTON_WHITE_ROUNDED("iconbutton-white-rounded"),
     ICONBUTTON_BACKGROUND_ROUNDED("iconbutton-background-rounded"),
     LEVEL_FINISH_STARBOX("level-finish-starbox"),
     TIMER_BACKGROUND_EMPTY("timer-background-empty"),
