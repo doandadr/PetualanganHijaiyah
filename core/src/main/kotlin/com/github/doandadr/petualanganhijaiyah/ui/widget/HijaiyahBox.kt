@@ -6,11 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
-import com.github.doandadr.petualanganhijaiyah.asset.Buttons
-import com.github.doandadr.petualanganhijaiyah.asset.Labels
-import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
-import com.github.doandadr.petualanganhijaiyah.data.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_HIJAIYAH
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_SMALL
 import ktx.assets.async.AssetStorage
@@ -27,15 +25,18 @@ class HijaiyahBox(
     private var frame: Button
     private var image: Image
     private val textAtlas = assets[TextureAtlasAsset.HIJAIYAH.descriptor]
-    private val sizeValue: Float = when (size) {
+    private val size: Float = when (size) {
         Size.SMALL -> SIZE_HIJAIYAH_SMALL
         Size.MEDIUM -> SIZE_HIJAIYAH_MEDIUM
     }
-    private var hijaiyahState: State = State.DEFAULT
+    private val fontScale: Float = when (size) {
+        Size.SMALL -> 1f
+        Size.MEDIUM -> SCALE_FONT_MEDIUM
+    }
 
     init {
         this@HijaiyahBox.boxStack = stack {
-            it.prefSize(this@HijaiyahBox.sizeValue)
+            it.prefSize(this@HijaiyahBox.size)
 
             this@HijaiyahBox.frame = button(Buttons.HIJAIYAH.style) {
                 isTransform = true
@@ -46,13 +47,15 @@ class HijaiyahBox(
                 setScaling(Scaling.fit)
                 touchable = Touchable.disabled
             }
-            this@HijaiyahBox.hijaiyahText = label("", Labels.SECONDARY_BORDER.style) {
+            this@HijaiyahBox.hijaiyahText = label("", Labels.PRIMARY.style) {
+                color = skin.getColor(Colors.BLACK.color)
                 setAlignment(Align.center)
+                setFontScale(this@HijaiyahBox.fontScale)
                 touchable = Touchable.disabled
             }
         }
 
-        setState(State.DEFAULT)
+        setType(Type.DEFAULT)
         updateLetter(hijaiyah)
     }
 
@@ -66,41 +69,45 @@ class HijaiyahBox(
         MEDIUM,
     }
 
-    enum class State {
+    enum class Type {
         DEFAULT,
         TEXT,
-        CORRECT,
-        INCORRECT,
         DROP
     }
 
-    fun setState(state: State) {
-        when (state) {
-            State.DEFAULT -> {
+    enum class State {
+        CORRECT,
+        INCORRECT,
+    }
+
+    fun setType(type: Type) {
+        when (type) {
+            Type.DEFAULT -> {
                 hijaiyahText.isVisible = false
                 image.isVisible = true
             }
-
-            State.TEXT -> {
+            Type.TEXT -> {
                 hijaiyahText.isVisible = true
                 image.isVisible = false
                 hijaiyahText.setText(hijaiyah.name.uppercase())
             }
-
-            State.DROP -> {
+            Type.DROP -> {
                 hijaiyahText.isVisible = true
                 image.isVisible = false
                 frame.style = skin.get(Buttons.HIJAIYAH_DROP.style,ButtonStyle::class.java)
                 hijaiyahText.setText(hijaiyah.name.uppercase())
             }
+        }
+    }
 
+    fun setState(state: State) {
+        when (state) {
             State.CORRECT -> {
                 frame.apply {
                     style = skin.get(Buttons.HIJAIYAH_STATE.style, ButtonStyle::class.java)
                     isDisabled = false
                 }
             }
-
             State.INCORRECT -> {
                 frame.apply {
                     style = skin.get(Buttons.HIJAIYAH_STATE.style, ButtonStyle::class.java)
