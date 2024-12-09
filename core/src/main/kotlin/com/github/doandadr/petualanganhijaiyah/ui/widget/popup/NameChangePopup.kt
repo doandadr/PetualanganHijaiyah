@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.popup
 
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
@@ -7,17 +8,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.TextButtons
+import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
+import com.github.doandadr.petualanganhijaiyah.data.PrefKey
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.screen.HomeScreen.PopupState
+import ktx.actors.onChangeEvent
+import ktx.preferences.flush
+import ktx.preferences.get
+import ktx.preferences.set
 import ktx.scene2d.*
 
 class NameChangePopup(
+    private val preferences: Preferences,
+    private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
     val nameField: TextField
     val confirmButton: TextButton
 
     init {
-        isVisible = false
-
         label("Ubah Nama", Labels.BOARD.style) {
             setAlignment(Align.center)
         }
@@ -31,11 +40,30 @@ class NameChangePopup(
         row()
 
         this@NameChangePopup.confirmButton = textButton("OK", TextButtons.GREEN_LARGE.style)
+
+        setupListeners()
+    }
+
+    private fun setupListeners() {
+        confirmButton.onChangeEvent {
+            val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
+            player.name = nameField.text
+            preferences.flush {
+                preferences[PrefKey.PLAYER.key] = player
+            }
+            gameEventManager.dispatchPlayerChangedEvent(player)
+            gameEventManager.dispatchSetHomePopupStateEvent(PopupState.CHARACTER)
+        }
     }
 }
 
 inline fun <S> KWidget<S>.nameChangePopup(
+    preferences: Preferences,
+    gameEventManager: GameEventManager,
     init: NameChangePopup.(S) -> Unit = {}
 ) = actor(
-    NameChangePopup(), init
+    NameChangePopup(
+        preferences,
+        gameEventManager,
+    ), init
 )
