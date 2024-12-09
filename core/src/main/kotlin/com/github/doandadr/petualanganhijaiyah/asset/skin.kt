@@ -18,6 +18,8 @@ enum class Buttons(val style: String) {
     HIJAIYAH("hijaiyah"),
     HIJAIYAH_DROP("hijaiyah-drop"),
     HIJAIYAH_STATE("hijaiyah-state"),
+    JOIN("join"),
+    JOIN_STATE("join-state")
 }
 
 enum class CheckBoxes(val style: String) {
@@ -82,8 +84,6 @@ enum class TextButtons(val style: String) {
     GREEN_SMALL("green-small"),
     ORANGE_LARGE("orange-large"),
     ORANGE_SMALL("orange-small"),
-    JOIN("join"),
-    JOIN_STATE("join-state")
 }
 
 enum class TextTooltips(val style: String) {

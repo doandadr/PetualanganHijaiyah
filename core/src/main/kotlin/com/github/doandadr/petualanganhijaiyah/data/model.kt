@@ -196,14 +196,14 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         isScored = true,
         stages = listOf(
             StageModel(
-                type = StageType.MCQ,
-                choices = Difficulty.EASY.entries,
-                rounds = 4
-            ),
-            StageModel(
                 type = StageType.MATCH_LINE,
                 choices = Difficulty.EASY.entriesMatch,
                 rounds = 2
+            ),
+            StageModel(
+                type = StageType.MCQ,
+                choices = Difficulty.EASY.entries,
+                rounds = 4
             ),
         ),
         bgIndex = TextureAsset.FOREST_1.ordinal,
@@ -219,14 +219,14 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         isScored = true,
         stages = listOf(
             StageModel(
-                type = StageType.MCQ_VOICE,
-                choices = Difficulty.MEDIUM.entries,
-                rounds = 4
-            ),
-            StageModel(
                 type = StageType.MCQ_JOIN,
                 choices = Difficulty.MEDIUM.entries,
                 rounds = 2
+            ),
+            StageModel(
+                type = StageType.MCQ_VOICE,
+                choices = Difficulty.MEDIUM.entries,
+                rounds = 4
             ),
         ),
         bgIndex = TextureAsset.FOREST_2.ordinal,
@@ -283,14 +283,14 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         isScored = true,
         stages = listOf(
             StageModel(
-                type = StageType.MCQ,
-                choices = Difficulty.MEDIUM.entries,
-                rounds = 3
-            ),
-            StageModel(
                 type = StageType.DRAG_AND_DROP,
                 choices = Difficulty.MEDIUM.entries,
                 rounds = 2
+            ),
+            StageModel(
+                type = StageType.MCQ,
+                choices = Difficulty.MEDIUM.entries,
+                rounds = 3
             ),
             StageModel(
                 type = StageType.MCQ_JOIN,
