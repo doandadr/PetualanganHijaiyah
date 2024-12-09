@@ -9,4 +9,5 @@ enum class TextureAtlasAsset(
     val descriptor: AssetDescriptor<TextureAtlas> = AssetDescriptor("$directory/$fileName", TextureAtlas::class.java)
 ) {
     HIJAIYAH("hijaiyah.atlas"),
+
 }

@@ -25,10 +25,3 @@ enum class TextureAsset(
 //    MOUNTAIN_1("bg-mountain1.jpg"),
 //    MOUNTAIN_2("bg-mountain2.jpg"),
 }
-
-fun dumm() {
-    val backgroundIdx : Int
-    backgroundIdx = TextureAsset.HOME.ordinal
-
-    val background = TextureAsset.entries[backgroundIdx]
-}
