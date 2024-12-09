@@ -1,18 +1,17 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.graphics.Color.BLACK
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.utils.Align
-import com.github.doandadr.petualanganhijaiyah.asset.Drawables
-import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
-import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
-import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
-import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.MatchBox
 import ktx.actors.alpha
@@ -20,12 +19,17 @@ import ktx.actors.onChangeEvent
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
+import space.earlygrey.shapedrawer.ShapeDrawer
+import space.earlygrey.shapedrawer.scene2d.ShapeDrawerDrawable
 
 class MatchLineStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
+    private val batch: Batch,
+    private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
+    private var drawArea: Image
     private val hijaiyahEntries = Hijaiyah.entries
     lateinit var leftEntries: List<Hijaiyah>
     lateinit var rightEntries: List<Hijaiyah>
@@ -35,22 +39,21 @@ class MatchLineStage(
     private val skipButton: ImageTextButton
     private val dragAndDrop = DragAndDrop()
 
-    //    private var pixmap = Pixmap(skin.getDrawable(Drawables.CIRCLE_BRUSH.drawable))
+    private val drawer = ShapeDrawer(batch, skin.getRegion(Drawables.CIRCLE_BRUSH.drawable))
+
     private val savedLines: MutableList<Line> = mutableListOf()
-    private lateinit var shapeRenderer: ShapeRenderer
 
     init {
         background(skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable))
         horizontalGroup {
             space(150f)
             this@MatchLineStage.leftGroup = verticalGroup {
-                space(SPACE_BETWEEN_BUTTONS)
+                space(40f)
             }
 
             this@MatchLineStage.rightGroup = verticalGroup {
-                space(SPACE_BETWEEN_BUTTONS)
+                space(40f)
             }
-
             it.padTop(PADDING_INNER_SCREEN).expand()
         }
 
@@ -65,12 +68,27 @@ class MatchLineStage(
             it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
+        row()
+        this@MatchLineStage.drawArea = image(object : ShapeDrawerDrawable(drawer) {
+            override fun drawShapes(shapeDrawer: ShapeDrawer?, x: Float, y: Float, width: Float, height: Float) {
+                drawer.line(0f, 0f, 100f, 100f, BLACK, 10f)
+                drawer.update()
+            }
+        })
+        {
+            setFillParent(true)
+            color = skin.getColor(Colors.BLACK.color)
+            toFront()
+            it.grow().align(Align.bottomLeft)
+        }
+
         loadStage()
     }
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)
 
     fun loadStage() {
+
         leftGroup.clearChildren()
         leftEntries = pickRandomEntries(5)
         leftEntries.shuffled().forEachIndexed { _, hijaiyah ->
@@ -80,7 +98,7 @@ class MatchLineStage(
                 log.debug { "right box touched" }
             }
 
-            addDragSource(box.rightDot)
+            addDragSource(box)
             addDragTarget(box)
             leftGroup.addActor(box)
         }
@@ -89,7 +107,7 @@ class MatchLineStage(
         rightEntries = leftEntries.shuffled()
         rightEntries.shuffled().forEachIndexed { index, hijaiyah ->
             val box = MatchBox(hijaiyah, MatchBox.State.RIGHT, assets)
-            box.box.setState(HijaiyahBox.State.TEXT)
+            box.box.setType(HijaiyahBox.Type.TEXT)
             box.onChangeEvent {
                 log.debug { "right box touched" }
             }
@@ -100,21 +118,17 @@ class MatchLineStage(
         }
     }
 
-    private fun addDragSource(dot: Image) {
+    private fun addDragSource(box: MatchBox) {
         log.debug { "Adding drag source" }
-        dragAndDrop.addSource(object : DragAndDrop.Source(dot) {
+        dragAndDrop.addSource(object : DragAndDrop.Source(box) {
             override fun dragStart(event: InputEvent?, x: Float, y: Float, pointer: Int): DragAndDrop.Payload {
                 log.debug { "Start dragging source" }
                 val payload: DragAndDrop.Payload = DragAndDrop.Payload()
-                actor.alpha = 1f
-                payload.dragActor = actor
-                stage.addActor(actor)
-                dragAndDrop.setDragActorPosition(actor.width / 2, -actor.height / 2)
-
-//                val dragCircle = (actor.userObject as MatchBox).leftCircle
-//                val circleStageCoords = dragCircle.localToStageCoordinates(Vector2(0f, 0f))
-//                savedLines.add(Line(circleStageCoords.x, circleStageCoords.y, actor.x, actor.y))
-
+                val draggedDot = (actor as MatchBox).rightDot
+                draggedDot.alpha = 1f
+                payload.dragActor = draggedDot
+                stage.addActor(draggedDot)
+                dragAndDrop.setDragActorPosition(draggedDot.width / 2, -draggedDot.height / 2)
                 audioService.play(SoundAsset.STRETCH)
 
                 return payload
@@ -124,8 +138,7 @@ class MatchLineStage(
                 log.debug { "Dragging source" }
                 super.drag(event, x, y, pointer)
                 // TODO draw a line from actor.userObject.leftCircle to current location
-//                shapeRenderer.begin()
-//                shapeRenderer.rectLine()
+                drawLines()
             }
 
             override fun dragStop(
@@ -138,21 +151,30 @@ class MatchLineStage(
             ) {
                 log.debug { "Stop dragging source" }
 
-                val sourceBox = dot.userObject as MatchBox
+                val sourceBox = box
 
-                if (target == null) {
-                    sourceBox.rightCircle.actor = dot
-                    audioService.play(SoundAsset.CANCEL)
-                } else if ((target.actor as MatchBox).hijaiyah != sourceBox.hijaiyah) {
-                    sourceBox.rightCircle.actor = dot
-                    audioService.play(SoundAsset.FAILURE)
-                    // TODO handle incorrect
+                if (payload != null) {
+                    if (target == null) {
+                        sourceBox.rightCircle.actor = payload.dragActor
+                        audioService.play(SoundAsset.CANCEL)
+                    } else if ((target.actor as MatchBox).hijaiyah != sourceBox.hijaiyah) {
+                        sourceBox.rightCircle.actor = payload.dragActor
+                        audioService.play(SoundAsset.INCORRECT)
+                        // TODO handle incorrect
+                    }
                 }
+
+
             }
         })
     }
 
+    private fun drawLines() {
+
+    }
+
     private fun addDragTarget(frame: MatchBox) {
+
         log.debug { "Adding drag target" }
         dragAndDrop.addTarget(object :DragAndDrop.Target(frame) {
             override fun drag(
@@ -220,11 +242,14 @@ class MatchLineStage(
 
                     // TODO handle correct/incorrect view
                     if (isCorrect) {
-                        // TODO set state of source and target box to correct
                         frame.box.setState(HijaiyahBox.State.CORRECT)
-//                        (source?.actor as MatchBox).box.setState(HijaiyahBox.State.CORRECT)
-                        log.debug { "Source is $source" }
+                        (source?.actor as MatchBox).box.setState(HijaiyahBox.State.CORRECT)
 
+                        frame.leftCircle.actor = payloadDot
+                        payloadDot.touchable = Touchable.disabled
+
+                        audioService.play(SoundAsset.DROP)
+                        audioService.play(SoundAsset.CORRECT_DING)
                     }
                 }
             }
@@ -232,22 +257,25 @@ class MatchLineStage(
         })
     }
 
-
     companion object {
         private val log = logger<MatchLineStage>()
     }
 }
 
+private data class Line(val sX: Float, val sY: Float, val eX: Float, val eY: Float)
+
 inline fun <S> KWidget<S>.matchLineStage(
     assets: AssetStorage,
     audioService: AudioService,
+    batch: Batch,
+    gameEventManager: GameEventManager,
     init: MatchLineStage.(S) -> Unit = {}
 ) = actor(
     MatchLineStage(
         assets,
         audioService,
+        batch,
+        gameEventManager,
     ), init
 )
-
-private data class Line(val startX: Float, val startY: Float, val endX: Float, val endY: Float)
 
