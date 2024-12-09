@@ -5,103 +5,123 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
+import ktx.log.logger
 import ktx.scene2d.KTable
 import ktx.scene2d.KWidget
 import ktx.scene2d.Scene2DSkin
 import ktx.scene2d.actor
 
 class TimerWidget(
-    private val maxSeconds: Float,
     private val eventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
-    // ON level finish event, stop timer, OK
-    // IF timer drops to 0, send failure state to parent TODO
-
     private var deltaTimerCount: Float = 0f
-    var remainingSeconds: Float = maxSeconds
-    var elapsedSeconds: Float = 0f
+    private var maxSeconds: Float = DEFAULT_MAX_TIME
+    private var remainingSeconds: Float = DEFAULT_MAX_TIME
+    var elapsedSeconds: Float = 0.0f
 
+    val bar: TimerBar
     private val counter: TimerCounter
-    private val bar: TimerBar
-    private var state: State = State.START
+    private var state: State = State.STOP
 
     init {
-        this@TimerWidget.bar = timerBar(maxSeconds) {
+        this@TimerWidget.bar = timerBar(DEFAULT_MAX_TIME) {
             it.align(Align.topLeft)
         }
 
         row()
-        this@TimerWidget.counter = timerCounter(maxSeconds) {
+        this@TimerWidget.counter = timerCounter(DEFAULT_MAX_TIME) {
             it.spaceTop(SPACE_BETWEEN_BUTTONS).align(Align.topLeft)
         }
     }
 
+    fun loadWidget(maxTime: Float) {
+        maxSeconds = maxTime
+        remainingSeconds = maxSeconds
+        elapsedSeconds = 0f
+        setState(State.START)
+        bar.maxSeconds = maxSeconds
+        counter.maxSeconds = maxSeconds
+    }
+
     fun update(deltaTime: Float) {
-        // TODO update only if resume
-        if (state == State.START) {
-            deltaTimerCount += deltaTime
-            if (deltaTimerCount >= 1) {
-                setState(State.RESUME)
-                deltaTimerCount = 0f
+        when (state) {
+            State.STOP -> return
+            State.START -> {
+                deltaTimerCount += deltaTime
+                if (deltaTimerCount >= 1) {
+                    setState(State.RESUME)
+                    deltaTimerCount = 0f
+                }
+                counter.resetTimer(maxSeconds)
+                bar.resetTimer(maxSeconds)
             }
-            counter.resetTimer()
-            bar.resetTimer()
-        }
-        if (state == State.RESUME) {
-            deltaTimerCount += deltaTime
-            if (deltaTimerCount >= 1) {
-                remainingSeconds -= 1
-                elapsedSeconds += 1
-                counter.updateTime(remainingSeconds)
-                bar.updateTime(remainingSeconds)
-                deltaTimerCount = 0f
+            State.RESUME -> {
+                deltaTimerCount += deltaTime
+                if (deltaTimerCount >= 1) {
+                    remainingSeconds -= 1
+                    elapsedSeconds += 1
+                    counter.updateTime(remainingSeconds)
+                    bar.updateTime(remainingSeconds)
+                    deltaTimerCount = 0f
+                }
             }
-        }
-        if (state == State.STOP) {
-            remainingSeconds = maxSeconds
-            counter.updateTime(0f)
-            bar.updateTime(0f)
-        }
-        if (state == State.STOPWATCH) {
-            deltaTimerCount += deltaTime
-            if (deltaTimerCount >= 1) {
-                elapsedSeconds += 1
-                counter.updateTime(elapsedSeconds)
+            State.STOPWATCH -> {
+                deltaTimerCount += deltaTime
+                if (deltaTimerCount >= 1) {
+                    elapsedSeconds += 1
+                    counter.updateTime(elapsedSeconds)
+                    deltaTimerCount = 0f
+                }
             }
         }
+
         if (remainingSeconds <= 0f) {
-            // TODO handle level end, failure
             setState(State.STOP)
-            eventManager.dispatchLevelFailEvent(elapsedSeconds)
+            eventManager.dispatchLevelFailEvent()
         }
+    }
+
+    fun reset(time: Float) {
+        maxSeconds = time
+        bar.resetTimer(maxSeconds)
+        counter.resetTimer(maxSeconds)
     }
 
     fun setState(timerState: State) {
         state = timerState
         bar.isVisible = (state != State.STOPWATCH)
-        isVisible = (state != State.DISABLED)
+        isVisible = (state != State.STOP)
+    }
+
+    fun startStopwatch() {
+        bar.remove()
+        setState(State.STOPWATCH)
+    }
+
+    fun stop() {
+        setState(State.STOP)
     }
 
     enum class State {
         STOP,
         RESUME,
-        PAUSE,
-        DISABLED,
         STOPWATCH,
         START,
     }
 
+    companion object {
+        private const val DEFAULT_MAX_TIME = 120f
+        private val log = logger<TimerWidget>()
+    }
 }
 
 inline fun <S> KWidget<S>.timerWidget(
-    maxSeconds: Float,
     eventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
     init: TimerWidget.(S) -> Unit = {}
 ) = actor(
     TimerWidget(
-        maxSeconds,
         eventManager,
         skin
     ), init

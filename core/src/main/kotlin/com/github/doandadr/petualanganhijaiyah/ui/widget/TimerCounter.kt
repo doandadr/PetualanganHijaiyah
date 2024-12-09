@@ -10,12 +10,12 @@ import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import ktx.scene2d.*
 
 class TimerCounter(
-    private val maxSeconds: Float,
+    var maxSeconds: Float,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
     private val colon: Image
-    val minute: Label
-    val second: Label
+    private val minute: Label
+    private val second: Label
 
     init {
         minute = label("", Labels.TIMER_COUNTER.style) {
@@ -26,7 +26,7 @@ class TimerCounter(
             setAlignment(Align.center)
         }
 
-        resetTimer()
+        resetTimer(maxSeconds)
     }
 
     fun updateTime(time: Float) {
@@ -34,8 +34,8 @@ class TimerCounter(
         second.setText(formatSS(time))
     }
 
-    fun resetTimer() {
-        updateTime(maxSeconds)
+    fun resetTimer(maxTime: Float) {
+        updateTime(maxTime)
     }
 
     private fun formatMM(sec: Float): String = (sec / 60).toInt().toString().padStart(2, '0')

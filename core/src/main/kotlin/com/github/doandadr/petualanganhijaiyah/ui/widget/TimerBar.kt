@@ -10,8 +10,7 @@ import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import ktx.scene2d.*
 
 class TimerBar(
-    // IF value drop below n, change star view based on that
-    private val maxSeconds: Float,
+    var maxSeconds: Float,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
     private var currentValue: Float = MAX_VALUE
@@ -23,6 +22,9 @@ class TimerBar(
     private val starOffSecond: Image
     private val starOnThird: Image
     private val starOffThird: Image
+
+    var levelScore: Float = 0f
+    var levelStars: Int = 0
 
     init {
         stack {
@@ -64,35 +66,43 @@ class TimerBar(
             it.prefSize(60f).padLeft(-30f).align(Align.left).colspan(2)
         }
 
-        resetTimer()
+        resetTimer(maxSeconds)
     }
 
     private fun valueToWidth(value: Float): Float {
-        return MathUtils.clamp(value / MAX_VALUE * WIDTH_SPAN , 0f, WIDTH_SPAN)
+        return MathUtils.clamp(value / MAX_VALUE * WIDTH_SPAN, 0f, WIDTH_SPAN)
     }
 
     fun updateTime(time: Float) {
         currentValue = time / maxSeconds * MAX_VALUE
         greenBar.width = valueToWidth(currentValue)
         setStars(currentValue)
+        levelScore = currentValue * 10
     }
 
     private fun setStars(value: Float) {
-        if (value > THIRD_THRESHOLD) {
+        if (value >= THIRD_THRESHOLD) {
             starOnFirst.isVisible = true
             starOnSecond.isVisible = true
             starOnThird.isVisible = true
+            levelStars = 3
         }
-        if (value <= THIRD_THRESHOLD)
+        if (value < THIRD_THRESHOLD) {
             starOnThird.isVisible = false
-        if (value <= SECOND_THRESHOLD)
+            levelStars = 2
+        }
+        if (value < SECOND_THRESHOLD) {
             starOnSecond.isVisible = false
-        if (value <= FIRST_THRESHOLD)
+            levelStars = 1
+        }
+        if (value < FIRST_THRESHOLD) {
             starOnFirst.isVisible = false
+            levelStars = 0
+        }
     }
 
-    fun resetTimer() {
-        updateTime(maxSeconds)
+    fun resetTimer(maxTime: Float) {
+        updateTime(maxTime)
     }
 
     companion object {
