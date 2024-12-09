@@ -41,7 +41,10 @@ enum class SoundAsset(
     CANCEL("cancel.ogg"),
     CONFIRM_1("confirm-1.ogg"),
     CONFIRM_2("confirm-2.ogg"),
-    DROP("drop.ogg"),
+    DROP("drop.ogg", 0.4f),
+    STAR_1("star-1.ogg"),
+    STAR_2("star-2.ogg"),
+    STAR_3("star-3.ogg"),
 
     V01_ALIF("v01-alif.ogg"),
     V02_BA("v02-ba.ogg"),

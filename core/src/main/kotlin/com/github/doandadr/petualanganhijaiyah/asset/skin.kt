@@ -62,7 +62,9 @@ enum class Labels(val style: String) {
     BOARD("board"),
     MAP("map"),
     SIGN_NAME("sign-name"),
+    BANNER_GREEN("banner-green"),
     BANNER_ORANGE("banner-orange"),
+    BANNER_RED("banner-red"),
     TIMER_COUNTER("timer-counter"),
     TEXTBOX_ORANGE_ROUNDED("textbox-orange-rounded"),
     TEXTBOX_BLUE_ROUNDED("textbox-blue-rounded"),
@@ -110,6 +112,7 @@ enum class Drawables(val drawable: String) {
     HIJAIYAH_FRAME_LARGE("hijaiyah-frame-large"),
     ICON_AUDIO("icon-audio"),
     ICON_AUDIOOFF("icon-audiooff"),
+    ICON_CLOCK("icon-clock"),
     ICON_COIN("icon-coin"),
     ICON_BOOK("icon-book"),
     ICON_DIAMOND("icon-diamond"),
@@ -118,6 +121,7 @@ enum class Drawables(val drawable: String) {
     ICON_HEART_HALF("icon-hearthalf"),
     ICON_LOCK("icon-lock"),
     ICON_LOOKING_GLASS("icon-looking-glass"),
+    ICON_PRIZE("icon-prize"),
     ICON_STAR_LARGE("icon-star-large"),
     ICON_STAR_MEDIUM("icon-star-medium"),
     ICON_STAR_SMALL("icon-star-small"),
@@ -147,6 +151,7 @@ enum class Colors(val color: String) {
     RED("RGBA_220_0_62_255"),
     ORANGE("RGBA_232_110_0_255"),
     GREEN("RGBA_45_165_0_255"),
+    LIGHT_GREEN("RGBA_170_255_136_255"),
     GREY("RGBA_94_105_126_255"),
 }
 
