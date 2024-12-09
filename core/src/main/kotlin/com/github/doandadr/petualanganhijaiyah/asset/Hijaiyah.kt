@@ -2,29 +2,29 @@ package com.github.doandadr.petualanganhijaiyah.asset
 
 enum class Hijaiyah(
     val character: String,
-    val image: String,
-    val drawImg: String,
+    val id: String,
     val audio: SoundAsset,
     val audioFathah: SoundAsset,
     val audioKasrah: SoundAsset,
     val audioDhommah: SoundAsset,
+    val image: String = "f$id",
+    val drawImg: String = "d$id",
+    val imageSmall: String = "sf$id"
 ) {
 
     ALIF(
         "أ",
-        "f01-alif",
-        "d01-alif",
+        "01-alif",
         SoundAsset.V01_ALIF,
         SoundAsset.V01_ALIF_A,
         SoundAsset.V01_ALIF_I,
         SoundAsset.V01_ALIF_U
     ),
-    BA("ب", "f02-ba", "d02-ba", SoundAsset.V02_BA, SoundAsset.V02_BA_A, SoundAsset.V02_BA_I, SoundAsset.V02_BA_U),
-    TA("ت", "f03-ta", "d03-ta", SoundAsset.V03_TA, SoundAsset.V03_TA_A, SoundAsset.V03_TA_I, SoundAsset.V03_TA_U),
+    BA("ب","02-ba",  SoundAsset.V02_BA, SoundAsset.V02_BA_A, SoundAsset.V02_BA_I, SoundAsset.V02_BA_U),
+    TA("ت","03-ta",  SoundAsset.V03_TA, SoundAsset.V03_TA_A, SoundAsset.V03_TA_I, SoundAsset.V03_TA_U),
     TSA(
         "ث",
-        "f04-tsa",
-        "d04-tsa",
+        "04-tsa",
         SoundAsset.V04_TSA,
         SoundAsset.V04_TSA_A,
         SoundAsset.V04_TSA_I,
@@ -32,8 +32,7 @@ enum class Hijaiyah(
     ),
     JIM(
         "ج",
-        "f05-jim",
-        "d05-jim",
+        "05-jim",
         SoundAsset.V05_JIM,
         SoundAsset.V05_JIM_A,
         SoundAsset.V05_JIM_I,
@@ -41,8 +40,7 @@ enum class Hijaiyah(
     ),
     KHA(
         "ح",
-        "f06-kha",
-        "d06-kha",
+        "06-kha",
         SoundAsset.V06_KHA,
         SoundAsset.V06_KHA_A,
         SoundAsset.V06_KHA_I,
@@ -50,8 +48,7 @@ enum class Hijaiyah(
     ),
     KHO(
         "خ",
-        "f07-kho",
-        "d07-kho",
+        "07-kho",
         SoundAsset.V07_KHO,
         SoundAsset.V07_KHO_A,
         SoundAsset.V07_KHO_I,
@@ -59,8 +56,7 @@ enum class Hijaiyah(
     ),
     DAL(
         "د",
-        "f08-dal",
-        "d08-dal",
+        "08-dal",
         SoundAsset.V08_DAL,
         SoundAsset.V08_DAL_A,
         SoundAsset.V08_DAL_I,
@@ -68,19 +64,17 @@ enum class Hijaiyah(
     ),
     DZAL(
         "ذ",
-        "f09-dzal",
-        "d09-dzal",
+        "09-dzal",
         SoundAsset.V09_DZAL,
         SoundAsset.V09_DZAL_A,
         SoundAsset.V09_DZAL_I,
         SoundAsset.V09_DZAL_U
     ),
-    RA("ر", "f10-ra", "d10-ra", SoundAsset.V10_RA, SoundAsset.V10_RA_A, SoundAsset.V10_RA_I, SoundAsset.V10_RA_U),
-    ZA("ز", "f11-za", "d11-za", SoundAsset.V11_ZA, SoundAsset.V11_ZA_A, SoundAsset.V11_ZA_I, SoundAsset.V11_ZA_U),
+    RA("ر", "10-ra", SoundAsset.V10_RA, SoundAsset.V10_RA_A, SoundAsset.V10_RA_I, SoundAsset.V10_RA_U),
+    ZA("ز", "11-za", SoundAsset.V11_ZA, SoundAsset.V11_ZA_A, SoundAsset.V11_ZA_I, SoundAsset.V11_ZA_U),
     SIN(
         "س",
-        "f12-sin",
-        "d12-sin",
+        "12-sin",
         SoundAsset.V12_SIN,
         SoundAsset.V12_SIN_A,
         SoundAsset.V12_SIN_I,
@@ -88,8 +82,7 @@ enum class Hijaiyah(
     ),
     SYIN(
         "ش",
-        "f13-syin",
-        "d13-syin",
+        "13-syin",
         SoundAsset.V13_SYIN,
         SoundAsset.V13_SYIN_A,
         SoundAsset.V13_SYIN_I,
@@ -97,8 +90,7 @@ enum class Hijaiyah(
     ),
     SHOD(
         "ص",
-        "f14-shod",
-        "d14-shod",
+        "14-shod",
         SoundAsset.V14_SHOD,
         SoundAsset.V14_SHOD_A,
         SoundAsset.V14_SHOD_I,
@@ -106,8 +98,7 @@ enum class Hijaiyah(
     ),
     DHOD(
         "ض",
-        "f15-dhod",
-        "d15-dhod",
+        "15-dhod",
         SoundAsset.V15_DHOD,
         SoundAsset.V15_DHOD_A,
         SoundAsset.V15_DHOD_I,
@@ -115,8 +106,7 @@ enum class Hijaiyah(
     ),
     THO(
         "ط",
-        "f16-tho",
-        "d16-tho",
+        "16-tho",
         SoundAsset.V16_THO,
         SoundAsset.V16_THO_A,
         SoundAsset.V16_THO_I,
@@ -124,8 +114,7 @@ enum class Hijaiyah(
     ),
     DHO(
         "ظ",
-        "f17-dho",
-        "d17-dho",
+        "17-dho",
         SoundAsset.V17_DHO,
         SoundAsset.V17_DHO_A,
         SoundAsset.V17_DHO_I,
@@ -133,8 +122,7 @@ enum class Hijaiyah(
     ),
     AIN(
         "ع",
-        "f18-ain",
-        "d18-ain",
+        "18-ain",
         SoundAsset.V18_AIN,
         SoundAsset.V18_AIN_A,
         SoundAsset.V18_AIN_I,
@@ -142,18 +130,16 @@ enum class Hijaiyah(
     ),
     GHOIN(
         "غ",
-        "f19-ghoin",
-        "d19-ghoin",
+        "19-ghoin",
         SoundAsset.V19_GHOIN,
         SoundAsset.V19_GHOIN_A,
         SoundAsset.V19_GHOIN_I,
         SoundAsset.V19_GHOIN_U
     ),
-    FA("ف", "f20-fa", "d20-fa", SoundAsset.V20_FA, SoundAsset.V20_FA_A, SoundAsset.V20_FA_I, SoundAsset.V20_FA_U),
+    FA("ف", "20-fa",  SoundAsset.V20_FA, SoundAsset.V20_FA_A, SoundAsset.V20_FA_I, SoundAsset.V20_FA_U),
     QOF(
         "ق",
-        "f21-qof",
-        "d21-qof",
+        "21-qof",
         SoundAsset.V21_QOF,
         SoundAsset.V21_QOF_A,
         SoundAsset.V21_QOF_I,
@@ -161,8 +147,7 @@ enum class Hijaiyah(
     ),
     KAF(
         "ك",
-        "f22-kaf",
-        "d22-kaf",
+        "22-kaf",
         SoundAsset.V22_KAF,
         SoundAsset.V22_KAF_A,
         SoundAsset.V22_KAF_I,
@@ -170,8 +155,7 @@ enum class Hijaiyah(
     ),
     LAM(
         "ل",
-        "f23-lam",
-        "d23-lam",
+        "23-lam",
         SoundAsset.V23_LAM,
         SoundAsset.V23_LAM_A,
         SoundAsset.V23_LAM_I,
@@ -179,8 +163,7 @@ enum class Hijaiyah(
     ),
     MIM(
         "م",
-        "f24-mim",
-        "d24-mim",
+        "24-mim",
         SoundAsset.V24_MIM,
         SoundAsset.V24_MIM_A,
         SoundAsset.V24_MIM_I,
@@ -188,8 +171,7 @@ enum class Hijaiyah(
     ),
     NUN(
         "ن",
-        "f25-nun",
-        "d25-nun",
+        "25-nun",
         SoundAsset.V25_NUN,
         SoundAsset.V25_NUN_A,
         SoundAsset.V25_NUN_I,
@@ -197,14 +179,13 @@ enum class Hijaiyah(
     ),
     WAWU(
         "و",
-        "f26-wawu",
-        "d26-wawu",
+        "26-wawu",
         SoundAsset.V26_WAWU,
         SoundAsset.V26_WAWU_A,
         SoundAsset.V26_WAWU_I,
         SoundAsset.V26_WAWU_U
     ),
-    HA("ه", "f27-ha", "d27-ha", SoundAsset.V27_HA, SoundAsset.V27_HA_A, SoundAsset.V27_HA_I, SoundAsset.V27_HA_U),
-    YA("ى", "f28-ya", "d28-ya", SoundAsset.V28_YA, SoundAsset.V28_YA_A, SoundAsset.V28_YA_I, SoundAsset.V28_YA_U),
+    HA("ه", "27-ha", SoundAsset.V27_HA, SoundAsset.V27_HA_A, SoundAsset.V27_HA_I, SoundAsset.V27_HA_U),
+    YA("ى", "28-ya", SoundAsset.V28_YA, SoundAsset.V28_YA_A, SoundAsset.V28_YA_I, SoundAsset.V28_YA_U),
 }
 
