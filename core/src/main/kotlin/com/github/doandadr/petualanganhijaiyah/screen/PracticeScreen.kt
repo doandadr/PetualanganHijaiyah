@@ -9,11 +9,8 @@ import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
-import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_HEIGHT
-import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_WIDTH
 import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.practiceStage
 import ktx.actors.onChange
-import ktx.assets.disposeSafely
 import ktx.log.logger
 import ktx.scene2d.*
 
@@ -23,6 +20,7 @@ private val log = logger<PracticeScreen>()
 class PracticeScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {
+        super.show()
         log.debug { "Practice Screen is shown" }
         setupUI()
     }
@@ -53,7 +51,8 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 row()
 
                 practiceStage(assets, audioService) {
-                    it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT-200).spaceTop(100f)
+                    //it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT)
+                    it.grow()
                 }
                 row()
 
@@ -62,22 +61,5 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 }
             }
         }
-    }
-
-    override fun render(delta: Float) {
-        super.render(delta)
-        stage.run {
-            viewport.apply()
-            act()
-            draw()
-        }
-    }
-
-    override fun hide() {
-        stage.clear()
-    }
-
-    override fun dispose() {
-        stage.disposeSafely()
     }
 }
