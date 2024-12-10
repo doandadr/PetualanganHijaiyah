@@ -5,10 +5,11 @@ import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
 import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
-import com.github.doandadr.petualanganhijaiyah.data.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
@@ -20,8 +21,10 @@ import ktx.scene2d.*
 class DragAndDropStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
+    private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ):Table(skin), KTable {
+    private var correctCount: Int = 0
     private val hijaiyahEntries = Hijaiyah.entries
     lateinit var dragEntries: List<Hijaiyah>
     lateinit var dropEntries: List<Hijaiyah>
@@ -58,17 +61,17 @@ class DragAndDropStage(
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)
 
-    fun loadStage() {
+    private fun loadStage() {
         dragGroup.clearChildren()
-        dragEntries = pickRandomEntries(3)
-        dragEntries.shuffled().forEachIndexed { index, letter ->
+        dragEntries = pickRandomEntries(ENTRY_COUNT)
+        dragEntries.shuffled().forEachIndexed { _, letter ->
             val box = HijaiyahBox(letter, HijaiyahBox.Size.MEDIUM, assets)
             val frame = Container<HijaiyahBox>().size(SIZE_HIJAIYAH_MEDIUM)
             box.userObject = frame
             frame.actor = box
 
-            setupDragBox(box)
-            setupDragFrame(frame)
+            addDragSource(box)
+            addDragTarget(frame)
 
             dragGroup.addActor(frame)
         }
@@ -78,19 +81,19 @@ class DragAndDropStage(
         dropEntries.forEachIndexed { index, letter ->
             val box = HijaiyahBox(letter, HijaiyahBox.Size.MEDIUM, assets)
             val frame = Container<HijaiyahBox>().size(SIZE_HIJAIYAH_MEDIUM)
-            box.setState(HijaiyahBox.State.DROP)
+            box.setType(HijaiyahBox.Type.DROP)
             box.userObject = frame
             frame.setBackground(skin.getDrawable(Drawables.ICONBUTTON_BACKGROUND_ROUNDED.drawable))
             frame.actor = box
 
-            setupDropFrame(frame)
+            addDropTarget(frame)
 
             dropGroup.addActor(frame)
         }
-
+        correctCount = 0
     }
 
-    private fun setupDragBox(box: HijaiyahBox) {
+    private fun addDragSource(box: HijaiyahBox) {
         dragAndDrop.addSource(object :DragAndDrop.Source(box) {
             override fun dragStart(event: InputEvent?, x: Float, y: Float, pointer: Int): DragAndDrop.Payload {
                 val payload : DragAndDrop.Payload = DragAndDrop.Payload()
@@ -98,7 +101,6 @@ class DragAndDropStage(
                 stage.addActor(actor)
                 dragAndDrop.setDragActorPosition(actor.width/2, -actor.height/2)
 
-                // TODO play sound
                 audioService.play(SoundAsset.POP_LOW)
 
                 return payload
@@ -112,21 +114,21 @@ class DragAndDropStage(
                 payload: DragAndDrop.Payload?,
                 target: DragAndDrop.Target?
             ) {
-                if (target == null ) {
-                    (box.userObject as Container<HijaiyahBox>).actor = box
+                val sourceBox = (box.userObject as Container<HijaiyahBox>)
 
+                if (target == null ) {
+                    sourceBox.actor = box
                     audioService.play(SoundAsset.CANCEL)
                 } else if ((target.actor as Container<HijaiyahBox>).actor.hijaiyah != box.hijaiyah) {
-                    (box.userObject as Container<HijaiyahBox>).actor = box
-                    audioService.play(SoundAsset.FAILURE)
-
-                    // TODO handle incorrect
+                    // Answer is incorrect
+                    sourceBox.actor = box
+                    gameEventManager.dispatchAnswerIncorrectEvent(false)
                 }
             }
         })
     }
 
-    private fun setupDragFrame(frame: Container<HijaiyahBox>) {
+    private fun addDragTarget(frame: Container<HijaiyahBox>) {
         dragAndDrop.addTarget(object : DragAndDrop.Target(frame) {
             override fun drag(
                 source: DragAndDrop.Source?,
@@ -160,7 +162,7 @@ class DragAndDropStage(
         })
     }
 
-    private fun setupDropFrame(frame: Container<HijaiyahBox>) {
+    private fun addDropTarget(frame: Container<HijaiyahBox>) {
         dragAndDrop.addTarget(object : DragAndDrop.Target(frame) {
             override fun drag(
                 source: DragAndDrop.Source?,
@@ -183,29 +185,30 @@ class DragAndDropStage(
                     val payloadBox = payload.dragActor as HijaiyahBox
                     val frameBox = frame.actor
 
-                    // If incorrect / not match, ignore, handle incorrect, play sound
                     val isCorrect = payloadBox.hijaiyah == frameBox.hijaiyah
 
-                    // If correct, handle correct, change style of box to green
                     if (isCorrect) {
                         payloadBox.setState(HijaiyahBox.State.CORRECT)
                         frame.actor = payloadBox
                         payload.dragActor.touchable = Touchable.disabled
                         audioService.play(SoundAsset.DROP)
-                        // TODO update count number of correct
-                    } else {
-                        // TODO dispatch event
+                        correctCount++
+                        log.debug { "Answered correct $correctCount times" }
+                        if (correctCount >= ENTRY_COUNT) {
+                            gameEventManager.dispatchAnswerCorrectEvent(true)
+                            correctCount = 0
+                        } else {
+                            gameEventManager.dispatchAnswerCorrectEvent(false)
+                        }
                     }
                 }
             }
         })
     }
 
-    fun handleAnswer(index: Int) {
-
-    }
-
     companion object {
+        private const val ENTRY_COUNT = 3
+
         private val log = logger<DragAndDropStage>()
     }
 }
@@ -213,10 +216,12 @@ class DragAndDropStage(
 inline fun <S> KWidget<S>.dragAndDropStage(
     assets: AssetStorage,
     audioService: AudioService,
+    gameEventManager: GameEventManager,
     init: DragAndDropStage.(S) -> Unit = {}
 ) = actor(
     DragAndDropStage(
         assets,
-        audioService
+        audioService,
+        gameEventManager,
     ), init
 )
