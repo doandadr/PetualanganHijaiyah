@@ -3,9 +3,7 @@ package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
@@ -28,28 +26,28 @@ import ktx.scene2d.*
 import space.earlygrey.shapedrawer.ShapeDrawer
 import space.earlygrey.shapedrawer.scene2d.ShapeDrawerDrawable
 
+private data class Line(var sX: Float, var sY: Float, var eX: Float, var eY: Float)
+
 class MatchLineStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
     private val batch: Batch,
-    private val stage: Stage,
     private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Stack(), KGroup {
-    private var drawArea: Image
-    private val hijaiyahEntries = Hijaiyah.entries
-    lateinit var leftEntries: List<Hijaiyah>
-    lateinit var rightEntries: List<Hijaiyah>
-
     private val leftGroup: VerticalGroup
     private val rightGroup: VerticalGroup
     private val skipButton: ImageTextButton
+    private var drawArea: Image
+
+    private val hijaiyahEntries = Hijaiyah.entries
+    lateinit var leftEntries: List<Hijaiyah>
+    lateinit var rightEntries: List<Hijaiyah>
+    private var correctCount: Int = 0
+
     private val dragAndDrop = DragAndDrop()
     private lateinit var dragged: Image
-    private lateinit var draggedStart: Container<Actor>
-
     private val drawer = ShapeDrawer(batch, skin.getRegion(Drawables.CIRCLE_BRUSH.drawable))
-
     private val savedLines: MutableList<Line> = mutableListOf()
     private var currentLine: Line? = null
 
@@ -86,7 +84,6 @@ class MatchLineStage(
 
         }
 
-//        this@MatchLineStage.drawArea = image(Drawables.BOX_ORANGE_ROUNDED.drawable) {
         this@MatchLineStage.drawArea = image(object : ShapeDrawerDrawable(drawer) {
             override fun drawShapes(shapeDrawer: ShapeDrawer?, x: Float, y: Float, width: Float, height: Float) {
                 // Draw saved lines
@@ -103,8 +100,6 @@ class MatchLineStage(
         })
         {
             setFillParent(true)
-//            color = skin.getColor(Colors.GREY.color)
-//            it.grow().align(Align.bottomLeft)
             touchable = Touchable.disabled
         }
         loadStage()
@@ -112,16 +107,12 @@ class MatchLineStage(
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)
 
-    fun loadStage() {
-
+    private fun loadStage() {
         leftGroup.clearChildren()
         leftEntries = pickRandomEntries(5)
         leftEntries.shuffled().forEachIndexed { _, hijaiyah ->
             val box = MatchBox(hijaiyah, MatchBox.State.LEFT, assets)
             box.rightDot.userObject = box
-            box.onChangeEvent {
-                log.debug { "right box touched" }
-            }
 
             addDragSource(box)
             addDragTarget(box)
@@ -133,14 +124,15 @@ class MatchLineStage(
         rightEntries.shuffled().forEachIndexed { index, hijaiyah ->
             val box = MatchBox(hijaiyah, MatchBox.State.RIGHT, assets)
             box.box.setType(HijaiyahBox.Type.TEXT)
-            box.onChangeEvent {
-                log.debug { "right box touched" }
-            }
             box.leftDot.userObject = box
 
             addDropTarget(box)
             rightGroup.addActor(box)
         }
+
+        savedLines.clear()
+        currentLine = null
+        correctCount = 0
     }
 
     private fun addDragSource(box: MatchBox) {
@@ -152,43 +144,25 @@ class MatchLineStage(
                 val draggedDot = (actor as MatchBox).rightDot
                 draggedDot.alpha = 1f
                 dragged = draggedDot
-//                draggedStart = box.rightCircle
                 payload.dragActor = draggedDot
+
+                // Save the starting point of the drag
+                val stageCoordinates = draggedDot.localToStageCoordinates(Vector2(draggedDot.width / 2, draggedDot.height / 2))
+                currentLine = Line(stageCoordinates.x, stageCoordinates.y, stageCoordinates.x, stageCoordinates.y)
+
                 stage.addActor(draggedDot)
                 dragAndDrop.setDragActorPosition(draggedDot.width / 2, -draggedDot.height / 2)
                 audioService.play(SoundAsset.STRETCH)
-
-                // Save the starting point of the drag
-//                val startX = SCREEN_W/2 - STAGE_BOX_WIDTH/2 + box.x + box.width / 2    // box.rightCircle.x
-//                val startY = this@MatchLineStage.y + box.y + box.height / 2  // box.rightCircle.y
-//                val startX = box.rightDot.width / 2   // box.rightCircle.x
-//                val startY = -box.rightDot.height / 2 // box.rightCircle.y
-//
-//                currentLine = Line(startX, startY, startX, startY)
-                this@MatchLineStage.validate()
-                validate()
-                (actor as MatchBox).validate()
-                val stageCoords = actor.localToScreenCoordinates(Vector2(0f, 0f))
-//                val stageCoords = draggedDot.localToScreenCoordinates(vec2(startX, startY))
-//                val stageCoords = draggedDot.localToActorCoordinates(this@MatchLineStage, vec2(startX, startY))
-//                val stageCoords = draggedDot.localToStageCoordinates(Vector2(startX, startY))
-                currentLine = Line(stageCoords.x, stageCoords.y, stageCoords.x, stageCoords.y)
-//                currentLine = Line(draggedDot.width / 2, -draggedDot.height / 2,draggedDot.width / 2, -draggedDot.height / 2)
-
-                log.debug { "Init line starting position at (${stageCoords.x},${stageCoords.y})" }
-//                log.debug { "Init line starting position at (${startX},${startY})" }
 
                 return payload
             }
 
             override fun drag(event: InputEvent?, x: Float, y: Float, pointer: Int) {
-
-                log.debug { "Dragging line, position: (${currentLine?.sX},${currentLine?.sY}) (${currentLine?.eX},${currentLine?.eY}), in func: (${x},${y}),prop: (${dragged.x},${dragged.y})" }
                 // Update the end point of the current line
                 currentLine?.let {
-//                    it.sX = draggedStart.x +
-                    it.eX = dragged.x + dragged.width
-                    it.eY = dragged.y + dragged.height
+                    val stageCoordinates = dragged.localToStageCoordinates(Vector2(dragged.width / 2, dragged.height / 2))
+                    it.eX = stageCoordinates.x
+                    it.eY = stageCoordinates.y
                 }
             }
 
@@ -212,6 +186,7 @@ class MatchLineStage(
                         sourceBox.rightCircle.actor = payload.dragActor
                         audioService.play(SoundAsset.INCORRECT)
                         // TODO handle incorrect
+                        gameEventManager.dispatchAnswerIncorrectEvent(false)
                     }
                     currentLine = null
                 }
@@ -270,7 +245,6 @@ class MatchLineStage(
                 pointer: Int
             ): Boolean {
                 log.debug { "Dragging payload over drop target" }
-                // TODO animate scale up rightCircle
                 return true
             }
 
@@ -284,10 +258,8 @@ class MatchLineStage(
                 log.debug { "Dropping payload on drop target" }
                 if (payload != null) {
                     val payloadDot = payload.dragActor as Image
-
                     val isCorrect = (payloadDot.userObject as MatchBox).hijaiyah == frame.hijaiyah
 
-                    // TODO handle correct/incorrect view
                     if (isCorrect) {
                         frame.box.setState(HijaiyahBox.State.CORRECT)
                         (source?.actor as MatchBox).box.run {
@@ -300,29 +272,39 @@ class MatchLineStage(
                         audioService.play(SoundAsset.CORRECT_DING)
 
                         // Save the line coordinates
+                        val leftDot = frame.leftCircle
+                        val stageCoordinates = leftDot.localToStageCoordinates(Vector2(leftDot.width / 2, leftDot.height / 2))
                         currentLine?.let {
-                            savedLines.add(it)
+                            val newLine = Line(currentLine!!.sX, currentLine!!.sY, stageCoordinates.x, stageCoordinates.y)
+                            savedLines.add(newLine)
                             currentLine = null
+                        }
+
+                        correctCount++
+                        log.debug { "Answered correct $correctCount times" }
+                        if (correctCount >= ENTRY_COUNT) {
+                            gameEventManager.dispatchAnswerCorrectEvent(true)
+                            correctCount = 0
+                        } else {
+                            gameEventManager.dispatchAnswerCorrectEvent(false)
                         }
                     }
                 }
             }
-
         })
     }
 
     companion object {
+        private const val ENTRY_COUNT = 5
         private val log = logger<MatchLineStage>()
     }
 }
 
-private data class Line(var sX: Float, var sY: Float, var eX: Float, var eY: Float)
 
 inline fun <S> KWidget<S>.matchLineStage(
     assets: AssetStorage,
     audioService: AudioService,
     batch: Batch,
-    stage: Stage
     gameEventManager: GameEventManager,
     init: MatchLineStage.(S) -> Unit = {}
 ) = actor(
@@ -330,7 +312,6 @@ inline fun <S> KWidget<S>.matchLineStage(
         assets,
         audioService,
         batch,
-        stage,
         gameEventManager,
     ), init
 )
