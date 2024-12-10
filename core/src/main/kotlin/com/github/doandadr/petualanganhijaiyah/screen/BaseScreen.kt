@@ -1,12 +1,19 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
+import com.badlogic.gdx.Application.LOG_DEBUG
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.event.GameEventListener
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
+import ktx.assets.disposeSafely
+import ktx.log.logger
 
 abstract class BaseScreen(
     val game: Main,
@@ -14,9 +21,46 @@ abstract class BaseScreen(
     val assets: AssetStorage = game.assets,
     val audioService: AudioService = game.audioService,
     val stage: Stage = game.stage,
-): KtxScreen {
+    val batch: Batch = game.batch,
+    val gameEventManager: GameEventManager = game.gameEventManager,
+    val preferences: Preferences = game.preferences,
+    ): KtxScreen, GameEventListener {
+
+    override fun show() {
+        log.debug { "Show ${this::class.simpleName}" }
+        gameEventManager.addGameEventListener(this)
+    }
+
+    override fun render(delta: Float) {
+        audioService.update()
+        stage.run {
+            viewport.apply()
+            act()
+            draw()
+        }
+        if (Gdx.app.logLevel == LOG_DEBUG) {
+            debugMode()
+        }
+    }
+
+    open fun debugMode() {}
 
     override fun resize(width: Int, height: Int) {
         uiViewport.update(width, height, true)
+    }
+
+    override fun hide() {
+        log.debug { "Hide ${this::class.simpleName}" }
+        stage.clear()
+        audioService.stop()
+        gameEventManager.removeGameEventListener(this)
+    }
+
+    override fun dispose() {
+        stage.disposeSafely()
+    }
+
+    companion object {
+        private val log = logger<BaseScreen>()
     }
 }

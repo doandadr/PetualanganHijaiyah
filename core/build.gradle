@@ -38,6 +38,9 @@ dependencies {
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
   implementation "com.github.raeleus.stripe:freetype:$stripeVersion"
-//  implementation "com.github.iibrahimbakr:libGDX-RTL-Language:master"
-  //  implementation "org.gradle.libgdx-rtl:utilities:1.0"
+  implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
+  implementation "org.tensorflow:tensorflow:$tensorflowVersion"
+  implementation 'org.tensorflow:tensorflow-core-platform:0.4.0'
+  implementation 'org.tensorflow:tensorflow-core-api:0.4.0'
+//  implementation 'org.tensorflow:tensorflow-core-kernels:0.4.0'
 }

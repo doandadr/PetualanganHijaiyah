@@ -1,82 +1,130 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
+import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup
 import com.badlogic.gdx.utils.Align
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
+import ktx.actors.plusAssign
 import ktx.scene2d.KGroup
 import ktx.scene2d.KWidget
 import ktx.scene2d.Scene2DSkin
 import ktx.scene2d.actor
 
-enum class StarState {
-    HIDDEN,
-    ZERO,
-    ONE,
-    TWO,
-    THREE
-}
 
-class Stars(
-    val skin: Skin,
-    val star1: Image = Image(skin.getDrawable("star-grey")),
-    val star2: Image = Image(skin.getDrawable("star-grey")),
-    val star3: Image = Image(skin.getDrawable("star-grey")),
-):WidgetGroup(star1, star2, star3), KGroup {
-    init {
-        isTransform = true
-        setInitPosition()
-        setState(StarState.ZERO)
-        setOrigin(Align.center)
-        setScale(0.8f)
-        star2.setOrigin(Align.center)
-        star2.setScale(1.1f)
+class StarWidget(
+    val skin: Skin = Scene2DSkin.defaultSkin,
+    private val starOff1: Image = Image(skin.getDrawable(Drawables.ICON_STARGREY_MEDIUM.drawable)),
+    private val starOff2: Image = Image(skin.getDrawable(Drawables.ICON_STARGREY_LARGE.drawable)),
+    private val starOff3: Image = Image(skin.getDrawable(Drawables.ICON_STARGREY_MEDIUM.drawable)),
+    private val starOn1: Image = Image(skin.getDrawable(Drawables.ICON_STAR_MEDIUM.drawable)),
+    private val starOn2: Image = Image(skin.getDrawable(Drawables.ICON_STAR_LARGE.drawable)),
+    private val starOn3: Image = Image(skin.getDrawable(Drawables.ICON_STAR_MEDIUM.drawable)),
+) : WidgetGroup(starOff1, starOff2, starOff3, starOn1, starOn2, starOn3), KGroup {
+    private lateinit var audioService: AudioService
+    private var isAnimated = false
+
+    constructor(audioService: AudioService) : this() {
+        this.audioService = audioService
     }
 
-    private fun setInitPosition() {
-        val bumpY = 30f
+    init {
+        isTransform = true
+        setState(StarState.ZERO)
+        setOrigin(Align.center)
+        touchable = Touchable.disabled
+
+        listOf(starOn1, starOn2, starOn3).forEach {
+            it.setOrigin(Align.center)
+        }
+
+        val bumpY = 20f
         val gapX = -10f
-        star2.setPosition(star1.width + gapX, bumpY)
-        star3.setPosition(star1.width + star2.width + 2 * gapX, star1.y)
+        starOn2.setPosition(starOn1.width + gapX, bumpY)
+        starOn3.setPosition(starOn1.width + starOn2.width + 2 * gapX, starOn1.y)
+        starOff2.setPosition(starOff1.width + gapX, bumpY)
+        starOff3.setPosition(starOff1.width + starOff2.width + 2 * gapX, starOff1.y)
+
+        setState(StarState.ZERO)
+    }
+
+    fun setAnimated(animated: Boolean) {
+        isAnimated = animated
     }
 
     fun setState(state: StarState) {
-        if (state != StarState.HIDDEN) isVisible = true
-        when (state) {
-            StarState.HIDDEN -> {
-                if (this.isVisible)
-                this.isVisible = false
-            }
-            StarState.ZERO -> {
-                listOf(star1, star2, star3).forEach { star ->
-                    star.setDrawable(skin, "star-grey")
-                }
-            }
-            StarState.ONE -> {
-                star1.setDrawable(skin, "star")
-                star2.setDrawable(skin, "star-grey")
-                star3.setDrawable(skin, "star-grey")
-            }
-            StarState.TWO -> {
-                star1.setDrawable(skin, "star")
-                star2.setDrawable(skin, "star")
-                star3.setDrawable(skin, "star-grey")
-            }
-            StarState.THREE -> {
-                star1.setDrawable(skin, "star")
-                star2.setDrawable(skin, "star")
-                star3.setDrawable(skin, "star")
-            }
+        if (state == StarState.HIDDEN) {
+            isVisible = false
+            return
         }
+        isVisible = true
+
+        listOf(starOn1, starOn2, starOn3).forEach { it.clearActions(); it.isVisible = false }
+
+        when (state) {
+            StarState.ZERO -> {}
+
+            StarState.ONE -> {
+                if (isAnimated) starOn1 += Actions.sequence(
+                    Animations.starAnimation(),
+                    Actions.run { audioService.play(SoundAsset.STAR_1) })
+                else starOn1.isVisible = true
+            }
+
+            StarState.TWO -> {
+                if (isAnimated) starOn1 += Actions.sequence(
+                    Animations.starAnimation(),
+                    Actions.run { audioService.play(SoundAsset.STAR_1) })
+                else starOn1.isVisible = true
+
+                if (isAnimated) starOn2 += Actions.sequence(
+                    DelayAction(0.5f),
+                    Animations.starAnimation(),
+                    Actions.run { audioService.play(SoundAsset.STAR_2) })
+                else starOn2.isVisible = true
+            }
+
+            StarState.THREE -> {
+                if (isAnimated) starOn1 += Actions.sequence(
+                    Animations.starAnimation(),
+                    Actions.run { audioService.play(SoundAsset.STAR_1) })
+                else starOn1.isVisible = true
+
+                if (isAnimated) starOn2 += Actions.sequence(
+                    DelayAction(0.5f),
+                    Animations.starAnimation(),
+                    Actions.run { audioService.play(SoundAsset.STAR_2) })
+                else starOn2.isVisible = true
+
+                if (isAnimated) starOn3 += Actions.sequence(
+                    DelayAction(1f),
+                    Animations.starAnimation(),
+                    Actions.run { audioService.play(SoundAsset.STAR_3) })
+                else starOn3.isVisible = true
+            }
+
+            else -> {}
+        }
+    }
+
+    enum class StarState {
+        HIDDEN,
+        ZERO,
+        ONE,
+        TWO,
+        THREE
     }
 }
 
-
-inline fun <S> KWidget<S>.stars(
-    skin: Skin = Scene2DSkin.defaultSkin,
-    init: Stars.(S) -> Unit = {}
+inline fun <S> KWidget<S>.starWidget(
+    audioService: AudioService,
+    init: StarWidget.(S) -> Unit = {}
 ) = actor(
-    Stars(
-        skin,
-    ), init
+    StarWidget(audioService), init
 )
