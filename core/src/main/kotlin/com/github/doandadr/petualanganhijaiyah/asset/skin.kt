@@ -47,11 +47,16 @@ enum class ImageButtons(val style: String) {
 }
 
 enum class ImageTextButtons(val style: String) {
-    LEVEL_FINISH_SCORE("level-finish-score"),
     SKIP("skip"),
 }
 
 enum class Labels(val style: String) {
+    ARABIC("arabic"),
+    BANNER_GREEN("banner-green"),
+    BANNER_ORANGE("banner-orange"),
+    BANNER_RED("banner-red"),
+    BOARD("board"),
+    MAP("map"),
     PRIMARY("primary"),
     PRIMARY_BORDER("primary-wb"),
     PRIMARY_GREEN_WHITE_BORDER("primary-gw"),
@@ -60,21 +65,19 @@ enum class Labels(val style: String) {
     SECONDARY("secondary"),
     SECONDARY_BORDER("secondary-wb"),
     SECONDARY_GREEN_WHITE_BORDER("secondary-gw"),
-    ARABIC("arabic"),
-    BOARD("board"),
-    MAP("map"),
     SIGN_NAME("sign-name"),
-    BANNER_GREEN("banner-green"),
-    BANNER_ORANGE("banner-orange"),
-    BANNER_RED("banner-red"),
-    TIMER_COUNTER("timer-counter"),
-    TEXTBOX_ORANGE_ROUNDED("textbox-orange-rounded"),
     TEXTBOX_BLUE_ROUNDED("textbox-blue-rounded"),
-    TEXTBOX_WHITE_SQUARE_LARGE("textbox-white-square-large"),
-    TEXTBOX_ORANGE_SQUARE_LARGE("textbox-orange-square-large"),
     TEXTBOX_GREEN_SQUARE_LARGE("textbox-green-square-large"),
+    TEXTBOX_ORANGE_ROUNDED("textbox-orange-rounded"),
+    TEXTBOX_ORANGE_SQUARE_LARGE("textbox-orange-square-large"),
+    TEXTBOX_WHITE_SQUARE_LARGE("textbox-white-square-large"),
     TEXTBOX_WHITE_SQUARE_SMALL("textbox-white-square-small"),
-    DROP_FRAME("drop-frame"),
+    TIMER_COUNTER("timer-counter"),
+    TUTORIAL("tutorial"),
+    TUTORIAL_LEFT_DOWN("tutorial-left-down"),
+    TUTORIAL_LEFT_UP("tutorial-left-up"),
+    TUTORIAL_RIGHT_DOWN("tutorial-right-down"),
+    TUTORIAL_RIGHT_UP("tutorial-right-up"),
 }
 
 enum class TextButtons(val style: String) {
@@ -92,6 +95,7 @@ enum class TextTooltips(val style: String) {
 
 enum class Drawables(val drawable: String) {
     BISMILLAH("bismillah"),
+    BISMILLAH_WHITE("bismillah-white"),
     BOOK("book"),
     BOX_WHITE_ROUNDED("box-rounded"),
     BOX_ORANGE_ROUNDED("box-orange-rounded"),
@@ -153,5 +157,6 @@ enum class Colors(val color: String) {
     GREEN("RGBA_45_165_0_255"),
     LIGHT_GREEN("RGBA_170_255_136_255"),
     GREY("RGBA_94_105_126_255"),
+    BROWN("RGBA_164_77_0_255"),
 }
 
