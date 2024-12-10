@@ -23,10 +23,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.widget.*
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.AnswerPopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.answerPopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.*
-import ktx.actors.onChangeEvent
-import ktx.actors.onClick
-import ktx.actors.onTouchEvent
-import ktx.actors.plusAssign
+import ktx.actors.*
 import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
@@ -90,6 +87,7 @@ class LevelScreen(
     private fun setupUI() {
         val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
+        stage.isDebugAll = true
         stage.actors {
             backgroundImg = image {
                 setFillParent(true)
@@ -203,11 +201,11 @@ class LevelScreen(
             layout.touchable = Touchable.disabled
 
             popup.clear()
-            popup += Actions.sequence(Actions.show(), fadeIn(0.5f))
+            popup += Actions.sequence(Actions.show(), fadeIn(0.2f))
         } else {
             layout.touchable = Touchable.childrenOnly
 
-            popup += Actions.sequence(fadeOut(0.5f), Actions.hide(), Actions.run { popup.clear() })
+            popup += Actions.sequence(fadeOut(0.2f), Actions.hide(), Actions.run { popup.clear() })
         }
 
         when (popupState) {
@@ -262,12 +260,6 @@ class LevelScreen(
 
             PopupState.CORRECT -> {
                 popup.add(scene2d.answerPopup(AnswerPopup.State.CORRECT, preferences) {
-                    onChangeEvent {
-                        this@answerPopup.touchable = Touchable.disabled
-                        this@answerPopup.clearActions()
-                        setPopup(PopupState.NONE)
-                        nextRound()
-                    }
                     this@answerPopup.clearActions()
                     this@answerPopup += Actions.sequence(Animations.fadeInOutAnimation(), Actions.run {
                         if (popupState != PopupState.FINISH) {
@@ -275,22 +267,30 @@ class LevelScreen(
                             nextRound()
                         }
                     })
+                    onClick {
+                        this@answerPopup.clearActions()
+                        setPopup(PopupState.NONE)
+                        nextRound()
+                        this@answerPopup.touchable = Touchable.disabled
+                    }
                 })
             }
 
             PopupState.INCORRECT -> {
                 popup.add(scene2d.answerPopup(AnswerPopup.State.INCORRECT, preferences) {
-                    onClick {
-                        this.clearActions()
-                        loadStage(currentStage)
-                        setPopup(PopupState.NONE)
-                    }
                     this.clearActions()
-                    this += Actions.sequence(Animations.fadeInOutAnimation(), Actions.run {
-                        setPopup(PopupState.NONE)
+                    this@answerPopup += Actions.sequence(Animations.fadeInOutAnimation(), Actions.run {
                         playerInfo.loseHealth()
+                        setPopup(PopupState.NONE)
                         loadStage(currentStage)
                     })
+                    onClick {
+                        this@answerPopup.clearActions()
+                        playerInfo.loseHealth()
+                        setPopup(PopupState.NONE)
+                        loadStage(currentStage)
+                        this@answerPopup.touchable = Touchable.disabled
+                    }
                 })
             }
 
@@ -323,6 +323,7 @@ class LevelScreen(
             timer.isVisible = false
         }
 
+        levelTitle.setText(level.name)
         backgroundImg.drawable = TextureRegionDrawable(assets[TextureAsset.entries[level.bgIndex].descriptor])
 
         audioService.play(MusicAsset.entries[level.musicIndex])
@@ -361,6 +362,7 @@ class LevelScreen(
         val nextLevel = levels.find { it.number == nextLevelNumber }
         if (nextLevel != null) {
             log.debug { "Next level $nextLevelNumber" }
+            preferences[PrefKey.CURRENT_LEVEL.key] = nextLevelNumber
             loadLevel(nextLevelNumber)
         } else {
             log.debug { "Adventure finished" }
@@ -395,6 +397,9 @@ class LevelScreen(
         }
     }
 
+    private fun isEndOfLevel(): Boolean =
+        currentStageIndex + 1 >= currentLevel.stages.size && currentRound >= currentStage.rounds
+
     private fun updateLevelData(level: LevelModel, newScore: Float, newStars: Int, newRecordTime: Float) {
         log.debug { "Updating level data of ${level.name}" }
 
@@ -428,7 +433,10 @@ class LevelScreen(
     override fun answerCorrect(isContinue: Boolean) {
         log.debug { "Answer is correct, continue? $isContinue" }
         audioService.play(listOf(SoundAsset.CORRECT_BLING, SoundAsset.CORRECT_DING).random())
-        if (isContinue) {
+
+        if (isEndOfLevel()) {
+            nextRound()
+        } else if (isContinue) {
             setPopup(PopupState.CORRECT)
         }
     }
@@ -436,8 +444,15 @@ class LevelScreen(
     override fun answerIncorrect(isContinue: Boolean) {
         log.debug { "Answer is wrong, continue? $isContinue" }
         audioService.play(listOf(SoundAsset.INCORRECT, SoundAsset.INCORRECT_BIG).random())
+
+        if (isEndOfLevel()) {
+            nextRound()
+            return
+        }
         if (isContinue) {
             setPopup(PopupState.INCORRECT)
+        } else {
+            playerInfo.loseHealth()
         }
     }
 
@@ -446,17 +461,21 @@ class LevelScreen(
         currentScore = score
         currentStar = stars
         currentRecordTime = time
+
+        timer.stop()
         audioService.play(SoundAsset.COMPLETE)
         updateLevelData(currentLevel, score, stars, time)
         layout.touchable = Touchable.disabled
-        timer.stop()
     }
 
     override fun levelFailed() {
         log.debug { "Level failed" }
         currentScore = 0f
         currentStar = 0
+        currentRound = 1
+        currentStageIndex = 0
         currentRecordTime = timer.elapsedSeconds
+
         audioService.play(SoundAsset.FAILURE)
         setPopup(PopupState.FAILED)
         layout.touchable = Touchable.disabled
@@ -483,6 +502,8 @@ class LevelScreen(
             // load join level
             loadLevel(levels[3].number)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+            // load match line level
+            loadLevel(levels[2].number)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {

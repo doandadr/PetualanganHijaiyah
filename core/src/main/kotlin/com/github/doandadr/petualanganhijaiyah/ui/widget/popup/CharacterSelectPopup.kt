@@ -46,12 +46,18 @@ class CharacterSelectPopup(
         setupListeners()
     }
 
+    private fun handleSelected(selected: String) {
+        girlButton.color = skin.getColor(if (selected == GIRL) Colors.LIGHT_GREEN.color else Colors.WHITE.color)
+        boyButton.color = skin.getColor(if (selected == BOY) Colors.LIGHT_GREEN.color else Colors.WHITE.color)
+    }
+
     private fun setupListeners() {
         girlButton.onChangeEvent {
             preferences.flush {
                 preferences[PrefKey.PLAYER.key] = player.apply { character = GIRL }
             }
             audioService.play(SoundAsset.CLICK_BUTTON)
+            handleSelected(GIRL)
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.NONE)
         }
         boyButton.onChangeEvent {
@@ -59,6 +65,7 @@ class CharacterSelectPopup(
                 preferences[PrefKey.PLAYER.key] = player.apply { character = BOY }
             }
             audioService.play(SoundAsset.CLICK_BUTTON)
+            handleSelected(BOY)
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.NONE)
         }
     }

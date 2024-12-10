@@ -48,7 +48,6 @@ class HijaiyahBox(
                 touchable = Touchable.disabled
             }
             this@HijaiyahBox.hijaiyahText = label("", Labels.PRIMARY.style) {
-                color = skin.getColor(Colors.BLACK.color)
                 setAlignment(Align.center)
                 setFontScale(this@HijaiyahBox.fontScale)
                 touchable = Touchable.disabled
@@ -85,17 +84,20 @@ class HijaiyahBox(
             Type.DEFAULT -> {
                 hijaiyahText.isVisible = false
                 image.isVisible = true
+
             }
             Type.TEXT -> {
                 hijaiyahText.isVisible = true
                 image.isVisible = false
                 hijaiyahText.setText(hijaiyah.name.uppercase())
+                hijaiyahText.color = skin.getColor(Colors.BLACK.color)
             }
             Type.DROP -> {
                 hijaiyahText.isVisible = true
                 image.isVisible = false
                 frame.style = skin.get(Buttons.HIJAIYAH_DROP.style,ButtonStyle::class.java)
                 hijaiyahText.setText(hijaiyah.name.uppercase())
+                hijaiyahText.color = skin.getColor(Colors.WHITE.color)
             }
         }
     }

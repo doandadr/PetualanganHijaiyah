@@ -4,6 +4,7 @@ import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
@@ -23,11 +24,19 @@ class AnswerPopup(
     private val bannerStyle = if (state == State.CORRECT) Labels.BANNER_GREEN.style else Labels.BANNER_RED.style
 
     init {
-        image(this@AnswerPopup.charImg)
-        row()
-        label(this@AnswerPopup.bannerText, this@AnswerPopup.bannerStyle) {
-            setAlignment(Align.center)
-            it.padTop(-40f)
+        stack {
+            table {
+                image(this@AnswerPopup.charImg)
+                row()
+                label(this@AnswerPopup.bannerText, this@AnswerPopup.bannerStyle) {
+                    setAlignment(Align.center)
+                    it.padTop(-40f)
+                }
+            }
+            image(Drawables.EFFECT_CONFETTI.drawable) {
+                setScaling(Scaling.none)
+                setScale(2f)
+            }
         }
     }
 
