@@ -1,12 +1,9 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
 import com.badlogic.gdx.scenes.scene2d.ui.*
-import com.github.doandadr.petualanganhijaiyah.asset.Drawables
-import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
-import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
-import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
-import com.github.doandadr.petualanganhijaiyah.data.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
@@ -18,6 +15,7 @@ import ktx.scene2d.*
 class MCQVoiceStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
+    private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
     private var answerVoiceButton: ImageButton
@@ -64,13 +62,13 @@ class MCQVoiceStage(
 
     private fun handleAnswer(index: Int) {
         if (currentLetters[index] == correctAnswer) {
-            // TODO handle correct
-
             choiceBoxes[index].setState(HijaiyahBox.State.CORRECT)
+            audioService.play(choiceBoxes[index].hijaiyah.audio)
+            gameEventManager.dispatchAnswerCorrectEvent(true)
         } else {
-            // TODO handle incorrect
-
             choiceBoxes[index].setState(HijaiyahBox.State.INCORRECT)
+            audioService.play(choiceBoxes[index].hijaiyah.audio)
+            gameEventManager.dispatchAnswerIncorrectEvent(true)
         }
     }
 
@@ -107,10 +105,12 @@ class MCQVoiceStage(
 inline fun <S> KWidget<S>.mcqVoiceStage(
     assets: AssetStorage,
     audioService: AudioService,
+    gameEventManager: GameEventManager,
     init: MCQVoiceStage.(S) -> Unit = {}
 ) = actor(
     MCQVoiceStage(
         assets,
-        audioService
+        audioService,
+        gameEventManager,
     ), init
 )

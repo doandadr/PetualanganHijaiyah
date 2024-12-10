@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_HIJAIYAH_MEDIUM
@@ -18,7 +19,8 @@ import ktx.scene2d.*
 class MCQStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
-    skin: Skin = Scene2DSkin.defaultSkin
+    private val gameEventManager: GameEventManager,
+    skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
     private var answerBox: Stack
     private val hijaiyahEntries = Hijaiyah.entries
@@ -69,21 +71,22 @@ class MCQStage(
         loadStage()
     }
 
-    fun handleAnswer(index: Int) {
+    private fun handleAnswer(index: Int) {
         if (currentEntries[index] == correctAnswer) {
-            // TODO handle correct
-
             choiceBoxes[index].setState(HijaiyahBox.State.CORRECT)
+            audioService.play(choiceBoxes[index].hijaiyah.audio)
+            gameEventManager.dispatchAnswerCorrectEvent(true)
         } else {
-            // TODO handle incorrect
-
             choiceBoxes[index].setState(HijaiyahBox.State.INCORRECT)
+            audioService.play(choiceBoxes[index].hijaiyah.audio)
+            gameEventManager.dispatchAnswerIncorrectEvent(true)
         }
     }
 
     private fun pickRandomEntries(count: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(count)
 
-    fun loadStage() {
+    private fun loadStage() {
+        // ramdomize whether stage is arabic to latin or vice versa
         state = State.entries.random()
         // get random letters
         currentEntries = pickRandomEntries(ENTRY_COUNT)
@@ -112,11 +115,6 @@ class MCQStage(
         answerArabic.updateLetter(correctAnswer)
     }
 
-    fun setState(state: State) {
-        this@MCQStage.state = state
-        loadStage()
-    }
-
     enum class State {
         ARABIC,
         LATIN
@@ -132,10 +130,12 @@ class MCQStage(
 inline fun <S> KWidget<S>.mcqStage(
     assets: AssetStorage,
     audioService: AudioService,
+    gameEventManager: GameEventManager,
     init: MCQStage.(S) -> Unit = {}
 ) = actor(
     MCQStage(
         assets,
-        audioService
+        audioService,
+        gameEventManager,
     ), init
 )
