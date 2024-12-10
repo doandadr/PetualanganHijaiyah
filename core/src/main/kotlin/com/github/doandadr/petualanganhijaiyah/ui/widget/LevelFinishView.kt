@@ -60,8 +60,8 @@ class LevelFinishView(
                     setScaling(Scaling.none)
                 }
                 this@LevelFinishView.stars = starWidget(this@LevelFinishView.audioService) {
-                    setFillParent(true) // TODO check if stars is centered
-                    width = parent.width
+                    setFillParent(true)
+                    setPosition(0f, 0f, Align.center)
                 }
                 it.padTop(80.0f).padBottom(30.0f).expandY().colspan(3).align(Align.center)
             }

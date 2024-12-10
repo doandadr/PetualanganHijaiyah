@@ -46,6 +46,7 @@ class TimerWidget(
 
     fun update(deltaTime: Float) {
         when (state) {
+            State.DISABLED -> return
             State.STOP -> return
             State.START -> {
                 deltaTimerCount += deltaTime
@@ -91,7 +92,7 @@ class TimerWidget(
     fun setState(timerState: State) {
         state = timerState
         bar.isVisible = (state != State.STOPWATCH)
-        isVisible = (state != State.STOP)
+        isVisible = (state != State.DISABLED)
     }
 
     fun startStopwatch() {
@@ -108,6 +109,7 @@ class TimerWidget(
         RESUME,
         STOPWATCH,
         START,
+        DISABLED,
     }
 
     companion object {
