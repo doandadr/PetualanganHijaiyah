@@ -63,6 +63,7 @@ data class PlayerModel(
     var character: String = "girl", // boy, girl
     var totalScore: Float = 0f,
     var totalStar: Int = 0,
+    var tutorials: MutableSet<Int> = mutableSetOf()
 )
 
 enum class Difficulty(
