@@ -20,7 +20,9 @@ import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
 import com.github.doandadr.petualanganhijaiyah.util.centerX
-import ktx.actors.onTouchEvent
+import ktx.actors.onChange
+import ktx.actors.onChangeEvent
+import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.preferences.flush
@@ -37,7 +39,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
     private lateinit var totalScore: Label
     private lateinit var totalStar: Label
 
-    private lateinit var levels:Array<LevelModel>
+    private lateinit var levels: Array<LevelModel>
     private lateinit var levelsSavedData: MutableList<LevelSavedData>
     private lateinit var levelButtons: MutableList<LevelButton>
 
@@ -53,8 +55,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setupData() {
-        levels= levelsData
-        levelsSavedData=
+        levels = levelsData
+        levelsSavedData =
             preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
         levelButtons = mutableListOf()
     }
@@ -201,11 +203,29 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
                 row()
                 homeButton = imageButton(ImageButtons.HOME.style) {
+                    isTransform = true
+                    setOrigin(Align.center)
                     it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomLeft)
+                    onTouchDown {
+                        this.clearActions()
+                        this += Animations.pulseAnimation()
+                    }
+                    onChange {
+                        game.setScreen<HomeScreen>()
+                    }
                 }
 
                 tutorialButton = imageButton(ImageButtons.QUESTION.style) {
+                    isTransform = true
+                    setOrigin(Align.center)
                     it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
+                    onTouchDown {
+                        this.clearActions()
+                        this += Animations.pulseAnimation()
+                    }
+                    onChange {
+                        log.debug { "Tutorial button pressed" }
+                    }
                 }
             }
         }
@@ -241,8 +261,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
                     levelButton.setStarCount(0)
                     setOnTouchEvent(levelButton, index)
-                } else if (levelSave.number in listOf(2, 3) || levelsSavedData.find { it.number == number - 3 }?.hasCompleted == true
-                ) {
+                } else if (levelSave.number in listOf(2) || levelsSavedData.find { it.number in listOf(number - 2) }?.hasCompleted == true) {
                     levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
                     levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
                 } else {
@@ -261,16 +280,14 @@ class MapScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setOnTouchEvent(levelButton: LevelButton, index: Int) {
-        levelButton.onTouchEvent(
-            onDown = { _ ->
-                this.clearActions()
-                this += Animations.pulseAnimation()
-            },
-            onUp = { _ ->
-                preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
-                game.setScreen<LevelScreen>()
-            }
-        )
+        levelButton.onTouchDown {
+            this.clearActions()
+            this += Animations.pulseAnimation()
+        }
+        levelButton.onChangeEvent {
+            preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
+            game.setScreen<LevelScreen>()
+        }
     }
 
     override fun debugMode() {

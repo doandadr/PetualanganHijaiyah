@@ -13,7 +13,10 @@ fun main() {
       return
     Lwjgl3Application(Main(), Lwjgl3ApplicationConfiguration().apply {
         setTitle("PetualanganHijaiyah")
-        setWindowedMode(540, 960)
+        // figma (360, 706)
+        // phone (432, 960)
+        // real phone (1080, 1920)
+        setWindowedMode(432, 960)
         setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
     })
 }

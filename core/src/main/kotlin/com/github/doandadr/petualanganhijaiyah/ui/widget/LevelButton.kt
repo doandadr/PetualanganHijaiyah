@@ -1,61 +1,73 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_BIG
+import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget.StarState
 import ktx.scene2d.KGroup
 import ktx.scene2d.KWidget
 import ktx.scene2d.Scene2DSkin
 import ktx.scene2d.actor
 
 class LevelButton(
-    levelText: String,
     buttonStyle: String,
     private val skin: Skin = Scene2DSkin.defaultSkin,
-    private val label: Label = Label(levelText, skin, Labels.PRIMARY_GREY_WHITE_BORDER.style),
+    val label: Label = Label("", skin, Labels.PRIMARY_GREY_WHITE_BORDER.style),
     val button: Button = Button(skin, buttonStyle),
     val text: Container<Label> = Container(label),
-    val dots: LevelDots = LevelDots(skin),
-    val starWidget: StarWidget = StarWidget(skin),
+    val dots: LevelDots = LevelDots(),
+    val starWidget: StarWidget = StarWidget(),
 ) : WidgetGroup(button, text, dots, starWidget), KGroup {
     init {
-        // TODO set state based on save data
+        isTransform = true
+        setOrigin(Align.center)
+        button.isTransform = true
+        button.setOrigin(Align.center)
         setState(LevelButtonState.INACCESSIBLE)
         label.setFontScale(SCALE_FONT_BIG)
+        touchable = Touchable.enabled
+        label.touchable = Touchable.disabled
     }
 
     fun rotateText(degrees: Float) {
-        text.isTransform = true
-        text.setOrigin(Align.center)
         text.rotation = degrees
+    }
+
+    fun setTitle(text: String) {
+        label.setText(text)
     }
 
     fun setState(state: LevelButtonState) {
         if (state == LevelButtonState.HIDDEN) {
-            isVisible = false
-            return
+            starWidget.setState(StarState.HIDDEN)
         }
-        isVisible = true
-
         when (state) {
             LevelButtonState.INACCESSIBLE -> label.style =
                 skin.get(Labels.PRIMARY_GREY_WHITE_BORDER.style, LabelStyle::class.java)
-
             LevelButtonState.AVAILABLE -> label.style =
                 skin.get(Labels.PRIMARY_GREEN_WHITE_BORDER.style, LabelStyle::class.java)
-
             LevelButtonState.PASSED -> label.style =
                 skin.get(Labels.PRIMARY_ORANGE_WHITE_BORDER.style, LabelStyle::class.java)
-
-            else -> {}
+            LevelButtonState.HIDDEN -> label.isVisible = false
         }
         when (state) {
             LevelButtonState.INACCESSIBLE -> dots.setState(LevelDots.DotState.INACCESSIBLE)
             LevelButtonState.AVAILABLE -> dots.setState(LevelDots.DotState.AVAILABLE)
             LevelButtonState.PASSED -> dots.setState(LevelDots.DotState.PASSED)
-            else -> {}
+            LevelButtonState.HIDDEN -> dots.setState(LevelDots.DotState.HIDDEN)
+        }
+    }
+
+    fun setStarCount(stars: Int) {
+        when(stars) {
+            0 -> starWidget.setState(StarState.ZERO)
+            1 -> starWidget.setState(StarState.ONE)
+            2 -> starWidget.setState(StarState.TWO)
+            3 -> starWidget.setState(StarState.THREE)
+            else -> {starWidget.setState(StarState.HIDDEN)}
         }
     }
 
@@ -68,12 +80,10 @@ class LevelButton(
 }
 
 inline fun <S> KWidget<S>.levelButton(
-    labelText: String,
     buttonStyle: String,
     init: LevelButton.(S) -> Unit = {}
 ) = actor(
     LevelButton(
-        labelText,
         buttonStyle,
     ), init
 )

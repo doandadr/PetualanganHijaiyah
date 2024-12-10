@@ -12,7 +12,7 @@ import ktx.scene2d.actor
 
 
 class LevelDots(
-    val skin: Skin,
+    val skin: Skin = Scene2DSkin.defaultSkin,
     val dot1: Image = Image(skin.getDrawable(Drawables.CIRCLE_GREY.drawable)),
     val dot2: Image = Image(skin.getDrawable(Drawables.CIRCLE_GREY.drawable)),
     val dot3: Image = Image(skin.getDrawable(Drawables.CIRCLE_GREY.drawable)),
@@ -85,10 +85,7 @@ class LevelDots(
 }
 
 inline fun <S> KWidget<S>.levelDots(
-    skin: Skin = Scene2DSkin.defaultSkin,
     init: LevelDots.(S) -> Unit = {}
 ) = actor(
-    LevelDots(
-        skin,
-    ), init
+    LevelDots(), init
 )
