@@ -48,6 +48,7 @@ enum class ImageButtons(val style: String) {
 
 enum class ImageTextButtons(val style: String) {
     SKIP("skip"),
+    SUBMIT("submit"),
 }
 
 enum class Labels(val style: String) {
