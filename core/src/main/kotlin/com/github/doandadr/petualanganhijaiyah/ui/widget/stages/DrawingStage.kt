@@ -39,7 +39,7 @@ class DrawingStage(
     private var drawImage: Image
     private var incorrectButton: Button
     private var correctButton: Button
-    private var skipButton: KImageTextButton
+    private var skipButton: ImageButton
     private var hijaiyahText: Label
     private val hijaiyahEntries = Hijaiyah.entries
     private val drawer = ShapeDrawer(batch, skin.getRegion(Drawables.CIRCLE_BRUSH.drawable))
@@ -55,28 +55,30 @@ class DrawingStage(
         background(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
 
         label("Tuliskan huruf...", Labels.SECONDARY_BORDER.style) {
-            it.padTop(PADDING_INNER_SCREEN)
+            it.padTop(PADDING_INNER_SCREEN).colspan(2)
         }
 
         row()
         this@DrawingStage.hijaiyahText = label("", Labels.TEXTBOX_GREEN_SQUARE_LARGE.style) {
             setAlignment(Align.center)
             setFontScale(SCALE_BTN_MEDIUM)
-            it.spaceTop(20f)
+            it.spaceTop(20f).colspan(2)
         }
 
         row()
         this@DrawingStage.drawingBoard = table {
             background(skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable))
-            it.prefSize(SIZE_DRAWING_BOARD).spaceTop(30f)
-            this@DrawingStage.drawImage = image()
             touchable = Touchable.enabled
+            it.prefSize(SIZE_DRAWING_BOARD).spaceTop(30f).colspan(2)
+
+            this@DrawingStage.drawImage = image()
         }
 
         row()
         horizontalGroup {
             this@DrawingStage.correctButton = button(Buttons.CHECK.style)
             this@DrawingStage.incorrectButton = button(Buttons.X.style)
+            it.colspan(2)
         }
 
         row()
@@ -91,17 +93,17 @@ class DrawingStage(
             onChange {
                 this@DrawingStage.handleSubmission()
             }
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expandY()
         }
 
-        row()
-        this@DrawingStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
+        this@DrawingStage.skipButton = imageButton(ImageButtons.SKIP.style) {
             isTransform = true
             setOrigin(Align.bottom)
             setScale(SCALE_BTN_SMALL)
             onChangeEvent {
                 this@DrawingStage.loadStage()
             }
-            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expandY()
         }
 
         loadStage()
@@ -150,11 +152,11 @@ class DrawingStage(
             }
         })
 
-        drawImage.drawable = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
-        drawImage.touchable = Touchable.disabled
-        Gdx.app.postRunnable {
-            drawImage.setScale(1.7f)
-        }
+//        drawImage.drawable = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
+//        drawImage.touchable = Touchable.disabled
+//        drawImage.setOrigin(Align.center)
+//        drawImage.setScaling(Scaling.stretch)
+//        drawImage.setScale(1.5f)
     }
 
     override fun draw(batch: Batch?, parentAlpha: Float) {
@@ -165,7 +167,7 @@ class DrawingStage(
         for (segment in segments) {
             if (segment.isNotEmpty()) {
                 for (i in 0 until segment.size - 1) {
-                    drawer.line(segment[i], segment[i + 1], 5f) // Adjust the line thickness as needed
+                    drawer.line(segment[i], segment[i + 1], 10f) // Adjust the line thickness as needed
                 }
             }
         }
