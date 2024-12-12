@@ -4,12 +4,15 @@ import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventListener
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialWidget
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.assets.disposeSafely
@@ -24,11 +27,16 @@ abstract class BaseScreen(
     val batch: Batch = game.batch,
     val gameEventManager: GameEventManager = game.gameEventManager,
     val preferences: Preferences = game.preferences,
-    ): KtxScreen, GameEventListener {
+) : KtxScreen, GameEventListener {
+    private val tutorialView = TutorialWidget(preferences, gameEventManager)
 
     override fun show() {
         log.debug { "Show ${this::class.simpleName}" }
         gameEventManager.addGameEventListener(this)
+        Gdx.app.postRunnable {
+            stage.addActor(tutorialView)
+            tutorialView.toFront()
+        }
     }
 
     override fun render(delta: Float) {
@@ -58,6 +66,10 @@ abstract class BaseScreen(
 
     override fun dispose() {
         stage.disposeSafely()
+    }
+
+    override fun showTutorial(actor: Actor, type: TutorialType) {
+        tutorialView.addTutorial(actor, type)
     }
 
     companion object {

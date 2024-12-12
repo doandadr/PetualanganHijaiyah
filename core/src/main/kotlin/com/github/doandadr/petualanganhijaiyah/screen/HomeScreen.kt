@@ -2,12 +2,12 @@ package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -19,23 +19,20 @@ import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.*
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.characterSelectPopup
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.nameChangePopup
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.settingsPopup
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.tutorialPopup
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.*
 import ktx.actors.onChange
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.log.logger
+import ktx.preferences.flush
 import ktx.preferences.get
+import ktx.preferences.set
 import ktx.scene2d.*
 import ktx.scene2d.vis.floatingGroup
 
 private val log = logger<HomeScreen>()
 
 class HomeScreen(game: Main) : BaseScreen(game) {
-    private lateinit var anotherTutorialLabel: Label
-    private lateinit var tutorialLabel: Label
     private lateinit var player: PlayerModel
 
     private lateinit var exitButton: TextButton
@@ -46,6 +43,11 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     private var popup: Table = Table()
     private var layout: Table = Table()
     private var popupState = PopupState.NONE
+    private val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
+
+    private var tutorials: MutableList<Tutorial> = mutableListOf()
+    private lateinit var currentTutorial: Tutorial
+    private var currentTutorialIndex = 0
 
     enum class PopupState {
         NONE,
@@ -59,10 +61,51 @@ class HomeScreen(game: Main) : BaseScreen(game) {
         super.show()
         log.debug { "Home Screen is shown" }
 
-        setupData()
         setupAudio()
+        setupData()
         setupUI()
-//        setTutorialPopupPosition()
+        setupTutorials()
+        showTutorials()
+    }
+
+    private fun setupTutorials() {
+        Gdx.app.postRunnable {
+            registerTutorial(player, TutorialType.HOME_NAME, nameButton)
+            registerTutorial(player, TutorialType.HOME_PRACTICE, bookButton)
+            registerTutorial(player, TutorialType.HOME_START, startButton)
+
+            showTutorials()
+        }
+    }
+
+    private fun registerTutorial(player: PlayerModel, type: TutorialType, actor: Actor) {
+        if (player.tutorials.add(type.ordinal)) {
+            val tutorial = Tutorial(type, actor, stage)
+            tutorials.add(tutorial)
+        }
+    }
+
+    private fun showTutorials() {
+        if (tutorials.isNotEmpty()) {
+            currentTutorial = tutorials[currentTutorialIndex]
+            setPopup(PopupState.TUTORIAL)
+
+            preferences.flush {
+                this[PrefKey.PLAYER.key] = player
+            }
+        }
+    }
+
+    override fun showNextTutorial() {
+        if (tutorials.getOrNull(currentTutorialIndex + 1) != null) {
+            currentTutorialIndex++
+            currentTutorial = tutorials[currentTutorialIndex]
+            setPopup(PopupState.TUTORIAL)
+        } else {
+            currentTutorialIndex = 0
+            tutorials.clear()
+            setPopup(PopupState.NONE)
+        }
     }
 
     private fun setupData() {
@@ -76,10 +119,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setupUI() {
-        val skin = Scene2DSkin.defaultSkin
-
         val bgHome = TextureRegionDrawable(assets[TextureAsset.HOME.descriptor])
-        val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
         stage.actors {
             image(bgHome) {
@@ -137,7 +177,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 this += Animations.pulseAnimation()
                             }
                             onChange {
-                            game.setScreen<MapScreen>()
+                                game.setScreen<MapScreen>()
                             }
                         }
                         settingButton = textButton("PENGATURAN", TextButtons.BOARD.style) {
@@ -197,51 +237,17 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
             popup = table {
                 setFillParent(true)
-                setBackground(bgDim)
                 isVisible = false
             }
-
-//            table {
-//                setFillParent(true)
-//
-////                setBackground(bgDim)
-//                layout.touchable = if (this.isVisible) Touchable.disabled else Touchable.childrenOnly
-//                tutorialLabel = label("This is a tutorial message", Labels.TUTORIAL_RIGHT_UP.style) {
-//                    setFontScale(SCALE_FONT_SMALL)
-//                }
-//                anotherTutorialLabel = label("This is a sign", Labels.TUTORIAL_LEFT_DOWN.style) {
-//                    setFontScale(SCALE_FONT_SMALL)
-//                }
-//            }
         }
     }
-
-    // ON screen popup, or ON load stage, get player data -> tutorials
-    // add tutorial type ordinal to tutorials, if
-
-//    private fun setTutorialPopupPosition() {
-//        Gdx.app.postRunnable {
-//            val loc : Vector2 = Vector2(bookButton.x, bookButton.y)
-//            val stageLoc: Vector2= bookButton.localToStageCoordinates(loc)
-//            log.debug { "ActorStage (${stageLoc.x},${stageLoc.y})" }
-//
-//            val zeroLoc: Vector2 = bookButton.localToStageCoordinates(Vector2())
-//            log.debug { "ZeroStage (${zeroLoc.x},${zeroLoc.y})" }
-//
-//            tutorialLabel.setPosition(zeroLoc.x+bookButton.width-tutorialLabel.width, zeroLoc.y-tutorialLabel.height)
-//
-////            val signLoc: Vector2 = nameButton.localToStageCoordinates(Vector2())
-//            val signLoc: Vector2 = nameButton.localToStageCoordinates(Vector2(0f, nameButton.height))
-//            log.debug { "SignStage (${signLoc},${signLoc})" }
-//
-//            anotherTutorialLabel.setPosition(signLoc.x, signLoc.y)
-//        }
-//    }
 
     private fun setPopup(state: PopupState) {
         popupState = state
 
         if (popupState != PopupState.NONE) {
+            popup.setBackground(bgDim)
+            popup.align(Align.center)
             layout.touchable = Touchable.disabled
             popup.clear()
             popup += Actions.sequence(Actions.show(), fadeIn(0.5f))
@@ -260,11 +266,16 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             }
 
             PopupState.NAME -> {
-                popup.add(scene2d.nameChangePopup(preferences, gameEventManager))
+                popup.add(scene2d.nameChangePopup(preferences, gameEventManager).apply {
+                    registerTutorial(player, TutorialType.NAME_CHANGE, nameField)
+                    showTutorials()
+                })
             }
 
             PopupState.TUTORIAL -> {
-                popup.add(scene2d.tutorialPopup(preferences, audioService, gameEventManager))
+                popup.background = null
+                popup.align(Align.bottomLeft)
+                popup.add(scene2d.tutorialWidget(currentTutorial, gameEventManager))
             }
 
             PopupState.NONE -> {}

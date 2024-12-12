@@ -1,8 +1,10 @@
 package com.github.doandadr.petualanganhijaiyah.event
 
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.utils.Array
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.screen.HomeScreen
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.app.KtxInputAdapter
 
 class GameEventManager : KtxInputAdapter {
@@ -13,8 +15,8 @@ class GameEventManager : KtxInputAdapter {
 
     fun removeGameEventListener(listener: GameEventListener) = gameEventListeners.removeValue(listener, true)
 
-    fun dispatchShowTutorialEvent(tutorialKey: String) =
-        gameEventListeners.forEach { it.showTutorial(tutorialKey) }
+    fun dispatchShowNextTutorialEvent() =
+        gameEventListeners.forEach { it.showNextTutorial() }
 
     fun dispatchAnswerCorrectEvent(isContinue: Boolean) =
         gameEventListeners.forEach { it.answerCorrect(isContinue) }
@@ -31,12 +33,10 @@ class GameEventManager : KtxInputAdapter {
     fun dispatchSetHomePopupStateEvent(state: HomeScreen.PopupState) =
         gameEventListeners.forEach { it.setHomePopupState(state) }
 
-    fun dispatchTimerRunsOutEvent() =
-        gameEventListeners.forEach { it.timerRunsOut() }
-
-    fun dispatchHealthDepletedEvent(maxHealth: Int) =
-        gameEventListeners.forEach { it.healthDepleted(maxHealth) }
-
     fun dispatchPlayerChangedEvent(player: PlayerModel) =
         gameEventListeners.forEach { it.playerChanged(player) }
+
+    fun dispatchShowTutorialEvent(actor: Actor, type: TutorialType) {
+        gameEventListeners.forEach { it.showTutorial(actor, type) }
+    }
 }
