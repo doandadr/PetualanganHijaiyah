@@ -87,7 +87,6 @@ class LevelScreen(
     private fun setupUI() {
         val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
-        stage.isDebugAll = true
         stage.actors {
             backgroundImg = image {
                 setFillParent(true)
@@ -128,28 +127,24 @@ class LevelScreen(
                     homeButton = imageButton(ImageButtons.HOME.style) {
                         isTransform = true
                         setOrigin(Align.center)
-                        onTouchEvent(
-                            onDown = { _ ->
-                                this@imageButton.clearActions()
-                                this@imageButton += Animations.pulseAnimation()
-                            },
-                            onUp = { _ ->
-                                game.setScreen<HomeScreen>()
-                            }
-                        )
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                        }
+                        onChange {
+                            game.setScreen<HomeScreen>()
+                        }
                     }
                     backButton = imageButton(ImageButtons.BACK.style) {
                         isTransform = true
                         setOrigin(Align.center)
-                        onTouchEvent(
-                            onDown = { _ ->
-                                this@imageButton.clearActions()
-                                this@imageButton += Animations.pulseAnimation()
-                            },
-                            onUp = { _ ->
-                                game.setScreen<MapScreen>()
-                            }
-                        )
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                        }
+                        onChange {
+                            game.setScreen<MapScreen>()
+                        }
                     }
                     it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottomLeft)
                 }
@@ -159,15 +154,14 @@ class LevelScreen(
                     hintButton = imageButton(ImageButtons.HINT.style) {
                         isTransform = true
                         setOrigin(Align.center)
-                        onTouchEvent(
-                            onDown = { _ ->
-                                this@imageButton.clearActions()
-                                this@imageButton += Animations.pulseAnimation()
-                            },
-                            onUp = { _ ->
-                                // TODO do some hintButton shit
-                            }
-                        )
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                        }
+                        onChange {
+                            // TODO do some hintButton shit
+                        }
+                        isVisible = false
                     }
                     it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight);
                 }
@@ -280,13 +274,11 @@ class LevelScreen(
                 popup.add(scene2d.answerPopup(AnswerPopup.State.INCORRECT, preferences) {
                     this.clearActions()
                     this@answerPopup += Actions.sequence(Animations.fadeInOutAnimation(), Actions.run {
-                        playerInfo.loseHealth()
                         setPopup(PopupState.NONE)
                         loadStage(currentStage)
                     })
                     onClick {
                         this@answerPopup.clearActions()
-                        playerInfo.loseHealth()
                         setPopup(PopupState.NONE)
                         loadStage(currentStage)
                         this@answerPopup.touchable = Touchable.disabled
@@ -434,9 +426,11 @@ class LevelScreen(
         log.debug { "Answer is correct, continue? $isContinue" }
         audioService.play(listOf(SoundAsset.CORRECT_BLING, SoundAsset.CORRECT_DING).random())
 
-        if (isEndOfLevel()) {
+        if (isEndOfLevel() && isContinue) {
             nextRound()
-        } else if (isContinue) {
+            return
+        }
+        if (isContinue) {
             setPopup(PopupState.CORRECT)
         }
     }
@@ -445,14 +439,16 @@ class LevelScreen(
         log.debug { "Answer is wrong, continue? $isContinue" }
         audioService.play(listOf(SoundAsset.INCORRECT, SoundAsset.INCORRECT_BIG).random())
 
-        if (isEndOfLevel()) {
+        if (playerInfo.loseHealth() <= 0) {
+            levelFailed()
+            return
+        }
+        if (isEndOfLevel() && isContinue) {
             nextRound()
             return
         }
         if (isContinue) {
             setPopup(PopupState.INCORRECT)
-        } else {
-            playerInfo.loseHealth()
         }
     }
 

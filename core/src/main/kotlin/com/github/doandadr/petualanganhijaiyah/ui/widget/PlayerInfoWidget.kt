@@ -69,12 +69,10 @@ class PlayerInfoWidget(
         this.hearts.take(hearts).forEach { it.drawable = skin.getDrawable(Drawables.ICON_HEART_FULL.drawable) }
     }
 
-    fun loseHealth() {
+    fun loseHealth() : Int {
         health -= 1
         setHeartCount(health)
-        if (health <= 0) {
-            gameEventManager.dispatchLevelFailEvent()
-        }
+        return health
     }
 
     private fun setPlayerPortrait(playerCharacter: String) {
