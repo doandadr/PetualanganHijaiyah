@@ -8,7 +8,6 @@ import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 interface GameEventListener {
     fun answerCorrect(isContinue: Boolean) {}
     fun answerIncorrect(isContinue: Boolean){}
-    fun showNextTutorial() {}
     fun levelComplete(score: Float, stars: Int, time: Float) {}
     fun levelFailed() {}
     fun setHomePopupState(state: HomeScreen.PopupState) {}

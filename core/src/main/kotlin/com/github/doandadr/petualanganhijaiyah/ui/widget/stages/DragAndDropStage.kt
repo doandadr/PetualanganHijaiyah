@@ -1,9 +1,11 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
+import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
 import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
@@ -13,6 +15,7 @@ import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.onChangeEvent
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
@@ -35,7 +38,7 @@ class DragAndDropStage(
     private val dragAndDrop = DragAndDrop()
 
     init {
-        setBackground(skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable))
+        setBackground(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
 
         this@DragAndDropStage.dropGroup = horizontalGroup {
             space(50f)
@@ -53,10 +56,18 @@ class DragAndDropStage(
             onChangeEvent {
                 this@DragAndDropStage.loadStage()
             }
-            it.spaceTop(50f).padBottom(PADDING_INNER_SCREEN)
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()
+        setTutorial()
+    }
+
+    private fun setTutorial() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(dragGroup.children.first(), TutorialType.DRAG_DROP_START)
+            gameEventManager.dispatchShowTutorialEvent(dropGroup.children.first(), TutorialType.DRAG_DROP_END)
+        }
     }
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)

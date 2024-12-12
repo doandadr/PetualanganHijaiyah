@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
@@ -18,6 +19,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.MatchBox
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.alpha
 import ktx.actors.onChangeEvent
 import ktx.assets.async.AssetStorage
@@ -102,7 +104,16 @@ class MatchLineStage(
             setFillParent(true)
             touchable = Touchable.disabled
         }
+
         loadStage()
+        setTutorials()
+    }
+
+    private fun setTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent((leftGroup.children.first() as MatchBox), TutorialType.MATCH_START)
+            gameEventManager.dispatchShowTutorialEvent((rightGroup.children[1] as MatchBox), TutorialType.MATCH_END)
+        }
     }
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)

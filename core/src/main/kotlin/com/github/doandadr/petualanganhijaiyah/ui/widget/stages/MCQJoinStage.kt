@@ -1,9 +1,11 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
+import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.HijaiyahJoined
 import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
@@ -13,6 +15,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
 import com.github.doandadr.petualanganhijaiyah.ui.widget.JoinBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.joinBox
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.onChangeEvent
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
@@ -35,7 +38,7 @@ class MCQJoinStage(
         background = skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable)
 
         this@MCQJoinStage.answerBox = joinBox(HijaiyahJoined.J23_LA_A, JoinBox.Type.QUESTION, JoinBox.Content.ANSWER, assets) {
-            it.padTop(PADDING_INNER_SCREEN)
+            it.padTop(PADDING_INNER_SCREEN).expand()
         }
 
         row()
@@ -47,10 +50,18 @@ class MCQJoinStage(
         row()
         this@MCQJoinStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
             onChangeEvent { this@MCQJoinStage.loadStage() }
-            it.spaceTop(50f).padBottom(PADDING_INNER_SCREEN)
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()
+        setTutorials()
+    }
+
+    private fun setTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(answerBox, TutorialType.JOIN_START)
+            gameEventManager.dispatchShowTutorialEvent(vertGroup.children.first(), TutorialType.JOIN_OPTION)
+        }
     }
 
     private fun loadStage() {

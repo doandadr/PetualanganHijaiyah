@@ -65,7 +65,7 @@ class MCQStage(
             onChangeEvent {
                 this@MCQStage.loadStage()
             }
-            it.spaceTop(50f).padBottom(PADDING_INNER_SCREEN)
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()

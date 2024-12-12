@@ -1,12 +1,15 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.onChangeEvent
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
@@ -27,16 +30,10 @@ class MCQVoiceStage(
     private val skipButton: ImageTextButton
 
     init {
-        background = skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable)
+        background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
 
-        this@MCQVoiceStage.horiGroup = horizontalGroup {
-            space(SPACE_HIJAIYAH_MEDIUM)
-            it.padTop(PADDING_INNER_SCREEN)
-        }
-
-        row()
         label("Yang manakah...", Labels.SECONDARY_BORDER.style) {
-            it.spaceTop(50f)
+            it.padTop(200f)
         }
 
         row()
@@ -50,14 +47,28 @@ class MCQVoiceStage(
         }
 
         row()
+        this@MCQVoiceStage.horiGroup = horizontalGroup {
+            space(SPACE_HIJAIYAH_MEDIUM)
+            it.spaceTop(50f).expand()
+        }
+
+        row()
         this@MCQVoiceStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
             onChangeEvent {
                 this@MCQVoiceStage.loadStage()
             }
-            it.spaceTop(50f).padBottom(PADDING_INNER_SCREEN)
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()
+        setTutorials()
+    }
+
+    private fun setTutorials() {
+        Gdx.app.postRunnable{
+            gameEventManager.dispatchShowTutorialEvent(answerVoiceButton, TutorialType.VOICE_START)
+            gameEventManager.dispatchShowTutorialEvent(horiGroup.children.first(), TutorialType.VOICE_OPTION)
+        }
     }
 
     private fun handleAnswer(index: Int) {

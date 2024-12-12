@@ -19,6 +19,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_MAP_STAR
 import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
@@ -52,6 +53,20 @@ class MapScreen(game: Main) : BaseScreen(game) {
         setupData()
         setupUI()
         loadLevels()
+        Gdx.app.postRunnable {
+            showTutorials()
+        }
+    }
+
+    private fun showTutorials() {
+        if (levelsSavedData.find { it.number == 1 && !it.hasCompleted } != null) {
+            gameEventManager.dispatchShowTutorialEvent(levelButtons.first().label, TutorialType.MAP_LEVEL1)
+        }
+        if (levelsSavedData.find { it.number == 8 && it.hasCompleted } != null
+            && levelsSavedData.find { it.number == 9 && !it.hasCompleted } != null
+        ) {
+            gameEventManager.dispatchShowTutorialEvent(levelButtons[8].label, TutorialType.MAP_LEVEL9)
+        }
     }
 
     private fun setupData() {
@@ -248,7 +263,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                 levelsSavedData.add(levelSave)
             }
 
-            levelButton.setTitle(levels[index].name.uppercase())
+            levelButton.setLevel(levels[index])
 
             if (levelSave.hasCompleted) {
                 levelButton.setState(LevelButton.LevelButtonState.PASSED)
@@ -295,7 +310,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
             hide()
             show()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            levelButtons.first().setState(LevelButton.LevelButtonState.INACCESSIBLE)
+            // Unlock all levels
+            levelButtons.forEach { it.setState(LevelButton.LevelButtonState.AVAILABLE) }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
             levelButtons.first().setState(LevelButton.LevelButtonState.AVAILABLE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {

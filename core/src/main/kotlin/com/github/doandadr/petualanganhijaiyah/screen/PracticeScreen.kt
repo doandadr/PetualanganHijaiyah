@@ -7,10 +7,13 @@ import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.practiceStage
 import ktx.actors.onChange
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.scene2d.*
 
@@ -37,6 +40,12 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 setFillParent(true)
 
                 imageButton(ImageButtons.BACK.style) {
+                    isTransform = true
+                    setOrigin(Align.center)
+                    onTouchDown {
+                        this.clearActions()
+                        this += Animations.pulseAnimation()
+                    }
                     onChange {
                         game.setScreen<HomeScreen>()
                     }
@@ -50,14 +59,15 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 }
                 row()
 
-                practiceStage(assets, audioService) {
+                practiceStage(assets, audioService, gameEventManager) {
                     //it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT)
                     it.grow()
                 }
-                row()
 
+                row()
                 imageButton(ImageButtons.QUESTION.style) {
                     it.expand().align(Align.bottomRight).padBottom(PADDING_INNER_SCREEN).padRight(PADDING_INNER_SCREEN)
+                    isVisible = false
                 }
             }
         }

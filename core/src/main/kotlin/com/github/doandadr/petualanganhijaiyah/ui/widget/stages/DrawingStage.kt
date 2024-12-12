@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -15,6 +16,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_DRAWING_BOARD
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown
@@ -34,9 +36,9 @@ class DrawingStage(
 ) : Table(skin), KTable {
     private var submitButton: ImageTextButton
     private var drawingBoard: Table
-    private lateinit var drawImage: Image
-    private lateinit var incorrectButton: Button
-    private lateinit var correctButton: Button
+    private var drawImage: Image
+    private var incorrectButton: Button
+    private var correctButton: Button
     private var skipButton: KImageTextButton
     private var hijaiyahText: Label
     private val hijaiyahEntries = Hijaiyah.entries
@@ -44,10 +46,8 @@ class DrawingStage(
     private lateinit var currentEntry: Hijaiyah
 
     private val textAtlas = assets[TextureAtlasAsset.HIJAIYAH.descriptor]
-    private var isStartDrag: Boolean = false
 
     // List to store the points of the drawing
-    private val points = mutableListOf<Vector2>()
     private val segments = mutableListOf<MutableList<Vector2>>()
 
 
@@ -105,15 +105,21 @@ class DrawingStage(
         }
 
         loadStage()
+        setTutorials()
+    }
+
+    private fun setTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(drawingBoard, TutorialType.DRAW_START)
+        }
     }
 
     private fun handleSubmission() {
         // TODO capture image in middle of table
-        // TODO send image into
+        // TODO send image into ML
         // Reset image
 
-        points.clear()
-        isStartDrag = false
+        segments.clear()
     }
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)
@@ -121,7 +127,7 @@ class DrawingStage(
     private fun loadStage() {
         currentEntry = pickRandomEntries(1).first()
         hijaiyahText.setText(currentEntry.name)
-        points.clear()
+        segments.clear()
 
         correctButton.onChange {
             gameEventManager.dispatchAnswerCorrectEvent(true)
@@ -132,39 +138,28 @@ class DrawingStage(
 
         drawingBoard.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
-//                points.add(drawingBoard.localToStageCoordinates(Vector2(x, y)))
                 segments.add(mutableListOf(drawingBoard.localToStageCoordinates(Vector2(x, y))))
                 return true
             }
 
             override fun touchDragged(event: InputEvent?, x: Float, y: Float, pointer: Int) {
-//                points.add(drawingBoard.localToStageCoordinates(Vector2(x, y)))
                 segments.last().add(drawingBoard.localToStageCoordinates(Vector2(x, y)))
             }
 
             override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
             }
         })
+
+        drawImage.drawable = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
+        drawImage.touchable = Touchable.disabled
+        Gdx.app.postRunnable {
+            drawImage.setScale(1.7f)
+        }
     }
 
     override fun draw(batch: Batch?, parentAlpha: Float) {
         super.draw(batch, parentAlpha)
         drawer.update()
-
-//        if (points.isNotEmpty()) {
-//            for (i in 0 until points.size - 1) {
-//                if (points.isNotEmpty()) {
-//                    for (i in 0 until points.size - 1) {
-//                        if (isStartDrag) {
-//                            isStartDrag = false
-//                            break
-//                        }
-//                        drawer.line(points[i], points[i + 1], 10f)
-////                        drawer.filledCircle(points[i + 1], 10f)
-//                    }
-//                }
-//            }
-//        }
 
         // Draw each segment
         for (segment in segments) {

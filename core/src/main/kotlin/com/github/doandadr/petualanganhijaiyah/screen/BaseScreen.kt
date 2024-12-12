@@ -69,7 +69,7 @@ abstract class BaseScreen(
     }
 
     override fun showTutorial(actor: Actor, type: TutorialType) {
-        tutorialView.addTutorial(actor, type)
+        tutorialView.addTutorial(actor, type, stage)
     }
 
     companion object {

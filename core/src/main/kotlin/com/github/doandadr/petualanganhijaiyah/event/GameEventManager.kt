@@ -15,9 +15,6 @@ class GameEventManager : KtxInputAdapter {
 
     fun removeGameEventListener(listener: GameEventListener) = gameEventListeners.removeValue(listener, true)
 
-    fun dispatchShowNextTutorialEvent() =
-        gameEventListeners.forEach { it.showNextTutorial() }
-
     fun dispatchAnswerCorrectEvent(isContinue: Boolean) =
         gameEventListeners.forEach { it.answerCorrect(isContinue) }
 

@@ -35,7 +35,9 @@ class AnswerPopup(
             }
             image(Drawables.EFFECT_CONFETTI.drawable) {
                 setScaling(Scaling.none)
+                setOrigin(Align.center)
                 setScale(2f)
+                isVisible = state == State.CORRECT
             }
         }
     }

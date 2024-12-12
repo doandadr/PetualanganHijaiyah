@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.popup
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
@@ -42,6 +43,13 @@ class NameChangePopup(
         this@NameChangePopup.confirmButton = textButton("OK", TextButtons.GREEN_LARGE.style)
 
         setupListeners()
+        setupTutorial()
+    }
+
+    private fun setupTutorial() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(nameField, TutorialType.NAME_CHANGE)
+        }
     }
 
     private fun setupListeners() {

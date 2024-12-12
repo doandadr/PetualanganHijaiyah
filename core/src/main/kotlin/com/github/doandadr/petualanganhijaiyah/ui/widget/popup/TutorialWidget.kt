@@ -36,27 +36,33 @@ enum class TutorialType(
 
     NAME_CHANGE(listOf("Ketikkan namamu disini!")),
 
-    MAP_LEVEL1(listOf("Click [ORANGE]Level 1 []untuk memulai permainan!")),
-    MAP_LEVEL9(listOf("Semangat! sebentar lagi kamu dapat menyelesaikan misi")),
+    MAP_LEVEL1(listOf("Click Level 1 untuk\nmemulai permainan!")),
+    MAP_LEVEL9(listOf("Semangat! sebentar lagi\nkamu dapat menyelesaikan misi")),
 
     PRACTICE_NEXT(listOf("Lanjut")),
+    PRACTICE_PREVIOUS(listOf("Sebelumnya")),
 
-    MATCH_START(listOf("Tarik garis dari [ORANGE]huruf hijaiyah,[]")),
-    MATCH_END(listOf("Lalu arahkan sesuai [ORANGE]eja-an []huruf hijaiyah tersebut!")),
+    MATCH_START(listOf("Tarik garis dari\nhuruf hijaiyah,")),
+    MATCH_END(listOf("Lalu arahkan sesuai eja-an\nhuruf hijaiyah tersebut!")),
 
     DRAW_START(
         listOf(
-            "Gambarlah [ORANGE]huruf hijaiyah []di dalam kotak kosong,",
-            "sesuai dengan yang tertulis di kotak kecil."
+            "Gambarlah huruf hijaiyah\ndi dalam kotak kosong,",
+            "sesuai dengan yang tertulis\ndi kotak kecil."
         )
     ),
-    VOICE_START(listOf("Klik disini untuk mendengarkan bunyi huruf hijaiyah nya")),
+    VOICE_START(listOf("Klik disini untuk\nmendengarkan bunyi\nhuruf hijaiyah nya")),
     VOICE_OPTION(
         listOf(
-            "Lalu, pilihlah salah satu [ORANGE]huruf hijaiyah",
-            "[]yang sesuai dengan bunyi yang kamu dengar!"
+            "Lalu, pilihlah salah\nsatu huruf hijaiyah",
+            "yang sesuai dengan\nbunyi yang kamu dengar!"
         )
-    )
+    ),
+    DRAG_DROP_START(listOf("Pilih huruf hijaiyah")),
+    DRAG_DROP_END(listOf("Lalu geret ke\ncetakan yang sesuai!")),
+
+    JOIN_START(listOf("Perhatikan huruf hijaiyah\ntersambung berikut!")),
+    JOIN_OPTION(listOf("Pilih salah satu\nyang merupakan", "huruf-huruf bagiannya\njika terpisah!")),
 }
 
 class Tutorial(
@@ -133,7 +139,7 @@ class TutorialWidget(
     private var tutorialQueue: Queue<Tutorial> = LinkedList()
     private lateinit var tutorial: Tutorial
     private var currentPageIndex = 0
-    private var isInitialized = false
+    private var isStart = false
 
     private var tutorialLabel: Label = label("") {
         setAlignment(Align.center)
@@ -167,19 +173,20 @@ class TutorialWidget(
     }
 
     private fun nextLine() {
-        if (isInitialized) {
-            isInitialized = false
+        if (isStart) {
+            isStart = false
             tutorialQueue.poll()
         }
-        if (tutorial.type.pages.getOrNull(currentPageIndex + 1) != null && isInitialized) {
+        if (tutorial.type.pages.getOrNull(currentPageIndex + 1) != null) {
             currentPageIndex++
             loadTutorial()
         } else {
+            currentPageIndex = 0
             setTutorialFromQueue()
         }
     }
 
-    private fun hideTutorial(fadeTime: Float = 0.3f) {
+    private fun hideTutorial(fadeTime: Float = 0.2f) {
         this.clearActions()
         this += fadeOut(fadeTime) + hide()
     }
@@ -187,23 +194,24 @@ class TutorialWidget(
     private fun showTutorial(delayTime: Float = 0.2f) {
         if (tutorialQueue.peek() != null) {
             this.clearActions()
-            this += delay(delayTime) + show() + fadeIn(0.3f)
-            isInitialized = true
+            this += delay(delayTime) + show() + fadeIn(0.2f)
             loadTutorial()
         }
     }
 
-    fun addTutorial(actor: Actor, type: TutorialType) {
-        registerTutorial(player, type, actor)
+    fun addTutorial(actor: Actor, type: TutorialType, stage: Stage) {
+        registerTutorial(player, type, actor, stage)
+        isStart = true
         showTutorial()
     }
 
-    private fun registerTutorial(player: PlayerModel, type: TutorialType, actor: Actor) {
-//        if (player.tutorials.add(type.ordinal)) {
+    private fun registerTutorial(player: PlayerModel, type: TutorialType, actor: Actor, stage: Stage) {
+        if (player.tutorials.add(type.ordinal)) {
             tutorialQueue.add(Tutorial(type, actor, stage))
             tutorial = tutorialQueue.peek()
+            currentPageIndex = 0
             updatePlayer()
-//        }
+        }
     }
 
     private fun updatePlayer() {
@@ -216,7 +224,6 @@ class TutorialWidget(
         val entry = tutorialQueue.poll()
         if (entry != null) {
             tutorial = entry
-            currentPageIndex = 0
             loadTutorial()
         } else {
             hideTutorial()

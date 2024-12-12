@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.data.LevelModel
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_BIG
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget.StarState
 import ktx.scene2d.KGroup
@@ -21,6 +22,8 @@ class LevelButton(
     val dots: LevelDots = LevelDots(),
     val starWidget: StarWidget = StarWidget(),
 ) : WidgetGroup(button, text, dots, starWidget), KGroup {
+    lateinit var levelModel: LevelModel
+
     init {
         isTransform = true
         setOrigin(Align.center)
@@ -38,6 +41,11 @@ class LevelButton(
 
     fun setTitle(text: String) {
         label.setText(text)
+    }
+
+    fun setLevel(level: LevelModel) {
+        levelModel = level
+        setTitle(levelModel.name.uppercase())
     }
 
     fun setState(state: LevelButtonState) {

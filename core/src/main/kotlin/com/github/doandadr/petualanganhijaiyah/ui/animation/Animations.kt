@@ -8,9 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 class Animations {
     companion object {
         // STAR ANIMATION
-        fun starAnimation() : SequenceAction {
-            val duration = 0.5f
-
+        fun starAnimation(duration: Float = 0.5f) : SequenceAction {
             val showStart = Actions.show()
             val alphaStart = Actions.alpha(0f)
             val moveByStart = Actions.moveBy(-20f, -20f)
@@ -29,11 +27,9 @@ class Animations {
         }
 
         // PULSE ANIMATION
-        fun pulseAnimation() : SequenceAction {
-            val duration = 0.3f
-
-            val scaleUp = Actions.scaleBy(0.1f, 0.1f, duration, Interpolation.fade)
-            val scaleDown = Actions.scaleBy(-0.1f, -0.1f, duration, Interpolation.fade)
+        fun pulseAnimation(scaleValue: Float = 0.1f, duration: Float = 0.3f) : SequenceAction {
+            val scaleUp = Actions.scaleBy(scaleValue, scaleValue, duration, Interpolation.fade)
+            val scaleDown = Actions.scaleBy(-scaleValue, -scaleValue, duration, Interpolation.fade)
 
             val action = Actions.sequence(scaleUp, scaleDown)
             return action

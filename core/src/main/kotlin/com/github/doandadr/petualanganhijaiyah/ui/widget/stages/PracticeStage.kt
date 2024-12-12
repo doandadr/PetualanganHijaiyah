@@ -1,12 +1,15 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.onChangeEvent
 import ktx.assets.async.AssetStorage
 import ktx.scene2d.*
@@ -15,6 +18,7 @@ import ktx.scene2d.*
 class PracticeStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
+    private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
     private var voiceDhommah: KImageButton
@@ -156,6 +160,15 @@ class PracticeStage(
         updateEntry(currentEntry)
     }
 
+    private fun showTutorial() {
+        Gdx.app.postRunnable {
+            if (currentEntry == Hijaiyah.ALIF)
+                gameEventManager.dispatchShowTutorialEvent(nextButton, TutorialType.PRACTICE_NEXT)
+            if (currentEntry == Hijaiyah.BA)
+                gameEventManager.dispatchShowTutorialEvent(prevButton, TutorialType.PRACTICE_PREVIOUS)
+        }
+    }
+
     private fun updateEntry(hijaiyah: Hijaiyah) {
         currentEntry = hijaiyah
         val hijDrawable = TextureRegionDrawable(textAtlas.findRegion(currentEntry.image))
@@ -176,16 +189,20 @@ class PracticeStage(
 
         prevButton.isVisible = currentEntry != Hijaiyah.ALIF
         nextButton.isVisible = currentEntry != Hijaiyah.YA
+
+        showTutorial()
     }
 }
 
 inline fun <S> KWidget<S>.practiceStage(
     assets: AssetStorage,
     audioService: AudioService,
+    gameEventManager: GameEventManager,
     init: PracticeStage.(S) -> Unit = {}
 ) = actor(
     PracticeStage(
         assets,
-        audioService
+        audioService,
+        gameEventManager,
     ), init
 )

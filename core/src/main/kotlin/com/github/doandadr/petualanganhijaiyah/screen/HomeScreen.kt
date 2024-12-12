@@ -2,7 +2,6 @@ package com.github.doandadr.petualanganhijaiyah.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn
@@ -19,14 +18,15 @@ import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.*
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.*
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.characterSelectPopup
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.nameChangePopup
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.settingsPopup
 import ktx.actors.onChange
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.log.logger
-import ktx.preferences.flush
 import ktx.preferences.get
-import ktx.preferences.set
 import ktx.scene2d.*
 import ktx.scene2d.vis.floatingGroup
 
@@ -45,66 +45,26 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     private var popupState = PopupState.NONE
     private val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
-    private var tutorials: MutableList<Tutorial> = mutableListOf()
-    private lateinit var currentTutorial: Tutorial
-    private var currentTutorialIndex = 0
-
     enum class PopupState {
         NONE,
         SETTING,
         CHARACTER,
         NAME,
-        TUTORIAL
     }
 
     override fun show() {
         super.show()
-        log.debug { "Home Screen is shown" }
-
         setupAudio()
         setupData()
         setupUI()
         setupTutorials()
-        showTutorials()
     }
 
     private fun setupTutorials() {
         Gdx.app.postRunnable {
-            registerTutorial(player, TutorialType.HOME_NAME, nameButton)
-            registerTutorial(player, TutorialType.HOME_PRACTICE, bookButton)
-            registerTutorial(player, TutorialType.HOME_START, startButton)
-
-            showTutorials()
-        }
-    }
-
-    private fun registerTutorial(player: PlayerModel, type: TutorialType, actor: Actor) {
-        if (player.tutorials.add(type.ordinal)) {
-            val tutorial = Tutorial(type, actor, stage)
-            tutorials.add(tutorial)
-        }
-    }
-
-    private fun showTutorials() {
-        if (tutorials.isNotEmpty()) {
-            currentTutorial = tutorials[currentTutorialIndex]
-            setPopup(PopupState.TUTORIAL)
-
-            preferences.flush {
-                this[PrefKey.PLAYER.key] = player
-            }
-        }
-    }
-
-    override fun showNextTutorial() {
-        if (tutorials.getOrNull(currentTutorialIndex + 1) != null) {
-            currentTutorialIndex++
-            currentTutorial = tutorials[currentTutorialIndex]
-            setPopup(PopupState.TUTORIAL)
-        } else {
-            currentTutorialIndex = 0
-            tutorials.clear()
-            setPopup(PopupState.NONE)
+            gameEventManager.dispatchShowTutorialEvent(nameButton, TutorialType.HOME_NAME)
+            gameEventManager.dispatchShowTutorialEvent(bookButton, TutorialType.HOME_PRACTICE)
+            gameEventManager.dispatchShowTutorialEvent(startButton, TutorialType.HOME_START)
         }
     }
 
@@ -237,6 +197,8 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
             popup = table {
                 setFillParent(true)
+                setBackground(bgDim)
+                align(Align.center)
                 isVisible = false
             }
         }
@@ -246,8 +208,6 @@ class HomeScreen(game: Main) : BaseScreen(game) {
         popupState = state
 
         if (popupState != PopupState.NONE) {
-            popup.setBackground(bgDim)
-            popup.align(Align.center)
             layout.touchable = Touchable.disabled
             popup.clear()
             popup += Actions.sequence(Actions.show(), fadeIn(0.5f))
@@ -266,16 +226,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             }
 
             PopupState.NAME -> {
-                popup.add(scene2d.nameChangePopup(preferences, gameEventManager).apply {
-                    registerTutorial(player, TutorialType.NAME_CHANGE, nameField)
-                    showTutorials()
-                })
-            }
-
-            PopupState.TUTORIAL -> {
-                popup.background = null
-                popup.align(Align.bottomLeft)
-                popup.add(scene2d.tutorialWidget(currentTutorial, gameEventManager))
+                popup.add(scene2d.nameChangePopup(preferences, gameEventManager))
             }
 
             PopupState.NONE -> {}
