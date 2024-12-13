@@ -14,13 +14,13 @@ import ktx.actors.onChangeEvent
 import ktx.assets.async.AssetStorage
 import ktx.scene2d.*
 
-// TODO fix layout
 class PracticeStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
     private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
+    private var harakatGroup: HorizontalGroup
     private var voiceDhommah: KImageButton
     private var voiceKasrah: KImageButton
     private var voiceFathah: KImageButton
@@ -70,7 +70,7 @@ class PracticeStage(
         }
 
         row()
-        horizontalGroup {
+        this@PracticeStage.harakatGroup = horizontalGroup {
             space(20f)
             it.spaceTop(20f).colspan(3)
             table {
@@ -115,7 +115,7 @@ class PracticeStage(
         }
 
         row()
-        this@PracticeStage.hijaiyahText = label(currentEntry.name, Labels.TEXTBOX_GREEN_SQUARE_LARGE.style) {
+        this@PracticeStage.hijaiyahText = label(currentEntry.reading, Labels.TEXTBOX_GREEN_SQUARE_LARGE.style) {
             setAlignment(Align.center)
             setFontScale(SCALE_BTN_MEDIUM)
             it.spaceTop(50f).colspan(3)
@@ -171,26 +171,34 @@ class PracticeStage(
 
     private fun updateEntry(hijaiyah: Hijaiyah) {
         currentEntry = hijaiyah
+        showTutorial()
+
+        prevButton.isVisible = currentEntry != Hijaiyah.ALIF
+        nextButton.isVisible = currentEntry != Hijaiyah.N10
+
+        val isNumber = currentEntry.id.toInt() in 101..110
+        harakatGroup.isVisible = !isNumber
+        if (isNumber) {
+            val hijDrawable = TextureRegionDrawable(textAtlas.findRegion(currentEntry.imageNumber))
+            hijaiyahImage.drawable = hijDrawable
+            hijaiyahText.setText(currentEntry.reading.uppercase())
+            return
+        }
+
         val hijDrawable = TextureRegionDrawable(textAtlas.findRegion(currentEntry.image))
         val fathahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.FATHAH.image))
         val kasrahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.KASRAH.image))
         val dhommahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.DHOMMAH.image))
         hijaiyahImage.drawable = hijDrawable
-        hijaiyahText.setText(currentEntry.name.uppercase())
+        hijaiyahText.setText(currentEntry.reading.uppercase())
 
         // Harakat
         fathahHij.drawable = hijDrawable
         kasrahHij.drawable = hijDrawable
         dhommahHij.drawable = hijDrawable
-
         fathah.drawable = fathahDrawable
         kasrah.drawable = kasrahDrawable
         dhommah.drawable = dhommahDrawable
-
-        prevButton.isVisible = currentEntry != Hijaiyah.ALIF
-        nextButton.isVisible = currentEntry != Hijaiyah.YA
-
-        showTutorial()
     }
 }
 

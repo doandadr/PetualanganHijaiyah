@@ -23,7 +23,7 @@ class MCQStage(
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
     private var answerBox: Stack
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     private lateinit var currentEntries: List<Hijaiyah>
     private val choiceBoxes = mutableListOf<HijaiyahBox>()
     private lateinit var correctAnswer: Hijaiyah
@@ -111,7 +111,7 @@ class MCQStage(
         answerArabic.isVisible = state == State.LATIN
         answerLatin.isVisible = state == State.ARABIC
 
-        answerLatin.setText(correctAnswer.name.uppercase())
+        answerLatin.setText(correctAnswer.reading.uppercase())
         answerArabic.updateLetter(correctAnswer)
     }
 

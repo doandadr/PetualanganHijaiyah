@@ -28,7 +28,7 @@ class DragAndDropStage(
     skin: Skin = Scene2DSkin.defaultSkin,
 ):Table(skin), KTable {
     private var correctCount: Int = 0
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     lateinit var dragEntries: List<Hijaiyah>
     lateinit var dropEntries: List<Hijaiyah>
 

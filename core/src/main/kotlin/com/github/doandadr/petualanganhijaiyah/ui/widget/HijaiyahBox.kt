@@ -89,14 +89,14 @@ class HijaiyahBox(
             Type.TEXT -> {
                 hijaiyahText.isVisible = true
                 image.isVisible = false
-                hijaiyahText.setText(hijaiyah.name.uppercase())
+                hijaiyahText.setText(hijaiyah.reading.uppercase())
                 hijaiyahText.color = skin.getColor(Colors.BLACK.color)
             }
             Type.DROP -> {
                 hijaiyahText.isVisible = true
                 image.isVisible = false
                 frame.style = skin.get(Buttons.HIJAIYAH_DROP.style,ButtonStyle::class.java)
-                hijaiyahText.setText(hijaiyah.name.uppercase())
+                hijaiyahText.setText(hijaiyah.reading.uppercase())
                 hijaiyahText.color = skin.getColor(Colors.WHITE.color)
             }
         }

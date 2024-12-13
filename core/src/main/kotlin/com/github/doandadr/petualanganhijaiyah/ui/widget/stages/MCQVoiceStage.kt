@@ -23,7 +23,7 @@ class MCQVoiceStage(
 ) : Table(skin), KTable {
     private var answerVoiceButton: ImageButton
     private var horiGroup: HorizontalGroup
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     private val choiceBoxes = mutableListOf<HijaiyahBox>()
     private lateinit var currentLetters: List<Hijaiyah>
     private lateinit var correctAnswer: Hijaiyah

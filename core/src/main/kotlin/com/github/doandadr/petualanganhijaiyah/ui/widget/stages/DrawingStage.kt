@@ -33,6 +33,7 @@ class DrawingStage(
     private val gameEventManager: GameEventManager,
     private val skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
+    private var resetButton: ImageButton
     private var submitButton: ImageTextButton
     private var drawingBoard: Table
     private var drawImage: Image
@@ -40,7 +41,7 @@ class DrawingStage(
     private var correctButton: Button
     private var skipButton: ImageButton
     private var hijaiyahText: Label
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     private val drawer = ShapeDrawer(batch, skin.getRegion(Drawables.CIRCLE_BRUSH.drawable))
     private lateinit var currentEntry: Hijaiyah
 
@@ -81,36 +82,52 @@ class DrawingStage(
         }
 
         row()
-        this@DrawingStage.skipButton = imageButton(ImageButtons.SKIP.style) {
-            isTransform = true
-            setOrigin(Align.bottom)
-            setScale(SCALE_BTN_SMALL)
-            onTouchDown {
-                this.clearActions()
-                this += Animations.pulseAnimation()
-            }
-            onChange {
-                this@DrawingStage.loadStage()
-            }
+        horizontalGroup {
             it.padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight).expandY()
-        }
 
-        this@DrawingStage.submitButton = imageTextButton("   Jawab", ImageTextButtons.SUBMIT.style) {
-            isTransform = true
-            setOrigin(Align.center)
-            setScale(SCALE_BTN_SMALL)
-            onTouchDown {
-                this.clearActions()
-                this += Animations.pulseAnimation()
+            this@DrawingStage.resetButton = imageButton(ImageButtons.REPEAT.style) {
+                isTransform = true
+                setOrigin(Align.center)
+                setScale(SCALE_BTN_SMALL)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                }
+                onChange {
+                    this@DrawingStage.resetDrawingBoard()
+                }
             }
-            onChange {
-                this@DrawingStage.handleSubmission()
+            this@DrawingStage.skipButton = imageButton(ImageButtons.SKIP.style) {
+                isTransform = true
+                setOrigin(Align.center)
+                setScale(SCALE_BTN_SMALL)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                }
+                onChange {
+                    this@DrawingStage.loadStage()
+                }
             }
-            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottomLeft).expandY()
+            this@DrawingStage.submitButton = imageTextButton("   Jawab", ImageTextButtons.SUBMIT.style) {
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                }
+                onChange {
+                    this@DrawingStage.handleSubmission()
+                }
+            }
         }
 
         loadStage()
         setTutorials()
+    }
+
+    private fun resetDrawingBoard() {
+        segments.clear()
     }
 
     private fun setTutorials() {
@@ -131,7 +148,7 @@ class DrawingStage(
 
     private fun loadStage() {
         currentEntry = pickRandomEntries(1).first()
-        hijaiyahText.setText(currentEntry.name)
+        hijaiyahText.setText(currentEntry.reading)
         segments.clear()
 
         correctButton.onChange {
@@ -144,6 +161,7 @@ class DrawingStage(
         drawingBoard.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 segments.add(mutableListOf(drawingBoard.localToStageCoordinates(Vector2(x, y))))
+                drawer.circle(x, y, 10f)
                 return true
             }
 
@@ -170,7 +188,7 @@ class DrawingStage(
         for (segment in segments) {
             if (segment.isNotEmpty()) {
                 for (i in 0 until segment.size - 1) {
-                    drawer.line(segment[i], segment[i + 1], 10f) // Adjust the line thickness as needed
+                    drawer.line(segment[i], segment[i + 1], 15f)
                 }
             }
         }
