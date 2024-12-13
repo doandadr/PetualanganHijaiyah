@@ -42,7 +42,7 @@ class MatchLineStage(
     private val skipButton: ImageTextButton
     private var drawArea: Image
 
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     lateinit var leftEntries: List<Hijaiyah>
     lateinit var rightEntries: List<Hijaiyah>
     private var correctCount: Int = 0
@@ -111,7 +111,10 @@ class MatchLineStage(
 
     private fun setTutorials() {
         Gdx.app.postRunnable {
-            gameEventManager.dispatchShowTutorialEvent((leftGroup.children.first() as MatchBox), TutorialType.MATCH_START)
+            gameEventManager.dispatchShowTutorialEvent(
+                (leftGroup.children.first() as MatchBox),
+                TutorialType.MATCH_START
+            )
             gameEventManager.dispatchShowTutorialEvent((rightGroup.children[1] as MatchBox), TutorialType.MATCH_END)
         }
     }
@@ -158,7 +161,8 @@ class MatchLineStage(
                 payload.dragActor = draggedDot
 
                 // Save the starting point of the drag
-                val stageCoordinates = draggedDot.localToStageCoordinates(Vector2(draggedDot.width / 2, draggedDot.height / 2))
+                val stageCoordinates =
+                    draggedDot.localToStageCoordinates(Vector2(draggedDot.width / 2, draggedDot.height / 2))
                 currentLine = Line(stageCoordinates.x, stageCoordinates.y, stageCoordinates.x, stageCoordinates.y)
 
                 stage.addActor(draggedDot)
@@ -170,10 +174,13 @@ class MatchLineStage(
 
             override fun drag(event: InputEvent?, x: Float, y: Float, pointer: Int) {
                 // Update the end point of the current line
-                currentLine?.let {
-                    val stageCoordinates = dragged.localToStageCoordinates(Vector2(dragged.width / 2, dragged.height / 2))
-                    it.eX = stageCoordinates.x
-                    it.eY = stageCoordinates.y
+                Gdx.app.postRunnable {
+                    currentLine?.let {
+                        val stageCoordinates =
+                            dragged.localToStageCoordinates(Vector2(dragged.width / 2, dragged.height / 2))
+                        it.eX = stageCoordinates.x
+                        it.eY = stageCoordinates.y
+                    }
                 }
             }
 
@@ -280,13 +287,14 @@ class MatchLineStage(
 
                         frame.leftCircle.actor = payloadDot
                         audioService.play(SoundAsset.DROP)
-                        audioService.play(SoundAsset.CORRECT_DING)
 
                         // Save the line coordinates
                         val leftDot = frame.leftCircle
-                        val stageCoordinates = leftDot.localToStageCoordinates(Vector2(leftDot.width / 2, leftDot.height / 2))
+                        val stageCoordinates =
+                            leftDot.localToStageCoordinates(Vector2(leftDot.width / 2, leftDot.height / 2))
                         currentLine?.let {
-                            val newLine = Line(currentLine!!.sX, currentLine!!.sY, stageCoordinates.x, stageCoordinates.y)
+                            val newLine =
+                                Line(currentLine!!.sX, currentLine!!.sY, stageCoordinates.x, stageCoordinates.y)
                             savedLines.add(newLine)
                             currentLine = null
                         }
