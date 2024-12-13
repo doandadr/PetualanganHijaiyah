@@ -18,7 +18,6 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_DRAWING_BOARD
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.onChange
-import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
@@ -82,6 +81,20 @@ class DrawingStage(
         }
 
         row()
+        this@DrawingStage.skipButton = imageButton(ImageButtons.SKIP.style) {
+            isTransform = true
+            setOrigin(Align.bottom)
+            setScale(SCALE_BTN_SMALL)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+            }
+            onChange {
+                this@DrawingStage.loadStage()
+            }
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight).expandY()
+        }
+
         this@DrawingStage.submitButton = imageTextButton("   Jawab", ImageTextButtons.SUBMIT.style) {
             isTransform = true
             setOrigin(Align.center)
@@ -93,17 +106,7 @@ class DrawingStage(
             onChange {
                 this@DrawingStage.handleSubmission()
             }
-            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expandY()
-        }
-
-        this@DrawingStage.skipButton = imageButton(ImageButtons.SKIP.style) {
-            isTransform = true
-            setOrigin(Align.bottom)
-            setScale(SCALE_BTN_SMALL)
-            onChangeEvent {
-                this@DrawingStage.loadStage()
-            }
-            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expandY()
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottomLeft).expandY()
         }
 
         loadStage()

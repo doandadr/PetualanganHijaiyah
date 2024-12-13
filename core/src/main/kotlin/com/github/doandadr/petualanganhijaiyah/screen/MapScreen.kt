@@ -311,7 +311,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
             show()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             // Unlock all levels
-            levelButtons.forEach { it.setState(LevelButton.LevelButtonState.AVAILABLE) }
+            levelsSavedData.forEach { it.hasCompleted = true }
+            loadLevels()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
             levelButtons.first().setState(LevelButton.LevelButtonState.AVAILABLE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {

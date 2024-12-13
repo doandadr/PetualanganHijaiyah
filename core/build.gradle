@@ -41,6 +41,6 @@ dependencies {
   implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
   implementation "org.tensorflow:tensorflow-core-platform:$tensorflowVersion"  // Adjust the version accordingly
   implementation "org.tensorflow:tensorflow-core-api:$tensorflowVersion"
-  implementation "org.tensorflow:tensorflow-lite:$tensorflowLiteVersion"
+//  implementation "org.tensorflow:tensorflow-lite:$tensorflowLiteVersion"
 //  implementation "org.tensorflow:tensorflow-android:$tensorflowAndroidVersion"
 }
