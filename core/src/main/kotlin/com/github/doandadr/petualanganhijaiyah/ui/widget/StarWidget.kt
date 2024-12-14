@@ -72,40 +72,46 @@ class StarWidget(
 
             StarState.ONE -> {
                 if (isAnimated) starOn1 += Actions.sequence(
+                    Actions.run { audioService.play(SoundAsset.STAR_1) },
                     Animations.starAnimation(),
-                    Actions.run { audioService.play(SoundAsset.STAR_1) })
+                )
                 else starOn1.isVisible = true
             }
 
             StarState.TWO -> {
                 if (isAnimated) starOn1 += Actions.sequence(
+                    Actions.run { audioService.play(SoundAsset.STAR_1) },
                     Animations.starAnimation(),
-                    Actions.run { audioService.play(SoundAsset.STAR_1) })
+                )
                 else starOn1.isVisible = true
 
                 if (isAnimated) starOn2 += Actions.sequence(
                     DelayAction(0.5f),
+                    Actions.run { audioService.play(SoundAsset.STAR_2) },
                     Animations.starAnimation(),
-                    Actions.run { audioService.play(SoundAsset.STAR_2) })
+                )
                 else starOn2.isVisible = true
             }
 
             StarState.THREE -> {
                 if (isAnimated) starOn1 += Actions.sequence(
+                    Actions.run { audioService.play(SoundAsset.STAR_1) },
                     Animations.starAnimation(),
-                    Actions.run { audioService.play(SoundAsset.STAR_1) })
+                )
                 else starOn1.isVisible = true
 
                 if (isAnimated) starOn2 += Actions.sequence(
                     DelayAction(0.5f),
+                    Actions.run { audioService.play(SoundAsset.STAR_2) },
                     Animations.starAnimation(),
-                    Actions.run { audioService.play(SoundAsset.STAR_2) })
+                )
                 else starOn2.isVisible = true
 
                 if (isAnimated) starOn3 += Actions.sequence(
                     DelayAction(1f),
+                    Actions.run { audioService.play(SoundAsset.STAR_3) },
                     Animations.starAnimation(),
-                    Actions.run { audioService.play(SoundAsset.STAR_3) })
+                )
                 else starOn3.isVisible = true
             }
 
