@@ -6,11 +6,14 @@ import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
-import ktx.actors.onChangeEvent
+import ktx.actors.onChange
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -33,31 +36,45 @@ class MCQVoiceStage(
         background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
 
         label("Yang manakah...", Labels.SECONDARY_BORDER.style) {
-            it.padTop(200f)
+            it.padTop(PADDING_INNER_SCREEN).expand().align(Align.bottom)
         }
 
         row()
         this@MCQVoiceStage.answerVoiceButton = imageButton(ImageButtons.VOICE.style) {
-            onChangeEvent {
+            it.spaceTop(20f)
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
                 this@MCQVoiceStage.apply {
                     audioService.play(correctAnswer.audio)
                 }
             }
-            it.spaceTop(20f)
         }
 
         row()
         this@MCQVoiceStage.horiGroup = horizontalGroup {
-            space(SPACE_HIJAIYAH_MEDIUM)
             it.spaceTop(50f).expand()
+            space(SPACE_HIJAIYAH_MEDIUM)
         }
 
         row()
         this@MCQVoiceStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
-            onChangeEvent {
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
                 this@MCQVoiceStage.loadStage()
             }
-            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()
@@ -98,11 +115,22 @@ class MCQVoiceStage(
         horiGroup.clearChildren()
         currentLetters.forEachIndexed { index, letter ->
             choiceBoxes += HijaiyahBox(letter, HijaiyahBox.Size.MEDIUM, assets)
-            choiceBoxes[index].onChangeEvent {
-                this@MCQVoiceStage.handleAnswer(index)
+            choiceBoxes[index].apply {
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+                }
+                onChange {
+                    this@MCQVoiceStage.handleAnswer(index)
+                }
             }
             horiGroup.addActor(choiceBoxes[index])
         }
+
+        audioService.play(correctAnswer.audio)
     }
 
 

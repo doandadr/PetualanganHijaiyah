@@ -9,10 +9,10 @@ enum class MusicAsset(
     directory: String = "audio/music",
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
-    DESERT("desert.mp3"),
+    DESERT("desert.mp3", 0.15f),
     DESERT_ALT("desert-2.mp3"),
     FIELD("forest.mp3"),
-    HOME("home.mp3", 0.5f),
+    HOME("home.mp3", 0.4f),
     MAP("map.mp3"),
     SNOW("snow.mp3"),
     VICTORY("victory.mp3"),

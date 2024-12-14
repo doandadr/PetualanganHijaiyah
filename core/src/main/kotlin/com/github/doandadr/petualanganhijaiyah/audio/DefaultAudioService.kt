@@ -131,6 +131,6 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
 
         private const val MIN_MULTIPLIER = 0.8f
         private const val MAX_MULTIPLIER = 1.2f
-        private const val MAX_SOUND_INSTANCES = 2
+        private const val MAX_SOUND_INSTANCES = 8
     }
 }

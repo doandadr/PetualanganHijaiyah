@@ -12,11 +12,15 @@ import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import ktx.actors.onChange
 import ktx.actors.onChangeEvent
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -53,7 +57,14 @@ class DragAndDropStage(
 
         row()
         this@DragAndDropStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
-            onChangeEvent {
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@DragAndDropStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
                 this@DragAndDropStage.loadStage()
             }
             it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()

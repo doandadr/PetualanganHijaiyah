@@ -27,7 +27,7 @@ class Animations {
         }
 
         // PULSE ANIMATION
-        fun pulseAnimation(scaleValue: Float = 0.1f, duration: Float = 0.3f) : SequenceAction {
+        fun pulseAnimation(scaleValue: Float = 0.2f, duration: Float = 0.3f) : SequenceAction {
             val scaleUp = Actions.scaleBy(scaleValue, scaleValue, duration, Interpolation.fade)
             val scaleDown = Actions.scaleBy(-scaleValue, -scaleValue, duration, Interpolation.fade)
 

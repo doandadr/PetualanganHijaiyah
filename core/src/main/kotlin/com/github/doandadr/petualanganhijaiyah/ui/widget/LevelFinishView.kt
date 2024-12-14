@@ -8,10 +8,16 @@ import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.BANNER_TOP_PADDING
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
+import com.kotcrab.vis.ui.layout.FloatingGroup
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.scene2d.*
+import ktx.scene2d.vis.floatingGroup
 
 class LevelFinishView(
     private val score: Float,
@@ -32,7 +38,8 @@ class LevelFinishView(
     val menuButton: ImageButton
     private val scoreView: Label
     private val stars: StarWidget
-    private val starStack: Stack
+//    private val starStack: Stack
+    private val starStack: FloatingGroup
 
     private val starState: StarWidget.StarState = run {
         when (star) {
@@ -45,9 +52,9 @@ class LevelFinishView(
 
     init {
         label(if (state == State.FINISH) "BERHASIL" else "GAGAL", Labels.BANNER_ORANGE.style) {
+            it.padBottom(BANNER_TOP_PADDING)
             setAlignment(Align.center)
             setFontScale(SCALE_FONT_MEDIUM)
-            it.padBottom(BANNER_TOP_PADDING)
         }
 
         row()
@@ -55,56 +62,83 @@ class LevelFinishView(
             toBack()
             setBackground(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
 
-            this@LevelFinishView.starStack = stack {
+            this@LevelFinishView.starStack = floatingGroup {
+                it.padTop(80.0f).padBottom(30.0f).grow().colspan(3).align(Align.center)
                 image(Drawables.LEVEL_FINISH_STARBOX.drawable) {
                     setScaling(Scaling.none)
+                    setPosition(65f, 0f)
                 }
                 this@LevelFinishView.stars = starWidget(this@LevelFinishView.audioService) {
-                    setFillParent(true)
-                    setPosition(0f, 0f, Align.center)
+                    setPosition(78f, 0f)
                 }
-                it.padTop(80.0f).padBottom(30.0f).expandY().colspan(3).align(Align.center)
             }
 
             row()
             image(Drawables.ICON_DIAMOND.drawable) {
+                it.padRight(-40.0f).spaceBottom(30.0f).align(Align.right)
                 toFront()
                 setScaling(Scaling.none)
-                it.padRight(-40.0f).spaceBottom(30.0f).align(Align.right)
             }
             this@LevelFinishView.scoreView = label("", Labels.TEXTBOX_BLUE_ROUNDED.style) {
+                it.spaceBottom(30.0f).fillX()
                 toBack()
                 setAlignment(Align.center)
-                it.spaceBottom(30.0f).fillX()
             }
             this@LevelFinishView.bestScoreImg = image(Drawables.ICON_PRIZE.drawable) {
-                setScaling(Scaling.none)
                 it.padLeft(-40.0f).spaceBottom(30.0f).align(Align.topLeft)
+                setScaling(Scaling.none)
             }
 
             row()
             image(Drawables.ICON_CLOCK.drawable) {
+                it.padRight(-40.0f).align(Align.right)
                 toFront()
                 setScaling(Scaling.none)
-                it.padRight(-40.0f).align(Align.right)
             }
             this@LevelFinishView.timeView = label("", Labels.TEXTBOX_ORANGE_ROUNDED.style) {
+                it.fillX()
                 toBack()
                 setAlignment(Align.center)
-                it.fillX()
             }
             this@LevelFinishView.bestTimeImg = image(Drawables.ICON_PRIZE.drawable) {
-                setScaling(Scaling.none)
                 it.padLeft(-40.0f).align(Align.left)
+                setScaling(Scaling.none)
             }
 
             row()
             horizontalGroup {
-                space(30f)
-                this@LevelFinishView.menuButton = imageButton(ImageButtons.MENU.style)
-                this@LevelFinishView.repeatButton = imageButton(ImageButtons.REPEAT.style)
-                this@LevelFinishView.nextButton = imageButton(ImageButtons.NEXT.style)
                 it.padBottom(15.0f).spaceBottom(16.0f).expandY().align(Align.bottom).colspan(3)
+                space(30f)
+                this@LevelFinishView.menuButton =
+                    imageButton(ImageButtons.MENU.style) {
+                        isTransform = true
+                        setOrigin(Align.center)
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                            this@LevelFinishView.audioService.play(SoundAsset.BUTTON_POP)
+                        }
+                    }
+                this@LevelFinishView.repeatButton =
+                    imageButton(ImageButtons.REPEAT.style) {
+                        isTransform = true
+                        setOrigin(Align.center)
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                            this@LevelFinishView.audioService.play(SoundAsset.BUTTON_POP)
+                        }
+                    }
+                this@LevelFinishView.nextButton =
+                    imageButton(ImageButtons.NEXT.style) {
+                        isTransform = true
+                        setOrigin(Align.center)
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                            this@LevelFinishView.audioService.play(SoundAsset.BUTTON_POP)
+                        }
+                    }
             }
 
             it.prefWidth(POPUP_WIDTH).prefHeight(POPUP_HEIGHT)

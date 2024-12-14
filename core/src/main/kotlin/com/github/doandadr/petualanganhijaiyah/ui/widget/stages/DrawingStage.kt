@@ -55,21 +55,21 @@ class DrawingStage(
         background(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
 
         label("Tuliskan huruf...", Labels.SECONDARY_BORDER.style) {
-            it.padTop(PADDING_INNER_SCREEN).colspan(2)
+            it.padTop(PADDING_INNER_SCREEN).colspan(3)
         }
 
         row()
         this@DrawingStage.hijaiyahText = label("", Labels.TEXTBOX_GREEN_SQUARE_LARGE.style) {
             setAlignment(Align.center)
             setFontScale(SCALE_BTN_MEDIUM)
-            it.spaceTop(20f).colspan(2)
+            it.spaceTop(20f).colspan(3)
         }
 
         row()
         this@DrawingStage.drawingBoard = table {
             background(skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable))
             touchable = Touchable.enabled
-            it.prefSize(SIZE_DRAWING_BOARD).spaceTop(30f).colspan(2)
+            it.prefSize(SIZE_DRAWING_BOARD).spaceTop(30f).colspan(3)
 
             this@DrawingStage.drawImage = image()
         }
@@ -78,7 +78,7 @@ class DrawingStage(
         horizontalGroup {
             this@DrawingStage.correctButton = button(Buttons.CHECK.style)
             this@DrawingStage.incorrectButton = button(Buttons.X.style)
-            it.colspan(2)
+            it.colspan(3)
         }
 
         row()
@@ -86,24 +86,26 @@ class DrawingStage(
             it.padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight).expandY()
 
             this@DrawingStage.resetButton = imageButton(ImageButtons.REPEAT.style) {
+                setScale(SCALE_BTN_SMALL)
                 isTransform = true
                 setOrigin(Align.center)
-                setScale(SCALE_BTN_SMALL)
                 onTouchDown {
                     this.clearActions()
                     this += Animations.pulseAnimation()
+                    this@DrawingStage.audioService.play(SoundAsset.BUTTON_POP)
                 }
                 onChange {
                     this@DrawingStage.resetDrawingBoard()
                 }
             }
             this@DrawingStage.skipButton = imageButton(ImageButtons.SKIP.style) {
+                setScale(SCALE_BTN_SMALL)
                 isTransform = true
                 setOrigin(Align.center)
-                setScale(SCALE_BTN_SMALL)
                 onTouchDown {
                     this.clearActions()
                     this += Animations.pulseAnimation()
+                    this@DrawingStage.audioService.play(SoundAsset.BUTTON_POP)
                 }
                 onChange {
                     this@DrawingStage.loadStage()
@@ -115,6 +117,7 @@ class DrawingStage(
                 onTouchDown {
                     this.clearActions()
                     this += Animations.pulseAnimation()
+                    this@DrawingStage.audioService.play(SoundAsset.BUTTON_POP)
                 }
                 onChange {
                     this@DrawingStage.handleSubmission()
@@ -148,7 +151,7 @@ class DrawingStage(
 
     private fun loadStage() {
         currentEntry = pickRandomEntries(1).first()
-        hijaiyahText.setText(currentEntry.reading)
+        hijaiyahText.setText(currentEntry.reading.uppercase())
         segments.clear()
 
         correctButton.onChange {
@@ -160,8 +163,8 @@ class DrawingStage(
 
         drawingBoard.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
-                segments.add(mutableListOf(drawingBoard.localToStageCoordinates(Vector2(x, y))))
-                drawer.circle(x, y, 10f)
+                val coords = drawingBoard.localToStageCoordinates(Vector2(x, y))
+                segments.add(mutableListOf(coords, coords))
                 return true
             }
 
@@ -188,7 +191,8 @@ class DrawingStage(
         for (segment in segments) {
             if (segment.isNotEmpty()) {
                 for (i in 0 until segment.size - 1) {
-                    drawer.line(segment[i], segment[i + 1], 15f)
+                    drawer.filledCircle(segment[i].x, segment[i].y, 8f)
+                    drawer.line(segment[i], segment[i + 1], 16f)
                 }
             }
         }

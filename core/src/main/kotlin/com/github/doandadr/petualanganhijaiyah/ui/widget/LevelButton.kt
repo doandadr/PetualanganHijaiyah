@@ -25,8 +25,6 @@ class LevelButton(
     lateinit var levelModel: LevelModel
 
     init {
-        isTransform = true
-        setOrigin(Align.center)
         button.isTransform = true
         button.setOrigin(Align.center)
         setState(LevelButtonState.INACCESSIBLE)

@@ -15,13 +15,13 @@ import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.MatchBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
-import ktx.actors.alpha
-import ktx.actors.onChangeEvent
+import ktx.actors.*
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -57,7 +57,7 @@ class MatchLineStage(
         table {
             setFillParent(true)
 
-            background(skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable))
+            background(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
             horizontalGroup {
                 space(150f)
                 this@MatchLineStage.leftGroup = verticalGroup {
@@ -73,10 +73,14 @@ class MatchLineStage(
             row()
             this@MatchLineStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
                 isTransform = true
-                setOrigin(Align.bottom)
+                setOrigin(Align.center)
                 setScale(SCALE_BTN_SMALL)
-                toFront()
-                onChangeEvent {
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@MatchLineStage.audioService.play(SoundAsset.BUTTON_POP)
+                }
+                onChange {
                     this@MatchLineStage.loadStage()
                 }
                 it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
@@ -127,7 +131,6 @@ class MatchLineStage(
         leftEntries.shuffled().forEachIndexed { _, hijaiyah ->
             val box = MatchBox(hijaiyah, MatchBox.State.LEFT, assets)
             box.rightDot.userObject = box
-
             addDragSource(box)
             addDragTarget(box)
             leftGroup.addActor(box)
@@ -202,8 +205,6 @@ class MatchLineStage(
                         audioService.play(SoundAsset.CANCEL)
                     } else if ((target.actor as MatchBox).hijaiyah != sourceBox.hijaiyah) {
                         sourceBox.rightCircle.actor = payload.dragActor
-                        audioService.play(SoundAsset.INCORRECT)
-                        // TODO handle incorrect
                         gameEventManager.dispatchAnswerIncorrectEvent(false)
                     }
                     currentLine = null
@@ -224,7 +225,6 @@ class MatchLineStage(
                 pointer: Int
             ): Boolean {
                 log.debug { "Dragging payload over drag target" }
-                // TODO animate scale up leftCircle
                 return true
             }
 

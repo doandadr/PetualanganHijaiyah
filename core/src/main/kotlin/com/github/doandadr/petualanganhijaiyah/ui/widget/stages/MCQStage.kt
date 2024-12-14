@@ -6,12 +6,16 @@ import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.hijaiyahBox
+import ktx.actors.onChange
 import ktx.actors.onChangeEvent
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -35,15 +39,15 @@ class MCQStage(
     private var state: State = State.LATIN
 
     init {
-        background = skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable)
+        background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
 
         label("Yang manakah...", Labels.SECONDARY_BORDER.style) {
-            color = skin.getColor(Colors.ORANGE.color)
-            it.padTop(PADDING_INNER_SCREEN)
+            it.padTop(PADDING_INNER_SCREEN).expand().align(Align.bottom)
         }
 
         row()
         this@MCQStage.answerBox = stack {
+            it.spaceTop(30f)
             this@MCQStage.answerLatin = label("", Labels.TEXTBOX_WHITE_SQUARE_LARGE.style) {
                 setAlignment(Align.center)
                 setFontScale(SCALE_FONT_MEDIUM)
@@ -51,21 +55,27 @@ class MCQStage(
             this@MCQStage.answerArabic = hijaiyahBox(Hijaiyah.ALIF, HijaiyahBox.Size.MEDIUM, this@MCQStage.assets) {
                 touchable = Touchable.disabled
             }
-            it.spaceTop(30f)
         }
 
         row()
         this@MCQStage.horiGroup = horizontalGroup {
-            space(SPACE_HIJAIYAH_MEDIUM)
             it.spaceTop(100f)
+            space(SPACE_HIJAIYAH_MEDIUM)
         }
 
         row()
         this@MCQStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
-            onChangeEvent {
+            it.padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottom)
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@MCQStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
                 this@MCQStage.loadStage()
             }
-            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()

@@ -105,15 +105,15 @@ class LevelScreen(
 
                 row()
                 table {
+                    it.colspan(2)
                     levelTitle = label("", Labels.PRIMARY_GREEN_WHITE_BORDER.style) {
                         setAlignment(Align.center)
-                        setFontScale(SCALE_FONT_MEDIUM)
+                        setFontScale(SCALE_FONT_BIG)
                     }
 
                     row()
                     image(Drawables.BISMILLAH.drawable)
 
-                    it.colspan(2)
                 }
 
                 row()
@@ -123,6 +123,7 @@ class LevelScreen(
 
                 row()
                 horizontalGroup {
+                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottomLeft)
                     space(SPACE_BETWEEN_BUTTONS)
                     homeButton = imageButton(ImageButtons.HOME.style) {
                         isTransform = true
@@ -130,11 +131,16 @@ class LevelScreen(
                         onTouchDown {
                             this.clearActions()
                             this += Animations.pulseAnimation()
+                            audioService.play(SoundAsset.BUTTON_POP)
                         }
                         onChange {
                             game.setScreen<HomeScreen>()
                         }
                     }
+                }
+                horizontalGroup {
+                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight);
+                    space(SPACE_BETWEEN_BUTTONS)
                     backButton = imageButton(ImageButtons.BACK.style) {
                         isTransform = true
                         setOrigin(Align.center)
@@ -146,24 +152,6 @@ class LevelScreen(
                             game.setScreen<MapScreen>()
                         }
                     }
-                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottomLeft)
-                }
-                horizontalGroup {
-                    space(SPACE_BETWEEN_BUTTONS)
-//                    questionButton = imageButton(ImageButtons.QUESTION.style)
-                    hintButton = imageButton(ImageButtons.HINT.style) {
-                        isTransform = true
-                        setOrigin(Align.center)
-                        onTouchDown {
-                            this.clearActions()
-                            this += Animations.pulseAnimation()
-                        }
-                        onChange {
-                            // TODO do some hintButton shit
-                        }
-                        isVisible = false
-                    }
-                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight);
                 }
             }
 
@@ -205,27 +193,41 @@ class LevelScreen(
         when (popupState) {
             PopupState.FINISH -> {
                 popup.add(
-                    scene2d.levelFinishView(
-                        currentScore,
-                        currentStar,
-                        currentRecordTime,
-                        LevelFinishView.State.FINISH,
-                        audioService,
-                        newBestScore,
-                        newBestTime
-                    ) {
-                        menuButton.onChangeEvent {
-                            game.setScreen<MapScreen>()
+                    scene2d.stack {
+                        image(Drawables.EFFECT_CONFETTI.drawable) {
+                            setScaling(Scaling.none)
+                            setOrigin(Align.top)
+                            setScale(2f)
+                            setPosition(0f, -300f)
                         }
-                        repeatButton.onChangeEvent {
-                            loadLevel(currentLevel.number)
-                            setPopup(PopupState.NONE)
+                        image(Drawables.EFFECT_SALUTE.drawable) {
+                            setScaling(Scaling.none)
+                            setOrigin(Align.center)
+                            setScale(2.5f)
                         }
-                        nextButton.onChangeEvent {
-                            loadLevel(currentLevel.number + 1)
-                            setPopup(PopupState.NONE)
+                        levelFinishView(
+                            currentScore,
+                            currentStar,
+                            currentRecordTime,
+                            LevelFinishView.State.FINISH,
+                            audioService,
+                            newBestScore,
+                            newBestTime
+                        ) {
+                            menuButton.onChangeEvent {
+                                game.setScreen<MapScreen>()
+                            }
+                            repeatButton.onChangeEvent {
+                                loadLevel(currentLevel.number)
+                                setPopup(PopupState.NONE)
+                            }
+                            nextButton.onChangeEvent {
+                                nextLevel()
+                                setPopup(PopupState.NONE)
+                            }
                         }
-                    })
+                    }
+                )
             }
 
             PopupState.FAILED -> {
@@ -315,7 +317,7 @@ class LevelScreen(
             timer.isVisible = false
         }
 
-        levelTitle.setText(level.name)
+        levelTitle.setText(level.name.uppercase())
         backgroundImg.drawable = TextureRegionDrawable(assets[TextureAsset.entries[level.bgIndex].descriptor])
 
         audioService.play(MusicAsset.entries[level.musicIndex])
@@ -424,7 +426,7 @@ class LevelScreen(
 
     override fun answerCorrect(isContinue: Boolean) {
         log.debug { "Answer is correct, continue? $isContinue" }
-        audioService.play(listOf(SoundAsset.CORRECT_BLING, SoundAsset.CORRECT_DING).random())
+        audioService.play(if (isContinue) SoundAsset.CORRECT_BLING else SoundAsset.CORRECT_DING)
 
         if (isEndOfLevel() && isContinue) {
             nextRound()
@@ -437,14 +439,10 @@ class LevelScreen(
 
     override fun answerIncorrect(isContinue: Boolean) {
         log.debug { "Answer is wrong, continue? $isContinue" }
-        audioService.play(listOf(SoundAsset.INCORRECT, SoundAsset.INCORRECT_BIG).random())
+        audioService.play(if (isContinue) SoundAsset.INCORRECT_BIG else SoundAsset.INCORRECT)
 
         if (playerInfo.loseHealth() <= 0) {
             levelFailed()
-            return
-        }
-        if (isEndOfLevel() && isContinue) {
-            nextRound()
             return
         }
         if (isContinue) {
@@ -482,6 +480,9 @@ class LevelScreen(
             // refresh
             hide()
             show()
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            // debug lines
+            stage.isDebugAll = !stage.isDebugAll
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             // finish level
             levelComplete(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)

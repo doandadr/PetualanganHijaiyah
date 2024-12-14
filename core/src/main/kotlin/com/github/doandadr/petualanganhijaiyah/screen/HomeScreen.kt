@@ -93,7 +93,6 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
                 floatingGroup {
                     setFillParent(true)
-
                     container {
                         setFillParent(true)
                         align(Align.topLeft)
@@ -115,10 +114,10 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             onTouchDown {
                                 this.clearActions()
                                 this += Animations.pulseAnimation()
+                                audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
                                 game.setScreen<PracticeScreen>()
-                                audioService.play(SoundAsset.CLICK_BUTTON)
                             }
                         }
                     }
@@ -128,38 +127,41 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                         space(40f)
                         padBottom(250f)
                         startButton = textButton("MULAI", TextButtons.BOARD.style) {
-                            isTransform = true
-                            setOrigin(Align.center)
                             setScale(SCALE_BTN_MEDIUM)
                             rotation = 10f
+                            isTransform = true
+                            setOrigin(Align.center)
                             onTouchDown {
                                 this.clearActions()
                                 this += Animations.pulseAnimation()
+                                audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
                                 game.setScreen<MapScreen>()
                             }
                         }
                         settingButton = textButton("PENGATURAN", TextButtons.BOARD.style) {
+                            this.label.setFontScale(SCALE_FONT_SMALL)
                             isTransform = true
                             setOrigin(Align.center)
-                            this.label.setFontScale(SCALE_FONT_SMALL)
                             onTouchDown {
                                 this.clearActions()
                                 this += Animations.pulseAnimation()
+                                audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
                                 setPopup(PopupState.SETTING)
                             }
                         }
                         exitButton = textButton("KELUAR", TextButtons.BOARD.style) {
-                            isTransform = true
-                            setOrigin(Align.center)
                             this.label.setFontScale(SCALE_FONT_SMALL)
                             setScale(SCALE_BTN_SMALL)
+                            isTransform = true
+                            setOrigin(Align.center)
                             onTouchDown {
                                 this.clearActions()
                                 this += Animations.pulseAnimation()
+                                audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
                                 Gdx.app.exit()
@@ -185,6 +187,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             onTouchDown {
                                 this.clearActions()
                                 this += Animations.pulseAnimation()
+                                audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
                                 setPopup(PopupState.NAME)
@@ -226,7 +229,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             }
 
             PopupState.NAME -> {
-                popup.add(scene2d.nameChangePopup(preferences, gameEventManager))
+                popup.add(scene2d.nameChangePopup(preferences, audioService, gameEventManager))
             }
 
             PopupState.NONE -> {}
