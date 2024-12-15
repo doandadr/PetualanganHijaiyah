@@ -181,17 +181,17 @@ class PracticeStage(
         }
         voiceFathah.onChange {
             this@PracticeStage.apply {
-                audioService.play(currentEntry.audioFathah)
+                currentEntry.audioFathah?.let { audioService.play(it) }
             }
         }
         voiceKasrah.onChange {
             this@PracticeStage.apply {
-                audioService.play(currentEntry.audioKasrah)
+                currentEntry.audioKasrah?.let { audioService.play(it) }
             }
         }
         voiceDhommah.onChange {
             this@PracticeStage.apply {
-                audioService.play(currentEntry.audioDhommah)
+                currentEntry.audioDhommah?.let { audioService.play(it) }
             }
         }
         prevButton.onChange {
@@ -223,7 +223,7 @@ class PracticeStage(
         prevButton.isVisible = currentEntry != Hijaiyah.ALIF
         nextButton.isVisible = currentEntry != Hijaiyah.N10
 
-        val isNumber = currentEntry.id.toInt() in 101..110
+        val isNumber = currentEntry.fileId.toInt() in 101..110
         harakatGroup.isVisible = !isNumber
         if (isNumber) {
             val hijDrawable = TextureRegionDrawable(textAtlas.findRegion(currentEntry.imageNumber))
