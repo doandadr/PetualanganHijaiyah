@@ -12,6 +12,7 @@ import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.BANNER_TOP_PADDING
+import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
 import com.kotcrab.vis.ui.layout.FloatingGroup
 import ktx.actors.onTouchDown
@@ -38,7 +39,8 @@ class LevelFinishView(
     val menuButton: ImageButton
     private val scoreView: Label
     private val stars: StarWidget
-//    private val starStack: Stack
+
+    //    private val starStack: Stack
     private val starStack: FloatingGroup
 
     private val starState: StarWidget.StarState = run {
@@ -59,8 +61,9 @@ class LevelFinishView(
 
         row()
         table {
-            toBack()
+            it.prefWidth(POPUP_WIDTH).prefHeight(POPUP_HEIGHT)
             setBackground(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
+            toBack()
 
             this@LevelFinishView.starStack = floatingGroup {
                 it.padTop(80.0f).padBottom(30.0f).grow().colspan(3).align(Align.center)
@@ -107,7 +110,7 @@ class LevelFinishView(
 
             row()
             horizontalGroup {
-                it.padBottom(15.0f).spaceBottom(16.0f).expandY().align(Align.bottom).colspan(3)
+                it.padBottom(PADDING_INNER_SCREEN).padTop(-50f).expandY().align(Align.bottom).colspan(3)
                 space(30f)
                 this@LevelFinishView.menuButton =
                     imageButton(ImageButtons.MENU.style) {
@@ -140,8 +143,6 @@ class LevelFinishView(
                         }
                     }
             }
-
-            it.prefWidth(POPUP_WIDTH).prefHeight(POPUP_HEIGHT)
         }
 
         loadWidget()

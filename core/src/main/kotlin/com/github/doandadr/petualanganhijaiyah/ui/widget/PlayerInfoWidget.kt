@@ -1,6 +1,7 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
 import com.badlogic.gdx.Preferences
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
@@ -14,7 +15,6 @@ import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import ktx.preferences.get
 import ktx.scene2d.*
-import kotlin.math.max
 
 class PlayerInfoWidget(
     private val preferences: Preferences,
@@ -32,10 +32,10 @@ class PlayerInfoWidget(
     init {
         table {
             this@PlayerInfoWidget.nameSign = label(this@PlayerInfoWidget.player.name, Labels.SIGN_NAME.style) {
+                it.padLeft(10f).padRight(-50f).growX()
                 setAlignment(Align.center)
-                setFontScale(5f / max(3, this@PlayerInfoWidget.player.name.length))
+                setFontScale(5f / MathUtils.clamp(this@PlayerInfoWidget.player.name.length, 3, 8))
                 setScale(SCALE_BTN_SMALL)
-                it.padRight(-50f)
             }
 
             row()
@@ -44,7 +44,7 @@ class PlayerInfoWidget(
             }
         }
         this@PlayerInfoWidget.portrait = image {
-            it.prefSize(120f)
+            it.size(120f)
         }
     }
 

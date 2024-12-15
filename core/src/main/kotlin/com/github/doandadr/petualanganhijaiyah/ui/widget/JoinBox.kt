@@ -34,7 +34,10 @@ class JoinBox(
             this@JoinBox.frame = button(Buttons.JOIN.style) {
                 isTransform = true
                 setOrigin(Align.center)
-                if (this@JoinBox.type == Type.QUESTION) scaleY = 1.5f
+                if (this@JoinBox.type == Type.QUESTION) {
+                    scaleY = 1.3f
+                    touchable = Touchable.disabled
+                }
             }
 
             this@JoinBox.image = image {

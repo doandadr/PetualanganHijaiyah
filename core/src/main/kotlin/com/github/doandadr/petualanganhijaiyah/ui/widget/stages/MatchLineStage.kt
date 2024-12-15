@@ -21,7 +21,10 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.MatchBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
-import ktx.actors.*
+import ktx.actors.alpha
+import ktx.actors.onChange
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -61,13 +64,13 @@ class MatchLineStage(
             horizontalGroup {
                 space(150f)
                 this@MatchLineStage.leftGroup = verticalGroup {
-                    space(40f)
+                    space(25f)
                 }
 
                 this@MatchLineStage.rightGroup = verticalGroup {
-                    space(40f)
+                    space(25f)
                 }
-                it.padTop(PADDING_INNER_SCREEN).expand()
+                it.padTop(PADDING_INNER_SCREEN).expandY()
             }
 
             row()
@@ -205,7 +208,6 @@ class MatchLineStage(
                         audioService.play(SoundAsset.CANCEL)
                     } else if ((target.actor as MatchBox).hijaiyah != sourceBox.hijaiyah) {
                         sourceBox.rightCircle.actor = payload.dragActor
-                        gameEventManager.dispatchAnswerIncorrectEvent(false)
                     }
                     currentLine = null
                 }
@@ -307,6 +309,8 @@ class MatchLineStage(
                         } else {
                             gameEventManager.dispatchAnswerCorrectEvent(false)
                         }
+                    } else {
+                        gameEventManager.dispatchAnswerIncorrectEvent(false)
                     }
                 }
             }
