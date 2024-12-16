@@ -39,7 +39,8 @@ dependencies {
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
   implementation "com.github.raeleus.stripe:freetype:$stripeVersion"
   implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
-  implementation "org.tensorflow:tensorflow-core-platform:$tensorflowVersion"  // Adjust the version accordingly
+//  implementation "org.tensorflow:tensorflow:2.9.0"
+  implementation "org.tensorflow:tensorflow-core-platform:$tensorflowVersion" 
   implementation "org.tensorflow:tensorflow-core-api:$tensorflowVersion"
 //  implementation "org.tensorflow:tensorflow-lite:$tensorflowLiteVersion"
 //  implementation "org.tensorflow:tensorflow-android:$tensorflowAndroidVersion"

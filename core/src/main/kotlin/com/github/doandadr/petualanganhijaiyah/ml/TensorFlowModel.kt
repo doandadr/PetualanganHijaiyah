@@ -1,56 +1,91 @@
 package com.github.doandadr.petualanganhijaiyah.ml
+
+import org.tensorflow.SavedModelBundle
+import org.tensorflow.ndarray.NdArrays
+import org.tensorflow.ndarray.Shape
+import org.tensorflow.types.TFloat32
+
+
+class TensorFlowModel(private val model: SavedModelBundle) {
+    fun predict(input: Array<FloatArray>): Int {
+        // Create the NdArray with the desired shape (1, 64, 64, 1)
+        val inputShape = Shape.of(1, 64, 64, 1)
+        val inputBuffer = NdArrays.ofFloats(inputShape)
+
+        // Fill the input tensor with the normalized pixel values from the 2D array
+        for (row in 0 until 64) {
+            for (col in 0 until 64) {
+                inputBuffer.setFloat(input[row][col], 0, row.toLong(), col.toLong(), 0)
+            }
+        }
+
+        val inputTensor = TFloat32.tensorOf(inputBuffer)
+
+        val imagePredictions = model.session().use { session ->
+            val result: TFloat32 = session.runner()
+                .feed("serving_default_conv2d_5_input:0", inputTensor)
+                .fetch("StatefulPartitionedCall:0")
+                .run().get(0) as TFloat32
+            println("Output Tensor: $result")
+            result.copyTo(NdArrays.ofFloats(result.shape()))
+        }
+
+        var maxIndex = 0
+        var maxValue = -Float.MAX_VALUE
+
+        for (j in 0 until imagePredictions.shape().size(1)) {
+            val value = imagePredictions.getFloat(0, j)
+            if (value > maxValue) {
+                maxValue = value
+                maxIndex = j.toInt()
+            }
+        }
+
+        return maxIndex
+    }
+
+    fun normalizeAndReshape(pixelArray: IntArray, height: Int, width: Int): Array<FloatArray> {
+        val totalSize = height * width
+        require(pixelArray.size == totalSize) { "The size of the input array does not match the specified dimensions." }
+
+        // Normalize the pixel values (0-255 to 0-1) and reshape to a 2D array
+        val reshapedArray = Array(height) { FloatArray(width) }
+        for (i in pixelArray.indices) {
+            val row = i / width
+            val col = i % width
+            reshapedArray[row][col] = pixelArray[i] / 255.0f
+        }
+
+        return reshapedArray
+    }
+}
+
+//            Tensor.of(FloatNdArray::class.java, inputBuffer).use { inputTensor ->
+//                session.runner()
+//                    .feed("input_tensor_name", inputTensor) // Change to your input tensor name
+//                    .fetch("output_tensor_name") // Change to your output tensor name
+//                    .run().first().use { outputTensor ->
+//                        val output = NdArrays.ofFloats(longArrayOf(1, 38)) // Change 38 to the number of classes in your model
+//                        outputTensor.copyTo(output)
+//                        return output.toFloatArray().map { it.toInt() }.toIntArray()
+//                    }
+//            }
+
+//class TensorFlowModel(modelDir: String) {
+//    private val model: SavedModelBundle = SavedModelBundle.load(modelDir, "serve")
 //
-//import org.tensorflow.SavedModelBundle
-//import org.tensorflow.Tensor
-//import java.awt.image.BufferedImage
-//import java.awt.Graphics2D
-//import java.io.File
-//import javax.imageio.ImageIO
-//
-//class TensorFlowModel(modelPath: String) {
-//    private val model: SavedModelBundle = SavedModelBundle.load(modelPath, "serve")
-//    fun predict(image: BufferedImage): String {
-//        // Preprocess image
-//        val input = preprocessImage(image)
-//
-//        // Create Tensor from input
-//        val inputTensor = Tensor.create(input, Float::class.java)
-//
-//        // Run the model and get result
-//        val result = model.session().runner()
-//            .feed("input_tensor", inputTensor)
-//            .fetch("output_tensor")
-//            .run()[0]
-//
-//        // Extract prediction
-//        val predictions = FloatArray(28)
-//        result.copyTo(predictions)
-//
-//        // Find the index with the highest probability
-//        val predictedClass = predictions.indices.maxByOrNull { predictions[it] } ?: -1
-//
-//        // Map the index to the corresponding Arabic character
-//        val arabicCharacters = arrayOf("ا", "ب", "ت", /* Fill in all 28 Arabic characters */)
-//        return arabicCharacters[predictedClass]
-//    }
-//
-//    private fun preprocessImage(image: BufferedImage): Array<Array<Array<FloatArray>>> {
-//        val width = 100
-//        val height = 100
-//        val resizedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-//        val g: Graphics2D = resizedImage.createGraphics()
-//        g.drawImage(image, 0, 0, width, height, null)
-//        g.dispose()
-//
-//        val input = Array(1) { Array(100) { Array(100) { FloatArray(3) } } }
-//        for (i in 0 until 100) {
-//            for (j in 0 until 100) {
-//                val rgb = resizedImage.getRGB(j, i)
-//                input[0][i][j][0] = ((rgb shr 16) and 0xFF) / 255.0f  // Red channel
-//                input[0][i][j][1] = ((rgb shr 8) and 0xFF) / 255.0f   // Green channel
-//                input[0][i][j][2] = (rgb and 0xFF) / 255.0f           // Blue channel
+//    fun predict(input: FloatArray): FloatArray {
+//        model.session().use { session ->
+//            Tensor.create(longArrayOf(1, 64, 64, 1), FloatBuffer.wrap(input)).use { inputTensor ->
+//                session.runner()
+//                    .feed("input_tensor_name", inputTensor) // Change to your input tensor name
+//                    .fetch("output_tensor_name") // Change to your output tensor name
+//                    .run().first().expect(Float::class.java).use { outputTensor ->
+//                        val output = Array(1) { FloatArray(38) } // Change 38 to the number of classes in your model
+//                        outputTensor.copyTo(output)
+//                        return output[0]
+//                    }
 //            }
 //        }
-//        return input
 //    }
 //}
