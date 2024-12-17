@@ -190,6 +190,7 @@ enum class Hijaiyah(
     ),
     HA("ه", 36, "27", "ha", SoundAsset.V27_HA, SoundAsset.V27_HA_A, SoundAsset.V27_HA_I, SoundAsset.V27_HA_U),
     YA("ى", 37, "28", "ya", SoundAsset.V28_YA, SoundAsset.V28_YA_A, SoundAsset.V28_YA_I, SoundAsset.V28_YA_U),
+    N00("٠", 0, "100", "sifr",SoundAsset.V100_SIFR),
     N01("١", 1, "101", "wahid", SoundAsset.V101_WAHID),
     N02("٢", 2, "102", "itsnan", SoundAsset.V102_ITSNAN),
     N03("٣", 3, "103", "tsalatsah", SoundAsset.V103_TSALATSAH),
@@ -199,6 +200,5 @@ enum class Hijaiyah(
     N07("٧", 7, "107", "sab'ah", SoundAsset.V107_SABAH),
     N08("٨", 8, "108", "tsamaniyah", SoundAsset.V108_TSAMANIYAH),
     N09("٩", 9, "109", "tis'ah", SoundAsset.V109_TISAH),
-    N10("١٠", 0, "110", "'asyarah", SoundAsset.V110_ASYARAH),
-//    N00("٠", 0, "100", "sifr",SoundAsset.V100_SIFR),
+    N10("١٠", 38, "110", "'asyarah", SoundAsset.V110_ASYARAH),
 }
