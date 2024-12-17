@@ -337,11 +337,11 @@ class LevelScreen(
                 StageType.MATCH_LINE -> matchLineStage(
                     assets,
                     audioService,
-                    this@LevelScreen.stage.batch,
+                    batch,
                     gameEventManager
                 )
 
-                StageType.DRAWING -> drawingStage(assets, audioService, batch, gameEventManager)
+                StageType.DRAWING -> drawingStage(assets, audioService, batch, gameEventManager, game.mlModel)
             }
         }
 
