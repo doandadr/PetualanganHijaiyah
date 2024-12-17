@@ -172,6 +172,7 @@ class PracticeStage(
             it.spaceTop(50f).colspan(3)
             setAlignment(Align.center)
             setFontScale(SCALE_BTN_MEDIUM)
+            width = 400f
         }
 
         voiceButton.onChange {
@@ -223,23 +224,22 @@ class PracticeStage(
         prevButton.isVisible = currentEntry != Hijaiyah.ALIF
         nextButton.isVisible = currentEntry != Hijaiyah.N10
 
-        val isNumber = currentEntry.fileId.toInt() in 101..110
+        val isNumber = currentEntry.fileId.toInt() in 100..110
         harakatGroup.isVisible = !isNumber
         if (isNumber) {
             val hijDrawable = TextureRegionDrawable(textAtlas.findRegion(currentEntry.imageNumber))
             hijaiyahImage.drawable = hijDrawable
-            hijaiyahText.setText(currentEntry.reading.uppercase())
+            hijaiyahText.setText("${currentEntry.fileId.takeLast(2).toInt()} ${currentEntry.reading.uppercase()}")
             return
         }
 
         val hijDrawable = TextureRegionDrawable(textAtlas.findRegion(currentEntry.image))
-        val fathahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.FATHAH.image))
-        val kasrahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.KASRAH.image))
-        val dhommahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.DHOMMAH.image))
         hijaiyahImage.drawable = hijDrawable
         hijaiyahText.setText(currentEntry.reading.uppercase())
 
-        // Harakat
+        val fathahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.FATHAH.image))
+        val kasrahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.KASRAH.image))
+        val dhommahDrawable = TextureRegionDrawable(textAtlas.findRegion(Harakat.DHOMMAH.image))
         fathahHij.drawable = hijDrawable
         kasrahHij.drawable = hijDrawable
         dhommahHij.drawable = hijDrawable

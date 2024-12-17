@@ -20,23 +20,6 @@ data class StageModel(
     val rounds: Int = 5,
 )
 
-// enter map screen
-// map screen reads from saved data, starCount and hasCompleted
-// level start
-// level retrieves data from model: name, number, etc., and setup first stage in list
-// start timer/stopwatch,
-// go to stage logic
-// player plays the game until either it is complete or fail or canceled
-// player plays n rounds of the stage, then move on to next in stageList if available
-// if skip, repeat round
-// if timer is available,
-// if health is available, reduce health if incorrect, and if heart drops to 0 go to failure state EVENT,
-// health does not affect score, just make sure that timer is challenging
-// if complete, show finish screen, update save data, EVENT
-// if fail, show finish screen, EVENT
-// if , clear screen as usual
-// either way, stop timer
-
 data class LevelModel(
     val number: Int,
     val name: String,
