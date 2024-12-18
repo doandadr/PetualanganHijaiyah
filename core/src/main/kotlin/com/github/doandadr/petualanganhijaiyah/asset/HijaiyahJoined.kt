@@ -17,7 +17,7 @@ enum class HijaiyahJoined(
     J08_BA_WA("j08-ba-wa", arrayOf(BA, WAWU), arrayOf(TA, QOF), arrayOf(YA, FA)),
     J09_DHA_FA("j09-dha-fa", arrayOf(DHOD, FA), arrayOf(DHOD, WAWU), arrayOf(DHO, FA)),
     J10_DHA_KHA_KA("j10-dha-kha-ka", arrayOf(DHOD, KHA, KAF), arrayOf(DHOD, KHA, LAM), arrayOf(DHO, KHO, ALIF)),
-    J11_DHA_KHA_MA("j11-dha-kha-ma", arrayOf(DHOD, KHO, MIM), arrayOf(DHOD, JIM, HA), arrayOf(SYIN, KHO, RA)),
+    J11_DHA_KHA_MA("j11-dha-kha-ma", arrayOf(DHOD, KHA, MIM), arrayOf(DHOD, JIM, HA), arrayOf(SYIN, KHO, RA)),
     J12_DZA_HA_BA("j12-dza-ha-ba", arrayOf(DZAL, HA, BA), arrayOf(DZAL, AIN, YA), arrayOf(NUN, HA, JIM)),
     J13_FA_RA_SYA("j13-fa-ra-sya", arrayOf(FA, RA, SYIN), arrayOf(FA, ZA, SIN), arrayOf(KHO, RA, TSA)),
     J14_FA_TA_RA("j14-fa-ta-ra", arrayOf(FA, TA, RA), arrayOf(FA, TSA, ZA), arrayOf(NUN, TA, YA)),

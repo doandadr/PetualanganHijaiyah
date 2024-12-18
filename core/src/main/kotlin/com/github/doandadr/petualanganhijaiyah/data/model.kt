@@ -306,7 +306,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
             ),
         ),
         bgIndex = TextureAsset.DESERT_2.ordinal,
-        musicIndex = MusicAsset.DESERT.ordinal
+        musicIndex = MusicAsset.DESERT_ALT.ordinal
     ),
     LevelModel(
         number = 9,
@@ -334,7 +334,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
             ),
         ),
         bgIndex = TextureAsset.DESERT_2.ordinal,
-        musicIndex = MusicAsset.DESERT.ordinal
+        musicIndex = MusicAsset.DESERT_ALT.ordinal
     ),
 //    LevelModel(
 //        number = 10,

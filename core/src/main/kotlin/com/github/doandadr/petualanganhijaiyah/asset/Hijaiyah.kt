@@ -60,7 +60,7 @@ enum class Hijaiyah(
     ),
     DAL(
         "د", 17,
-        "08", "dal", 3,
+        "08", "dal", 5,
         SoundAsset.V08_DAL,
         SoundAsset.V08_DAL_A,
         SoundAsset.V08_DAL_I,

@@ -10,7 +10,7 @@ enum class MusicAsset(
     val descriptor: AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ) {
     DESERT("desert.mp3", 0.15f),
-    DESERT_ALT("desert-2.mp3"),
+    DESERT_ALT("desert-2.mp3",0.4f),
     FIELD("forest.mp3"),
     HOME("home.mp3", 0.4f),
     MAP("map.mp3"),
