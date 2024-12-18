@@ -15,20 +15,52 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.*
-import com.github.doandadr.petualanganhijaiyah.data.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.data.LevelModel
+import com.github.doandadr.petualanganhijaiyah.data.LevelSavedData
+import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
+import com.github.doandadr.petualanganhijaiyah.data.PrefKey
+import com.github.doandadr.petualanganhijaiyah.data.StageModel
+import com.github.doandadr.petualanganhijaiyah.data.StageType
+import com.github.doandadr.petualanganhijaiyah.data.levelsData
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
-import com.github.doandadr.petualanganhijaiyah.ui.values.*
-import com.github.doandadr.petualanganhijaiyah.ui.widget.*
+import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_BIG
+import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
+import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_HEIGHT
+import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_WIDTH
+import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelFinishView
+import com.github.doandadr.petualanganhijaiyah.ui.widget.PlayerInfoWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TimerWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.levelFinishView
+import com.github.doandadr.petualanganhijaiyah.ui.widget.playerInfoWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.AnswerPopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.answerPopup
-import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.*
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.dragAndDropStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.drawingStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.matchLineStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqJoin
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqVoiceStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.timerWidget
 import ktx.actors.*
 import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.*
+import ktx.scene2d.actors
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.scene2d
+import ktx.scene2d.stack
+import ktx.scene2d.table
 
 class LevelScreen(
     game: Main,
@@ -407,8 +439,12 @@ class LevelScreen(
                 hasCompleted = true
             }
 
+            player.totalScore = levelsSavedData.fold(0f) {sum, data -> sum + data.highScore}
+            player.totalStar = levelsSavedData.fold(0) {sum, data -> sum + data.starCount}
+
             preferences.flush {
                 this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
+                this[PrefKey.PLAYER.key] = player
             }
         }
         setPopup(PopupState.FINISH)
