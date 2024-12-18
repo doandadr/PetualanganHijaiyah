@@ -19,7 +19,6 @@ import ktx.scene2d.*
 
 private val log = logger<PracticeScreen>()
 
-// TODO fix layout
 class PracticeScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {

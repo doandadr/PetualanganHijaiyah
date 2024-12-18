@@ -46,8 +46,6 @@ class DrawingStage(
     private val resetButton: ImageButton
     private val submitButton: ImageTextButton
     private val drawingBoard: Table
-    private val incorrectButton: Button
-    private val correctButton: Button
     private val skipButton: ImageButton
     private val hijaiyahText: Label
 
@@ -104,13 +102,6 @@ class DrawingStage(
 
         row()
         horizontalGroup {
-            it.colspan(3)
-            this@DrawingStage.correctButton = button(Buttons.CHECK.style)
-            this@DrawingStage.incorrectButton = button(Buttons.X.style)
-        }
-
-        row()
-        horizontalGroup {
             it.padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottom)
 
             this@DrawingStage.resetButton = imageButton(ImageButtons.REPEAT.style) {
@@ -162,16 +153,10 @@ class DrawingStage(
     private fun loadStage() {
         currentEntry = pickRandomEntries(1).first()
 
-        hijaiyahText.setText(currentEntry.reading.uppercase())// TODO if number
+        val isNumber = currentEntry.fileId.toInt() in 100..110
+        hijaiyahText.setText("${if (isNumber) "(${currentEntry.fileId.takeLast(2).toInt()}) " else ""}${currentEntry.reading.uppercase()}")
 
         segments.clear()
-
-        correctButton.onChange {
-            gameEventManager.dispatchAnswerCorrectEvent(true)
-        }
-        incorrectButton.onChange {
-            gameEventManager.dispatchAnswerIncorrectEvent(true)
-        }
 
         drawingBoard.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {

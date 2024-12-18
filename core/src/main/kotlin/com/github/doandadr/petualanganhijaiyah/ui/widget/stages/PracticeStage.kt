@@ -229,7 +229,7 @@ class PracticeStage(
         if (isNumber) {
             val hijDrawable = TextureRegionDrawable(textAtlas.findRegion(currentEntry.imageNumber))
             hijaiyahImage.drawable = hijDrawable
-            hijaiyahText.setText("${currentEntry.fileId.takeLast(2).toInt()} ${currentEntry.reading.uppercase()}")
+            hijaiyahText.setText("(${currentEntry.fileId.takeLast(2).toInt()}) ${currentEntry.reading.uppercase()}")
             return
         }
 
