@@ -87,6 +87,8 @@ class SplashScreen(game: Main) : BaseScreen(game) {
         game.addScreen(MapScreen(game))
         game.addScreen(LevelScreen(game))
         game.addScreen(PracticeScreen(game))
+        game.addScreen(StartScreen(game))
+        game.addScreen(FinishScreen(game))
 
         game.setScreen<HomeScreen>()
         game.removeScreen<SplashScreen>()

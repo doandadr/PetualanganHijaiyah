@@ -44,7 +44,7 @@ enum class ImageButtons(val style: String) {
     HINT("hint"),
     QUESTION("question"),
     SCORE("score"),
-    SKIP("skip")
+    SKIP("skip"),
 }
 
 enum class ImageTextButtons(val style: String) {
@@ -79,6 +79,7 @@ enum class Labels(val style: String) {
     TUTORIAL_LEFT_UP("tutorial-left-up"),
     TUTORIAL_RIGHT_DOWN("tutorial-right-down"),
     TUTORIAL_RIGHT_UP("tutorial-right-up"),
+    BUBBLE("bubble"),
 }
 
 enum class TextButtons(val style: String) {

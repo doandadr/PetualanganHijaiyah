@@ -261,6 +261,9 @@ class HomeScreen(game: Main) : BaseScreen(game) {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             // HIDE popup
             setPopup(PopupState.NONE)
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+            // Go to Finish Screen
+            game.setScreen<FinishScreen>()
         }
     }
 
