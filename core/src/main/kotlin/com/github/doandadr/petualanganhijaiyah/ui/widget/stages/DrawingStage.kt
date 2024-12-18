@@ -10,12 +10,24 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
-import com.github.doandadr.petualanganhijaiyah.ml.PreProcessHelper
+import com.github.doandadr.petualanganhijaiyah.ml.PreprocessingHelper
+import com.github.doandadr.petualanganhijaiyah.ml.Recognition
 import com.github.doandadr.petualanganhijaiyah.ml.TensorFlowUtils
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
@@ -28,8 +40,16 @@ import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
-import ktx.scene2d.*
-import org.tensorflow.SavedModelBundle
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.imageTextButton
+import ktx.scene2d.label
+import ktx.scene2d.table
 import space.earlygrey.shapedrawer.ShapeDrawer
 import space.earlygrey.shapedrawer.scene2d.ShapeDrawerDrawable
 
@@ -39,7 +59,7 @@ class DrawingStage(
     private val audioService: AudioService,
     private val batch: Batch,
     private val gameEventManager: GameEventManager,
-    private val mlModel: SavedModelBundle,
+    private val recognition: Recognition,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
     private val drawArea: Image
@@ -197,12 +217,12 @@ class DrawingStage(
 
     private fun handleSubmission() {
         // Preprocess the drawing
-        val preProcessHelper = PreProcessHelper()
+        val preprocessingHelper = PreprocessingHelper()
         val boardPos = drawingBoard.localToStageCoordinates(Vector2())
-        resultImageArray = preProcessHelper.preProcessDrawing(segments, boardPos,  SIZE_DRAWING_BOARD)
+        resultImageArray = preprocessingHelper.preProcessDrawing(segments, boardPos,  SIZE_DRAWING_BOARD)
 
         // Predict
-        val predictions = TensorFlowUtils.predict(mlModel, resultImageArray)
+        val predictions = recognition.predict(resultImageArray)
         val sortedPredictions = TensorFlowUtils.sortPredictions(predictions)
         val topPredictions = sortedPredictions.take(currentEntry.detectionSlack)
 
@@ -250,7 +270,7 @@ inline fun <S> KWidget<S>.drawingStage(
     audioService: AudioService,
     batch: Batch,
     gameEventManager: GameEventManager,
-    mlModel: SavedModelBundle,
+    recognition: Recognition,
     init: DrawingStage.(S) -> Unit = {}
 ) = actor(
     DrawingStage(
@@ -258,6 +278,6 @@ inline fun <S> KWidget<S>.drawingStage(
         audioService,
         batch,
         gameEventManager,
-        mlModel,
+        recognition,
     ), init
 )

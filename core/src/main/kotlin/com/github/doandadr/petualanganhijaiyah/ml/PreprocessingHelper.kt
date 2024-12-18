@@ -2,24 +2,12 @@ package com.github.doandadr.petualanganhijaiyah.ml
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import org.tensorflow.SavedModelBundle
-import org.tensorflow.ndarray.NdArrays
-import org.tensorflow.ndarray.Shape
-import org.tensorflow.types.TFloat32
-import java.awt.image.BufferedImage
-import java.io.File
-import javax.imageio.ImageIO
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.sqrt
 
-
-interface Prediction {
-    fun predict(input: Array<FloatArray>): FloatArray
-}
-
-class PreProcessHelper {
+class PreprocessingHelper {
     private lateinit var  segments: List<List<Vector2>>
     private lateinit var boardPosition: Vector2
     private var boardSize: Float = 0f
@@ -144,104 +132,5 @@ class PreProcessHelper {
         applyBrushEffect()
 
         return grayscaleArray
-    }
-}
-
-object TensorFlowUtils {
-    fun normalizeAndReshape(pixelArray: IntArray, height: Int = 64, width: Int = 64): Array<FloatArray> {
-        val totalSize = height * width
-        require(pixelArray.size == totalSize) { "The size of the input array does not match the specified dimensions." }
-
-        // Normalize the pixel values (0-255 to 0-1) and reshape to a 2D array
-        val reshapedArray = Array(height) { FloatArray(width) }
-        for (i in pixelArray.indices) {
-            val row = i / width
-            val col = i % width
-            reshapedArray[row][col] = pixelArray[i] / 255.0f
-        }
-
-        return reshapedArray
-    }
-
-    fun normalize(input: IntArray): FloatArray {
-        val normalizedArray = FloatArray(4096) { i -> input[i] / 255.0f }
-        return normalizedArray
-    }
-
-    fun convertValuesToImage(imageValues: FloatArray, display: Boolean = false): BufferedImage {
-        // Reshape and normalize the image values
-        val width = 64
-        val height = 64
-        val imageArray = Array(height) { FloatArray(width) }
-        for (i in imageValues.indices) {
-            val row = i / width
-            val col = i % width
-            imageArray[row][col] = imageValues[i]
-        }
-
-        // Convert to BufferedImage
-        val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                val value = (imageArray[y][x] * 255).toInt()
-                val rgb = (value shl 16) or (value shl 8) or value
-                bufferedImage.setRGB(x, y, rgb)
-            }
-        }
-
-        // Optionally display the image
-        if (display) {
-            val file = File("image.png")
-            ImageIO.write(bufferedImage, "png", file)
-            println("Image saved to ${file.absolutePath}")
-        }
-
-        return bufferedImage
-    }
-
-    fun predict(model: SavedModelBundle, input: Array<FloatArray>): FloatArray {
-        // Create the NdArray with the desired shape (1, 64, 64, 1)
-        val inputShape = Shape.of(1, 64, 64, 1)
-        val inputBuffer = NdArrays.ofFloats(inputShape)
-
-        // Fill the input tensor with the normalized pixel values from the 2D array
-        for (row in 0 until 64) {
-            for (col in 0 until 64) {
-                inputBuffer.setFloat(input[row][col], 0, row.toLong(), col.toLong(), 0)
-            }
-        }
-        val inputTensor = TFloat32.tensorOf(inputBuffer)
-
-        // Predict
-        val imagePredictions = run {
-            val result: TFloat32 = model.session().runner()
-                .feed("serving_default_conv2d_5_input:0", inputTensor)
-                .fetch("StatefulPartitionedCall:0")
-                .run().get(0) as TFloat32
-            result.copyTo(NdArrays.ofFloats(result.shape()))
-        }
-        val predictionSize = imagePredictions.shape().size(1).toInt()
-
-        val predictions = FloatArray(predictionSize)
-        // Fill the predictions array with the output values
-        for (i in 0 until predictionSize) {
-            predictions[i] = imagePredictions.getFloat(0, i.toLong())
-        }
-
-        for (i in 0 until predictionSize) {
-            print("${"%2d".format(i)}   ")
-        }
-        println()
-        for (j in 0 until imagePredictions.shape().size(1)) {
-            val value = imagePredictions.getFloat(0, j)
-            print("${"%.2f".format(value)} ")
-        }
-        println()
-
-        return predictions
-    }
-
-    fun sortPredictions(predictions: FloatArray): List<Pair<Int, Float>> {
-        return predictions.mapIndexed { index, value -> index to value }.sortedByDescending { it.second }
     }
 }
