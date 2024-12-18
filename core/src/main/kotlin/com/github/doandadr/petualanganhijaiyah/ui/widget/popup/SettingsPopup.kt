@@ -3,17 +3,17 @@ package com.github.doandadr.petualanganhijaiyah.ui.widget.popup
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
-import com.github.doandadr.petualanganhijaiyah.asset.CheckBoxes
-import com.github.doandadr.petualanganhijaiyah.asset.Drawables
-import com.github.doandadr.petualanganhijaiyah.asset.Labels
-import com.github.doandadr.petualanganhijaiyah.asset.TextButtons
+import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.screen.HomeScreen.PopupState
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
 import ktx.actors.onChangeEvent
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
@@ -49,22 +49,36 @@ class SettingsPopup(
             align(Align.top)
 
             this@SettingsPopup.soundToggle = checkBox("", CheckBoxes.SOUND.style) {
-                isChecked = this@SettingsPopup.soundVolume > 0f
                 it.padTop(OPTION_PADDING).prefSize(TOGGLE_SIZE)
+                isChecked = this@SettingsPopup.soundVolume > 0f
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
+                }
             }
             this@SettingsPopup.soundSlider = slider {
-                value = this@SettingsPopup.soundVolume
                 it.padTop(OPTION_PADDING).prefWidth(SLIDER_WIDTH)
+                value = this@SettingsPopup.soundVolume
             }
 
             row()
             this@SettingsPopup.musicToggle = checkBox("", CheckBoxes.MUSIC.style) {
-                isChecked = this@SettingsPopup.musicVolume > 0f
                 it.padTop(OPTION_PADDING).prefSize(TOGGLE_SIZE)
+                isChecked = this@SettingsPopup.musicVolume > 0f
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
+                }
             }
             this@SettingsPopup.musicSlider = slider {
-                value = this@SettingsPopup.musicVolume
                 it.padTop(OPTION_PADDING).prefWidth(SLIDER_WIDTH)
+                value = this@SettingsPopup.musicVolume
             }
 
             row()
@@ -73,6 +87,13 @@ class SettingsPopup(
             row()
             this@SettingsPopup.confirmButton = textButton("OK", TextButtons.GREEN_LARGE.style) {
                 it.padBottom(PADDING_INNER_SCREEN).colspan(2)
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
+                }
             }
             it.spaceTop(20f).spaceTop(40f).prefWidth(500f).prefHeight(600f)
         }

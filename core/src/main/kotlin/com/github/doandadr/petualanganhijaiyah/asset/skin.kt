@@ -44,10 +44,12 @@ enum class ImageButtons(val style: String) {
     HINT("hint"),
     QUESTION("question"),
     SCORE("score"),
+    SKIP("skip"),
 }
 
 enum class ImageTextButtons(val style: String) {
     SKIP("skip"),
+    SUBMIT("submit"),
 }
 
 enum class Labels(val style: String) {
@@ -73,11 +75,11 @@ enum class Labels(val style: String) {
     TEXTBOX_WHITE_SQUARE_LARGE("textbox-white-square-large"),
     TEXTBOX_WHITE_SQUARE_SMALL("textbox-white-square-small"),
     TIMER_COUNTER("timer-counter"),
-    TUTORIAL("tutorial"),
     TUTORIAL_LEFT_DOWN("tutorial-left-down"),
     TUTORIAL_LEFT_UP("tutorial-left-up"),
     TUTORIAL_RIGHT_DOWN("tutorial-right-down"),
     TUTORIAL_RIGHT_UP("tutorial-right-up"),
+    BUBBLE("bubble"),
 }
 
 enum class TextButtons(val style: String) {

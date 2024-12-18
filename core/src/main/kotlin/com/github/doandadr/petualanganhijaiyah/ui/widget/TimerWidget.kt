@@ -3,6 +3,8 @@ package com.github.doandadr.petualanganhijaiyah.ui.widget
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
 import ktx.log.logger
@@ -12,9 +14,11 @@ import ktx.scene2d.Scene2DSkin
 import ktx.scene2d.actor
 
 class TimerWidget(
+    private val audioService: AudioService,
     private val eventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
+    private var isTicking: Boolean = false
     private var deltaTimerCount: Float = 0f
     private var maxSeconds: Float = DEFAULT_MAX_TIME
     private var remainingSeconds: Float = DEFAULT_MAX_TIME
@@ -65,6 +69,11 @@ class TimerWidget(
                     counter.updateTime(remainingSeconds)
                     bar.updateTime(remainingSeconds)
                     deltaTimerCount = 0f
+
+                    if (remainingSeconds == 10f && !isTicking) {
+                        audioService.play(SoundAsset.TIMER)
+                        isTicking = true
+                    }
                 }
             }
             State.STOPWATCH -> {
@@ -119,11 +128,13 @@ class TimerWidget(
 }
 
 inline fun <S> KWidget<S>.timerWidget(
+    audioService: AudioService,
     eventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
     init: TimerWidget.(S) -> Unit = {}
 ) = actor(
     TimerWidget(
+        audioService,
         eventManager,
         skin
     ), init

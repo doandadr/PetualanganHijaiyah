@@ -25,6 +25,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_MAP_STAR
 import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
@@ -64,6 +65,20 @@ class MapScreen(game: Main) : BaseScreen(game) {
         setupData()
         setupUI()
         loadLevels()
+        Gdx.app.postRunnable {
+            showTutorials()
+        }
+    }
+
+    private fun showTutorials() {
+        if (levelsSavedData.find { it.number == 1 && !it.hasCompleted } != null) {
+            gameEventManager.dispatchShowTutorialEvent(levelButtons.first().label, TutorialType.MAP_LEVEL1)
+        }
+        if (levelsSavedData.find { it.number == 8 && it.hasCompleted } != null
+            && levelsSavedData.find { it.number == 9 && !it.hasCompleted } != null
+        ) {
+            gameEventManager.dispatchShowTutorialEvent(levelButtons[8].label, TutorialType.MAP_LEVEL9)
+        }
     }
 
     private fun setupData() {
@@ -180,8 +195,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
             table {
                 setFillParent(true)
-
                 table {
+                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topLeft)
                     image(Drawables.ICON_STAR_SMALL.drawable) {
                         it.padRight(-40f)
                     }
@@ -189,10 +204,9 @@ class MapScreen(game: Main) : BaseScreen(game) {
                         toBack()
                         setAlignment(Align.center)
                     }
-                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topLeft)
                 }
-
                 table {
+                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topRight)
                     image(Drawables.ICON_DIAMOND.drawable) {
                         it.padRight(-40f)
                     }
@@ -200,14 +214,12 @@ class MapScreen(game: Main) : BaseScreen(game) {
                         toBack()
                         setAlignment(Align.center)
                     }
-                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topRight)
                 }
-
 
                 row()
                 label("PETA", Labels.MAP.style) {
-                    setAlignment(Align.center)
                     it.padTop(PADDING_INNER_SCREEN).align(Align.top).colspan(2)
+                    setAlignment(Align.center)
                 }
 
                 row()
@@ -215,25 +227,26 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
                 row()
                 homeButton = imageButton(ImageButtons.HOME.style) {
+                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomLeft)
                     isTransform = true
                     setOrigin(Align.center)
-                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomLeft)
                     onTouchDown {
                         this.clearActions()
                         this += Animations.pulseAnimation()
+                        audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
                         game.setScreen<HomeScreen>()
                     }
                 }
-
                 tutorialButton = imageButton(ImageButtons.QUESTION.style) {
+                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
                     isTransform = true
                     setOrigin(Align.center)
-                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
                     onTouchDown {
                         this.clearActions()
                         this += Animations.pulseAnimation()
+                        audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
                         log.debug { "Tutorial button pressed" }
@@ -260,7 +273,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                 levelsSavedData.add(levelSave)
             }
 
-            levelButton.setTitle(levels[index].name.uppercase())
+            levelButton.setLevel(levels[index])
 
             if (levelSave.hasCompleted) {
                 levelButton.setState(LevelButton.LevelButtonState.PASSED)
@@ -295,7 +308,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
     private fun setOnTouchEvent(levelButton: LevelButton, index: Int) {
         levelButton.onTouchDown {
             this.clearActions()
-            this += Animations.pulseAnimation()
+            this += Animations.pulseAnimation(0.1f)
+            audioService.play(SoundAsset.BUTTON_POP)
         }
         levelButton.onChangeEvent {
             preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
@@ -308,7 +322,9 @@ class MapScreen(game: Main) : BaseScreen(game) {
             hide()
             show()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            levelButtons.first().setState(LevelButton.LevelButtonState.INACCESSIBLE)
+            // Unlock all levels
+            levelsSavedData.forEach { it.hasCompleted = true }
+            loadLevels()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
             levelButtons.first().setState(LevelButton.LevelButtonState.AVAILABLE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {

@@ -15,20 +15,52 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.*
-import com.github.doandadr.petualanganhijaiyah.data.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.data.LevelModel
+import com.github.doandadr.petualanganhijaiyah.data.LevelSavedData
+import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
+import com.github.doandadr.petualanganhijaiyah.data.PrefKey
+import com.github.doandadr.petualanganhijaiyah.data.StageModel
+import com.github.doandadr.petualanganhijaiyah.data.StageType
+import com.github.doandadr.petualanganhijaiyah.data.levelsData
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
-import com.github.doandadr.petualanganhijaiyah.ui.values.*
-import com.github.doandadr.petualanganhijaiyah.ui.widget.*
+import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_BIG
+import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
+import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_HEIGHT
+import com.github.doandadr.petualanganhijaiyah.ui.values.STAGE_BOX_WIDTH
+import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelFinishView
+import com.github.doandadr.petualanganhijaiyah.ui.widget.PlayerInfoWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TimerWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.levelFinishView
+import com.github.doandadr.petualanganhijaiyah.ui.widget.playerInfoWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.AnswerPopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.answerPopup
-import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.*
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.dragAndDropStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.drawingStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.matchLineStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqJoin
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqVoiceStage
+import com.github.doandadr.petualanganhijaiyah.ui.widget.timerWidget
 import ktx.actors.*
 import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.*
+import ktx.scene2d.actors
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.scene2d
+import ktx.scene2d.stack
+import ktx.scene2d.table
 
 class LevelScreen(
     game: Main,
@@ -41,7 +73,6 @@ class LevelScreen(
     private lateinit var timer: TimerWidget
     private lateinit var playerInfo: PlayerInfoWidget
     private lateinit var backgroundImg: Image
-    private lateinit var hintButton: ImageButton
     private lateinit var backButton: ImageButton
     private lateinit var homeButton: ImageButton
 
@@ -87,7 +118,6 @@ class LevelScreen(
     private fun setupUI() {
         val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
-        stage.isDebugAll = true
         stage.actors {
             backgroundImg = image {
                 setFillParent(true)
@@ -96,7 +126,7 @@ class LevelScreen(
             layout = table {
                 setFillParent(true)
 
-                timer = timerWidget(gameEventManager) {
+                timer = timerWidget(audioService, gameEventManager) {
                     it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expand().align(Align.topLeft)
                 }
 
@@ -106,15 +136,15 @@ class LevelScreen(
 
                 row()
                 table {
+                    it.colspan(2)
                     levelTitle = label("", Labels.PRIMARY_GREEN_WHITE_BORDER.style) {
                         setAlignment(Align.center)
-                        setFontScale(SCALE_FONT_MEDIUM)
+                        setFontScale(SCALE_FONT_BIG)
                     }
 
                     row()
                     image(Drawables.BISMILLAH.drawable)
 
-                    it.colspan(2)
                 }
 
                 row()
@@ -124,58 +154,41 @@ class LevelScreen(
 
                 row()
                 horizontalGroup {
+                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottomLeft)
                     space(SPACE_BETWEEN_BUTTONS)
                     homeButton = imageButton(ImageButtons.HOME.style) {
                         isTransform = true
                         setOrigin(Align.center)
-                        onTouchEvent(
-                            onDown = { _ ->
-                                this@imageButton.clearActions()
-                                this@imageButton += Animations.pulseAnimation()
-                            },
-                            onUp = { _ ->
-                                game.setScreen<HomeScreen>()
-                            }
-                        )
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                            audioService.play(SoundAsset.BUTTON_POP)
+                        }
+                        onChange {
+                            game.setScreen<HomeScreen>()
+                        }
                     }
+                }
+                horizontalGroup {
+                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
+                    space(SPACE_BETWEEN_BUTTONS)
                     backButton = imageButton(ImageButtons.BACK.style) {
                         isTransform = true
                         setOrigin(Align.center)
-                        onTouchEvent(
-                            onDown = { _ ->
-                                this@imageButton.clearActions()
-                                this@imageButton += Animations.pulseAnimation()
-                            },
-                            onUp = { _ ->
-                                game.setScreen<MapScreen>()
-                            }
-                        )
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulseAnimation()
+                        }
+                        onChange {
+                            game.setScreen<MapScreen>()
+                        }
                     }
-                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottomLeft)
-                }
-                horizontalGroup {
-                    space(SPACE_BETWEEN_BUTTONS)
-//                    questionButton = imageButton(ImageButtons.QUESTION.style)
-                    hintButton = imageButton(ImageButtons.HINT.style) {
-                        isTransform = true
-                        setOrigin(Align.center)
-                        onTouchEvent(
-                            onDown = { _ ->
-                                this@imageButton.clearActions()
-                                this@imageButton += Animations.pulseAnimation()
-                            },
-                            onUp = { _ ->
-                                // TODO do some hintButton shit
-                            }
-                        )
-                    }
-                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight);
                 }
             }
 
             popup = table {
                 setFillParent(true)
-                setBackground(bgDim)
+                background = bgDim
                 isVisible = false
             }
         }
@@ -184,14 +197,6 @@ class LevelScreen(
     override fun render(delta: Float) {
         super.render(delta)
         timer.update(delta)
-    }
-
-    enum class PopupState {
-        NONE,
-        FINISH,
-        FAILED,
-        CORRECT,
-        INCORRECT,
     }
 
     private fun setPopup(state: PopupState) {
@@ -211,27 +216,41 @@ class LevelScreen(
         when (popupState) {
             PopupState.FINISH -> {
                 popup.add(
-                    scene2d.levelFinishView(
-                        currentScore,
-                        currentStar,
-                        currentRecordTime,
-                        LevelFinishView.State.FINISH,
-                        audioService,
-                        newBestScore,
-                        newBestTime
-                    ) {
-                        menuButton.onChangeEvent {
-                            game.setScreen<MapScreen>()
+                    scene2d.stack {
+                        image(Drawables.EFFECT_CONFETTI.drawable) {
+                            setScaling(Scaling.none)
+                            setOrigin(Align.top)
+                            setScale(2f)
+                            setPosition(0f, -300f)
                         }
-                        repeatButton.onChangeEvent {
-                            loadLevel(currentLevel.number)
-                            setPopup(PopupState.NONE)
+                        image(Drawables.EFFECT_SALUTE.drawable) {
+                            setScaling(Scaling.none)
+                            setOrigin(Align.center)
+                            setScale(2.5f)
                         }
-                        nextButton.onChangeEvent {
-                            loadLevel(currentLevel.number + 1)
-                            setPopup(PopupState.NONE)
+                        levelFinishView(
+                            currentScore,
+                            currentStar,
+                            currentRecordTime,
+                            LevelFinishView.State.FINISH,
+                            audioService,
+                            newBestScore,
+                            newBestTime
+                        ) {
+                            menuButton.onChangeEvent {
+                                game.setScreen<MapScreen>()
+                            }
+                            repeatButton.onChangeEvent {
+                                loadLevel(currentLevel.number)
+                                setPopup(PopupState.NONE)
+                            }
+                            nextButton.onChangeEvent {
+                                nextLevel()
+                                setPopup(PopupState.NONE)
+                            }
                         }
-                    })
+                    }
+                )
             }
 
             PopupState.FAILED -> {
@@ -280,13 +299,11 @@ class LevelScreen(
                 popup.add(scene2d.answerPopup(AnswerPopup.State.INCORRECT, preferences) {
                     this.clearActions()
                     this@answerPopup += Actions.sequence(Animations.fadeInOutAnimation(), Actions.run {
-                        playerInfo.loseHealth()
                         setPopup(PopupState.NONE)
                         loadStage(currentStage)
                     })
                     onClick {
                         this@answerPopup.clearActions()
-                        playerInfo.loseHealth()
                         setPopup(PopupState.NONE)
                         loadStage(currentStage)
                         this@answerPopup.touchable = Touchable.disabled
@@ -323,7 +340,7 @@ class LevelScreen(
             timer.isVisible = false
         }
 
-        levelTitle.setText(level.name)
+        levelTitle.setText(level.name.uppercase())
         backgroundImg.drawable = TextureRegionDrawable(assets[TextureAsset.entries[level.bgIndex].descriptor])
 
         audioService.play(MusicAsset.entries[level.musicIndex])
@@ -343,11 +360,11 @@ class LevelScreen(
                 StageType.MATCH_LINE -> matchLineStage(
                     assets,
                     audioService,
-                    this@LevelScreen.stage.batch,
+                    batch,
                     gameEventManager
                 )
 
-                StageType.DRAWING -> drawingStage(assets, audioService, batch, gameEventManager)
+                StageType.DRAWING -> drawingStage(assets, audioService, batch, gameEventManager, game.recognition)
             }
         }
 
@@ -366,8 +383,7 @@ class LevelScreen(
             loadLevel(nextLevelNumber)
         } else {
             log.debug { "Adventure finished" }
-            // TODO finish the adventure
-            // game.setScreen<FinishScreen>()
+             game.setScreen<FinishScreen>()
         }
     }
 
@@ -423,8 +439,12 @@ class LevelScreen(
                 hasCompleted = true
             }
 
+            player.totalScore = levelsSavedData.fold(0f) {sum, data -> sum + data.highScore}
+            player.totalStar = levelsSavedData.fold(0) {sum, data -> sum + data.starCount}
+
             preferences.flush {
                 this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
+                this[PrefKey.PLAYER.key] = player
             }
         }
         setPopup(PopupState.FINISH)
@@ -432,27 +452,27 @@ class LevelScreen(
 
     override fun answerCorrect(isContinue: Boolean) {
         log.debug { "Answer is correct, continue? $isContinue" }
-        audioService.play(listOf(SoundAsset.CORRECT_BLING, SoundAsset.CORRECT_DING).random())
+        audioService.play(if (isContinue) SoundAsset.CORRECT_BLING else SoundAsset.CORRECT_DING)
 
-        if (isEndOfLevel()) {
+        if (isEndOfLevel() && isContinue) {
             nextRound()
-        } else if (isContinue) {
+            return
+        }
+        if (isContinue) {
             setPopup(PopupState.CORRECT)
         }
     }
 
     override fun answerIncorrect(isContinue: Boolean) {
         log.debug { "Answer is wrong, continue? $isContinue" }
-        audioService.play(listOf(SoundAsset.INCORRECT, SoundAsset.INCORRECT_BIG).random())
+        audioService.play(if (isContinue) SoundAsset.INCORRECT_BIG else SoundAsset.INCORRECT)
 
-        if (isEndOfLevel()) {
-            nextRound()
+        if (playerInfo.loseHealth() <= 0) {
+            levelFailed()
             return
         }
         if (isContinue) {
             setPopup(PopupState.INCORRECT)
-        } else {
-            playerInfo.loseHealth()
         }
     }
 
@@ -464,6 +484,8 @@ class LevelScreen(
 
         timer.stop()
         audioService.play(SoundAsset.COMPLETE)
+        audioService.play(SoundAsset.CHEER_SMALL)
+        audioService.stopSound(SoundAsset.TIMER)
         updateLevelData(currentLevel, score, stars, time)
         layout.touchable = Touchable.disabled
     }
@@ -477,6 +499,7 @@ class LevelScreen(
         currentRecordTime = timer.elapsedSeconds
 
         audioService.play(SoundAsset.FAILURE)
+        audioService.stopSound(SoundAsset.TIMER)
         setPopup(PopupState.FAILED)
         layout.touchable = Touchable.disabled
     }
@@ -486,6 +509,9 @@ class LevelScreen(
             // refresh
             hide()
             show()
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            // debug lines
+            stage.isDebugAll = !stage.isDebugAll
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             // finish level
             levelComplete(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
@@ -511,6 +537,14 @@ class LevelScreen(
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
             // level hint
         }
+    }
+
+    enum class PopupState {
+        NONE,
+        FINISH,
+        FAILED,
+        CORRECT,
+        INCORRECT,
     }
 
     companion object {

@@ -14,7 +14,10 @@ import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.screen.HomeScreen.PopupState
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import ktx.actors.onChangeEvent
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
@@ -37,9 +40,23 @@ class CharacterSelectPopup(
             label("PILIH KARAKTER", Labels.BOARD.style).setAlignment(Align.center)
             this@CharacterSelectPopup.girlButton = button(Buttons.GIRL_SELECT.style) {
                 color = skin.getColor(if (this@CharacterSelectPopup.player.character == GIRL) Colors.LIGHT_GREEN.color else Colors.WHITE.color)
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@CharacterSelectPopup.audioService.play(SoundAsset.BUTTON_POP)
+                }
             }
             this@CharacterSelectPopup.boyButton = button(Buttons.BOY_SELECT.style) {
                 color = skin.getColor(if (this@CharacterSelectPopup.player.character == BOY) Colors.LIGHT_GREEN.color else Colors.WHITE.color)
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@CharacterSelectPopup.audioService.play(SoundAsset.BUTTON_POP)
+                }
             }
         }
 
@@ -56,7 +73,6 @@ class CharacterSelectPopup(
             preferences.flush {
                 preferences[PrefKey.PLAYER.key] = player.apply { character = GIRL }
             }
-            audioService.play(SoundAsset.CLICK_BUTTON)
             handleSelected(GIRL)
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.NONE)
         }
@@ -64,7 +80,6 @@ class CharacterSelectPopup(
             preferences.flush {
                 preferences[PrefKey.PLAYER.key] = player.apply { character = BOY }
             }
-            audioService.play(SoundAsset.CLICK_BUTTON)
             handleSelected(BOY)
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.NONE)
         }

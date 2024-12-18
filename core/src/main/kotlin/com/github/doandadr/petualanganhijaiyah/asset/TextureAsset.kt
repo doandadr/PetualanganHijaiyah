@@ -8,7 +8,7 @@ enum class TextureAsset(
     directory: String = "graphics/bg",
     val descriptor: AssetDescriptor<Texture> = AssetDescriptor("$directory/$fileName", Texture::class.java)
 ) {
-//    FINISH("bg-finish.png"),
+    FINISH("bg-finish.png"),
     HOME("bg-home.png"),
     DIM("bg-dim.png"),
     STAGE("bg-stage.png"),

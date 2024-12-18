@@ -5,13 +5,13 @@ import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import ktx.collections.gdxArrayOf
 
-enum class StageType {
-    MCQ,
-    MCQ_JOIN,
-    MCQ_VOICE,
-    DRAG_AND_DROP,
-    MATCH_LINE,
-    DRAWING,
+enum class StageType(val title: String) {
+    MCQ("Tebak Huruf"),
+    MCQ_JOIN("Sambungan"),
+    MCQ_VOICE("Ucapan"),
+    DRAG_AND_DROP("Cetakan"),
+    MATCH_LINE("Tarik Garis"),
+    DRAWING("Menggambar"),
 }
 
 data class StageModel(

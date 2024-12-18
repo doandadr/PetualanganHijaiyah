@@ -1,13 +1,19 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
-import ktx.actors.onChangeEvent
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import ktx.actors.onChange
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -20,44 +26,66 @@ class MCQVoiceStage(
 ) : Table(skin), KTable {
     private var answerVoiceButton: ImageButton
     private var horiGroup: HorizontalGroup
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     private val choiceBoxes = mutableListOf<HijaiyahBox>()
     private lateinit var currentLetters: List<Hijaiyah>
     private lateinit var correctAnswer: Hijaiyah
     private val skipButton: ImageTextButton
 
     init {
-        background = skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable)
+        background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
 
-        this@MCQVoiceStage.horiGroup = horizontalGroup {
-            space(SPACE_HIJAIYAH_MEDIUM)
-            it.padTop(PADDING_INNER_SCREEN)
-        }
-
-        row()
         label("Yang manakah...", Labels.SECONDARY_BORDER.style) {
-            it.spaceTop(50f)
+            it.padTop(PADDING_INNER_SCREEN).expand().align(Align.bottom)
         }
 
         row()
         this@MCQVoiceStage.answerVoiceButton = imageButton(ImageButtons.VOICE.style) {
-            onChangeEvent {
+            it.spaceTop(20f)
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
                 this@MCQVoiceStage.apply {
                     audioService.play(correctAnswer.audio)
                 }
             }
-            it.spaceTop(20f)
+        }
+
+        row()
+        this@MCQVoiceStage.horiGroup = horizontalGroup {
+            it.spaceTop(50f).expand()
+            space(SPACE_HIJAIYAH_MEDIUM)
         }
 
         row()
         this@MCQVoiceStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
-            onChangeEvent {
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
                 this@MCQVoiceStage.loadStage()
             }
-            it.spaceTop(50f).padBottom(PADDING_INNER_SCREEN)
         }
 
         loadStage()
+        setTutorials()
+    }
+
+    private fun setTutorials() {
+        Gdx.app.postRunnable{
+            gameEventManager.dispatchShowTutorialEvent(answerVoiceButton, TutorialType.VOICE_START)
+            gameEventManager.dispatchShowTutorialEvent(horiGroup.children.first(), TutorialType.VOICE_OPTION)
+        }
     }
 
     private fun handleAnswer(index: Int) {
@@ -87,11 +115,22 @@ class MCQVoiceStage(
         horiGroup.clearChildren()
         currentLetters.forEachIndexed { index, letter ->
             choiceBoxes += HijaiyahBox(letter, HijaiyahBox.Size.MEDIUM, assets)
-            choiceBoxes[index].onChangeEvent {
-                this@MCQVoiceStage.handleAnswer(index)
+            choiceBoxes[index].apply {
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+                }
+                onChange {
+                    this@MCQVoiceStage.handleAnswer(index)
+                }
             }
             horiGroup.addActor(choiceBoxes[index])
         }
+
+        audioService.play(correctAnswer.audio)
     }
 
 

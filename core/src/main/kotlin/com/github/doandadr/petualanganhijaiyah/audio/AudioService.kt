@@ -13,5 +13,6 @@ interface AudioService {
     fun pause() = Unit
     fun resume() = Unit
     fun stop(clearSounds: Boolean = true) = Unit
+    fun stopSound(sound: SoundAsset) = Unit
     fun update() = Unit
 }

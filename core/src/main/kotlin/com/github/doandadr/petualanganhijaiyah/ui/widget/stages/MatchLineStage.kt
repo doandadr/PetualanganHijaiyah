@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
@@ -14,12 +15,16 @@ import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.MatchBox
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import ktx.actors.alpha
-import ktx.actors.onChangeEvent
+import ktx.actors.onChange
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -40,7 +45,7 @@ class MatchLineStage(
     private val skipButton: ImageTextButton
     private var drawArea: Image
 
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     lateinit var leftEntries: List<Hijaiyah>
     lateinit var rightEntries: List<Hijaiyah>
     private var correctCount: Int = 0
@@ -55,26 +60,30 @@ class MatchLineStage(
         table {
             setFillParent(true)
 
-            background(skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable))
+            background(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
             horizontalGroup {
                 space(150f)
                 this@MatchLineStage.leftGroup = verticalGroup {
-                    space(40f)
+                    space(25f)
                 }
 
                 this@MatchLineStage.rightGroup = verticalGroup {
-                    space(40f)
+                    space(25f)
                 }
-                it.padTop(PADDING_INNER_SCREEN).expand()
+                it.padTop(PADDING_INNER_SCREEN).expandY()
             }
 
             row()
             this@MatchLineStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
                 isTransform = true
-                setOrigin(Align.bottom)
+                setOrigin(Align.center)
                 setScale(SCALE_BTN_SMALL)
-                toFront()
-                onChangeEvent {
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@MatchLineStage.audioService.play(SoundAsset.BUTTON_POP)
+                }
+                onChange {
                     this@MatchLineStage.loadStage()
                 }
                 it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
@@ -102,7 +111,19 @@ class MatchLineStage(
             setFillParent(true)
             touchable = Touchable.disabled
         }
+
         loadStage()
+        setTutorials()
+    }
+
+    private fun setTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(
+                (leftGroup.children.first() as MatchBox),
+                TutorialType.MATCH_START
+            )
+            gameEventManager.dispatchShowTutorialEvent((rightGroup.children[1] as MatchBox), TutorialType.MATCH_END)
+        }
     }
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)
@@ -113,7 +134,6 @@ class MatchLineStage(
         leftEntries.shuffled().forEachIndexed { _, hijaiyah ->
             val box = MatchBox(hijaiyah, MatchBox.State.LEFT, assets)
             box.rightDot.userObject = box
-
             addDragSource(box)
             addDragTarget(box)
             leftGroup.addActor(box)
@@ -147,7 +167,8 @@ class MatchLineStage(
                 payload.dragActor = draggedDot
 
                 // Save the starting point of the drag
-                val stageCoordinates = draggedDot.localToStageCoordinates(Vector2(draggedDot.width / 2, draggedDot.height / 2))
+                val stageCoordinates =
+                    draggedDot.localToStageCoordinates(Vector2(draggedDot.width / 2, draggedDot.height / 2))
                 currentLine = Line(stageCoordinates.x, stageCoordinates.y, stageCoordinates.x, stageCoordinates.y)
 
                 stage.addActor(draggedDot)
@@ -159,10 +180,13 @@ class MatchLineStage(
 
             override fun drag(event: InputEvent?, x: Float, y: Float, pointer: Int) {
                 // Update the end point of the current line
-                currentLine?.let {
-                    val stageCoordinates = dragged.localToStageCoordinates(Vector2(dragged.width / 2, dragged.height / 2))
-                    it.eX = stageCoordinates.x
-                    it.eY = stageCoordinates.y
+                Gdx.app.postRunnable {
+                    currentLine?.let {
+                        val stageCoordinates =
+                            dragged.localToStageCoordinates(Vector2(dragged.width / 2, dragged.height / 2))
+                        it.eX = stageCoordinates.x
+                        it.eY = stageCoordinates.y
+                    }
                 }
             }
 
@@ -184,9 +208,6 @@ class MatchLineStage(
                         audioService.play(SoundAsset.CANCEL)
                     } else if ((target.actor as MatchBox).hijaiyah != sourceBox.hijaiyah) {
                         sourceBox.rightCircle.actor = payload.dragActor
-                        audioService.play(SoundAsset.INCORRECT)
-                        // TODO handle incorrect
-                        gameEventManager.dispatchAnswerIncorrectEvent(false)
                     }
                     currentLine = null
                 }
@@ -206,7 +227,6 @@ class MatchLineStage(
                 pointer: Int
             ): Boolean {
                 log.debug { "Dragging payload over drag target" }
-                // TODO animate scale up leftCircle
                 return true
             }
 
@@ -269,13 +289,14 @@ class MatchLineStage(
 
                         frame.leftCircle.actor = payloadDot
                         audioService.play(SoundAsset.DROP)
-                        audioService.play(SoundAsset.CORRECT_DING)
 
                         // Save the line coordinates
                         val leftDot = frame.leftCircle
-                        val stageCoordinates = leftDot.localToStageCoordinates(Vector2(leftDot.width / 2, leftDot.height / 2))
+                        val stageCoordinates =
+                            leftDot.localToStageCoordinates(Vector2(leftDot.width / 2, leftDot.height / 2))
                         currentLine?.let {
-                            val newLine = Line(currentLine!!.sX, currentLine!!.sY, stageCoordinates.x, stageCoordinates.y)
+                            val newLine =
+                                Line(currentLine!!.sX, currentLine!!.sY, stageCoordinates.x, stageCoordinates.y)
                             savedLines.add(newLine)
                             currentLine = null
                         }
@@ -288,6 +309,8 @@ class MatchLineStage(
                         } else {
                             gameEventManager.dispatchAnswerCorrectEvent(false)
                         }
+                    } else {
+                        gameEventManager.dispatchAnswerIncorrectEvent(false)
                     }
                 }
             }

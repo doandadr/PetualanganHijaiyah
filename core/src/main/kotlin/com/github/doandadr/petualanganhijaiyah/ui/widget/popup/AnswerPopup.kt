@@ -10,7 +10,14 @@ import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import ktx.preferences.get
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.image
+import ktx.scene2d.label
+import ktx.scene2d.stack
+import ktx.scene2d.table
 
 
 class AnswerPopup(
@@ -25,6 +32,19 @@ class AnswerPopup(
 
     init {
         stack {
+
+            image(Drawables.EFFECT_CONFETTI.drawable) {
+                setScaling(Scaling.none)
+                setOrigin(Align.center)
+                setScale(2f)
+                isVisible = state == State.CORRECT
+            }
+            image(Drawables.EFFECT_SMALL_FIREWORK.drawable) {
+                setScaling(Scaling.fill)
+                setOrigin(Align.top)
+                setScale(1f)
+                isVisible = state == State.CORRECT
+            }
             table {
                 image(this@AnswerPopup.charImg)
                 row()
@@ -32,10 +52,6 @@ class AnswerPopup(
                     setAlignment(Align.center)
                     it.padTop(-40f)
                 }
-            }
-            image(Drawables.EFFECT_CONFETTI.drawable) {
-                setScaling(Scaling.none)
-                setScale(2f)
             }
         }
     }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
-import com.badlogic.gdx.utils.Timer
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
@@ -40,11 +39,11 @@ class SplashScreen(game: Main) : BaseScreen(game) {
         KtxAsync.launch {
             assetRefs.joinAll()
             log.debug { "Time for assets to be loaded: ${System.currentTimeMillis() - old} ms" }
-            Timer.schedule(object : Timer.Task() {
-                override fun run() {
+//            Timer.schedule(object : Timer.Task() {
+//                override fun run() {
                     loadScreens()
-                }
-            }, SPLASH_DELAY_SECONDS)
+//                }
+//            }, SPLASH_DELAY_SECONDS)
         }
 
         setupUI()
@@ -88,6 +87,8 @@ class SplashScreen(game: Main) : BaseScreen(game) {
         game.addScreen(MapScreen(game))
         game.addScreen(LevelScreen(game))
         game.addScreen(PracticeScreen(game))
+        game.addScreen(StartScreen(game))
+        game.addScreen(FinishScreen(game))
 
         game.setScreen<HomeScreen>()
         game.removeScreen<SplashScreen>()

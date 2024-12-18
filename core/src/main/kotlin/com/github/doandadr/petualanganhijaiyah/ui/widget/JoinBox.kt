@@ -10,6 +10,7 @@ import com.github.doandadr.petualanganhijaiyah.asset.Buttons
 import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
 import com.github.doandadr.petualanganhijaiyah.asset.HijaiyahJoined
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
+import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_JOINED
 import ktx.assets.async.AssetStorage
 import ktx.scene2d.*
 
@@ -28,12 +29,15 @@ class JoinBox(
 
     init {
         this@JoinBox.boxStack = stack {
-//            it.prefHeight(SIZE_JOINED)
+            it.prefHeight(SIZE_JOINED)
 
             this@JoinBox.frame = button(Buttons.JOIN.style) {
                 isTransform = true
                 setOrigin(Align.center)
-                if (this@JoinBox.type == Type.QUESTION) scaleY = 1.5f
+                if (this@JoinBox.type == Type.QUESTION) {
+                    scaleY = 1.3f
+                    touchable = Touchable.disabled
+                }
             }
 
             this@JoinBox.image = image {

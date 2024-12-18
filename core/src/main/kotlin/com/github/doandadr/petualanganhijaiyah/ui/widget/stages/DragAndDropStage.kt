@@ -1,19 +1,26 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
+import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
 import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import ktx.actors.onChange
 import ktx.actors.onChangeEvent
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -25,7 +32,7 @@ class DragAndDropStage(
     skin: Skin = Scene2DSkin.defaultSkin,
 ):Table(skin), KTable {
     private var correctCount: Int = 0
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     lateinit var dragEntries: List<Hijaiyah>
     lateinit var dropEntries: List<Hijaiyah>
 
@@ -35,7 +42,7 @@ class DragAndDropStage(
     private val dragAndDrop = DragAndDrop()
 
     init {
-        setBackground(skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable))
+        setBackground(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
 
         this@DragAndDropStage.dropGroup = horizontalGroup {
             space(50f)
@@ -50,13 +57,28 @@ class DragAndDropStage(
 
         row()
         this@DragAndDropStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
-            onChangeEvent {
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@DragAndDropStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
                 this@DragAndDropStage.loadStage()
             }
-            it.spaceTop(50f).padBottom(PADDING_INNER_SCREEN)
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()
+        setTutorial()
+    }
+
+    private fun setTutorial() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(dragGroup.children.first(), TutorialType.DRAG_DROP_START)
+            gameEventManager.dispatchShowTutorialEvent(dropGroup.children.first(), TutorialType.DRAG_DROP_END)
+        }
     }
 
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)

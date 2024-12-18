@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.audio.DefaultAudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ml.Recognition
 import com.github.doandadr.petualanganhijaiyah.screen.SplashScreen
 import com.ray3k.stripe.FreeTypeSkin
 import ktx.app.KtxGame
@@ -24,9 +25,13 @@ const val SCREEN_W = 720f
 const val SCREEN_H = 1280f
 private const val PREF_NAME = "petualangan-hijaiyah"
 
-private val LOG = logger<Main>()
 
-class Main : KtxGame<KtxScreen>() {
+class Main(recognition: Recognition) : KtxGame<KtxScreen>() {
+    var recognition: Recognition = recognition
+//    constructor(recognitionImpl: Recognition) : this() {
+//        this.recognition = recognitionImpl
+//    }
+
     val uiViewport = ExtendViewport(SCREEN_W, SCREEN_H)
     val batch: Batch by lazy { SpriteBatch() }
     val stage: Stage by lazy {
@@ -50,17 +55,21 @@ class Main : KtxGame<KtxScreen>() {
     override fun create() {
         KtxAsync.initiate()
         Gdx.app.logLevel = LOG_DEBUG
-        LOG.debug { "Create game instance" }
+        log.debug { "Create game instance" }
 
         addScreen(SplashScreen(this))
         setScreen<SplashScreen>()
     }
 
     override fun dispose() {
-        LOG.debug { "Sprites in batch: ${(batch as SpriteBatch).maxSpritesInBatch}" }
+        log.debug { "Sprites in batch: ${(batch as SpriteBatch).maxSpritesInBatch}" }
         batch.disposeSafely()
         assets.disposeSafely()
         stage.disposeSafely()
         super.dispose()
+    }
+
+    companion object {
+        private val log = logger<Main>()
     }
 }

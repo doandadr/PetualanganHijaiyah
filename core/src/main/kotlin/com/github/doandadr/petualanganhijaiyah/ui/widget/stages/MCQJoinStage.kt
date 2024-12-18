@@ -1,19 +1,27 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
+import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.HijaiyahJoined
 import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
+import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
 import com.github.doandadr.petualanganhijaiyah.ui.widget.JoinBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.joinBox
+import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import ktx.actors.onChange
 import ktx.actors.onChangeEvent
+import ktx.actors.onTouchDown
+import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
 import ktx.scene2d.*
@@ -32,10 +40,10 @@ class MCQJoinStage(
     private lateinit var currentEntry : HijaiyahJoined
 
     init {
-        background = skin.getDrawable(Drawables.BOX_WHITE_ROUNDED.drawable)
+        background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
 
         this@MCQJoinStage.answerBox = joinBox(HijaiyahJoined.J23_LA_A, JoinBox.Type.QUESTION, JoinBox.Content.ANSWER, assets) {
-            it.padTop(PADDING_INNER_SCREEN)
+            it.padTop(PADDING_INNER_SCREEN).expand()
         }
 
         row()
@@ -46,11 +54,28 @@ class MCQJoinStage(
 
         row()
         this@MCQJoinStage.skipButton = imageTextButton("   Lewati", ImageTextButtons.SKIP.style) {
-            onChangeEvent { this@MCQJoinStage.loadStage() }
-            it.spaceTop(50f).padBottom(PADDING_INNER_SCREEN)
+            isTransform = true
+            setOrigin(Align.center)
+            onTouchDown {
+                this.clearActions()
+                this += Animations.pulseAnimation()
+                this@MCQJoinStage.audioService.play(SoundAsset.BUTTON_POP)
+            }
+            onChange {
+                this@MCQJoinStage.loadStage()
+            }
+            it.padBottom(PADDING_INNER_SCREEN).align(Align.bottom).expand()
         }
 
         loadStage()
+        setTutorials()
+    }
+
+    private fun setTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(answerBox, TutorialType.JOIN_START)
+            gameEventManager.dispatchShowTutorialEvent(vertGroup.children.first(), TutorialType.JOIN_OPTION)
+        }
     }
 
     private fun loadStage() {
