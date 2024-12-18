@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import ktx.log.logger
-import java.util.*
+import java.util.EnumMap
 import kotlin.math.max
 
 class DefaultAudioService(private val assets: AssetStorage) : AudioService {
@@ -113,6 +113,10 @@ class DefaultAudioService(private val assets: AssetStorage) : AudioService {
         if (clearSounds) {
             soundRequests.clear()
         }
+    }
+
+    override fun stopSound(sound: SoundAsset) {
+        soundRequests.remove(sound)
     }
 
     override fun update() {

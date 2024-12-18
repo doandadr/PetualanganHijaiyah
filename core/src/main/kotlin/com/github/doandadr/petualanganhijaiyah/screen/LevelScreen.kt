@@ -126,7 +126,7 @@ class LevelScreen(
             layout = table {
                 setFillParent(true)
 
-                timer = timerWidget(gameEventManager) {
+                timer = timerWidget(audioService, gameEventManager) {
                     it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expand().align(Align.topLeft)
                 }
 
@@ -170,7 +170,7 @@ class LevelScreen(
                     }
                 }
                 horizontalGroup {
-                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight);
+                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
                     space(SPACE_BETWEEN_BUTTONS)
                     backButton = imageButton(ImageButtons.BACK.style) {
                         isTransform = true
@@ -188,7 +188,7 @@ class LevelScreen(
 
             popup = table {
                 setFillParent(true)
-                setBackground(bgDim)
+                background = bgDim
                 isVisible = false
             }
         }
@@ -485,6 +485,7 @@ class LevelScreen(
         timer.stop()
         audioService.play(SoundAsset.COMPLETE)
         audioService.play(SoundAsset.CHEER_SMALL)
+        audioService.stopSound(SoundAsset.TIMER)
         updateLevelData(currentLevel, score, stars, time)
         layout.touchable = Touchable.disabled
     }
@@ -498,6 +499,7 @@ class LevelScreen(
         currentRecordTime = timer.elapsedSeconds
 
         audioService.play(SoundAsset.FAILURE)
+        audioService.stopSound(SoundAsset.TIMER)
         setPopup(PopupState.FAILED)
         layout.touchable = Touchable.disabled
     }
