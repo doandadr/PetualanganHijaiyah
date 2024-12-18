@@ -5,10 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.Drawables
-import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
-import com.github.doandadr.petualanganhijaiyah.asset.Labels
-import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
@@ -36,6 +33,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
         super.show()
 
         setupData()
+        setupAudio()
         setupUI()
     }
 
@@ -43,10 +41,14 @@ class FinishScreen(game: Main): BaseScreen(game) {
         player = preferences[PrefKey.PLAYER.key, PlayerModel()]
     }
 
+    private fun setupAudio() {
+        audioService.play(MusicAsset.VICTORY)
+        audioService.play(SoundAsset.CHEER_BIG)
+    }
+
     private fun setupUI() {
         val bgFinish = assets[TextureAsset.FINISH.descriptor]
 
-        stage.isDebugAll = true
         stage.actors {
             image(bgFinish) {
                 setFillParent(true)
