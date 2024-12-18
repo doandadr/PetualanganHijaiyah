@@ -41,7 +41,6 @@ class LevelScreen(
     private lateinit var timer: TimerWidget
     private lateinit var playerInfo: PlayerInfoWidget
     private lateinit var backgroundImg: Image
-    private lateinit var hintButton: ImageButton
     private lateinit var backButton: ImageButton
     private lateinit var homeButton: ImageButton
 
@@ -166,14 +165,6 @@ class LevelScreen(
     override fun render(delta: Float) {
         super.render(delta)
         timer.update(delta)
-    }
-
-    enum class PopupState {
-        NONE,
-        FINISH,
-        FAILED,
-        CORRECT,
-        INCORRECT,
     }
 
     private fun setPopup(state: PopupState) {
@@ -341,7 +332,7 @@ class LevelScreen(
                     gameEventManager
                 )
 
-                StageType.DRAWING -> drawingStage(assets, audioService, batch, gameEventManager, game.mlModel)
+                StageType.DRAWING -> drawingStage(assets, audioService, batch, gameEventManager, game.recognition)
             }
         }
 
@@ -360,8 +351,7 @@ class LevelScreen(
             loadLevel(nextLevelNumber)
         } else {
             log.debug { "Adventure finished" }
-            // TODO finish the adventure
-            // game.setScreen<FinishScreen>()
+             game.setScreen<FinishScreen>()
         }
     }
 
@@ -458,6 +448,7 @@ class LevelScreen(
 
         timer.stop()
         audioService.play(SoundAsset.COMPLETE)
+        audioService.play(SoundAsset.CHEER_SMALL)
         updateLevelData(currentLevel, score, stars, time)
         layout.touchable = Touchable.disabled
     }
@@ -508,6 +499,14 @@ class LevelScreen(
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
             // level hint
         }
+    }
+
+    enum class PopupState {
+        NONE,
+        FINISH,
+        FAILED,
+        CORRECT,
+        INCORRECT,
     }
 
     companion object {
