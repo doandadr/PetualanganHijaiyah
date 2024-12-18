@@ -8,9 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Buttons
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.data.LevelModel
 import com.github.doandadr.petualanganhijaiyah.data.LevelSavedData
+import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.data.levelsData
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
@@ -28,7 +34,12 @@ import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.*
+import ktx.scene2d.actors
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.scrollPane
+import ktx.scene2d.table
 import ktx.scene2d.vis.floatingGroup
 
 private val log = logger<MapScreen>()
@@ -38,10 +49,11 @@ class MapScreen(game: Main) : BaseScreen(game) {
     private lateinit var homeButton: ImageButton
     private lateinit var totalScore: Label
     private lateinit var totalStar: Label
+    private var levelButtons: MutableList<LevelButton> = mutableListOf()
 
     private lateinit var levels: Array<LevelModel>
     private lateinit var levelsSavedData: MutableList<LevelSavedData>
-    private lateinit var levelButtons: MutableList<LevelButton>
+    private lateinit var player: PlayerModel
 
     override fun show() {
         super.show()
@@ -58,7 +70,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
         levels = levelsData
         levelsSavedData =
             preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
-        levelButtons = mutableListOf()
+        player = preferences[PrefKey.PLAYER.key, PlayerModel()]
     }
 
     private fun setupUI() {
@@ -276,6 +288,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
         preferences.flush {
             this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
+            this[PrefKey.PLAYER.key] = player
         }
     }
 

@@ -20,23 +20,6 @@ data class StageModel(
     val rounds: Int = 5,
 )
 
-// enter map screen
-// map screen reads from saved data, starCount and hasCompleted
-// level start
-// level retrieves data from model: name, number, etc., and setup first stage in list
-// start timer/stopwatch,
-// go to stage logic
-// player plays the game until either it is complete or fail or canceled
-// player plays n rounds of the stage, then move on to next in stageList if available
-// if skip, repeat round
-// if timer is available,
-// if health is available, reduce health if incorrect, and if heart drops to 0 go to failure state EVENT,
-// health does not affect score, just make sure that timer is challenging
-// if complete, show finish screen, update save data, EVENT
-// if fail, show finish screen, EVENT
-// if , clear screen as usual
-// either way, stop timer
-
 data class LevelModel(
     val number: Int,
     val name: String,
@@ -76,74 +59,6 @@ enum class Difficulty(
     MEDIUM(180f, 4, 4),
     HARD(120f, 3, 5)
 }
-
-private const val DEFAULT_RECORD_TIME = 300f
-
-val defaultLevelSaveData: Array<LevelSavedData> = gdxArrayOf(
-    LevelSavedData(
-        number = 1,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 2,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 3,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 4,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 5,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 6,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 7,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 8,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-    LevelSavedData(
-        number = 9,
-        highScore = 0f,
-        recordTime = DEFAULT_RECORD_TIME,
-        starCount = 0,
-        hasCompleted = false,
-    ),
-)
 
 val levelsData: Array<LevelModel> = gdxArrayOf(
     LevelModel(
@@ -323,7 +238,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
             ),
         ),
         bgIndex = TextureAsset.DESERT_2.ordinal,
-        musicIndex = MusicAsset.DESERT.ordinal
+        musicIndex = MusicAsset.DESERT_ALT.ordinal
     ),
     LevelModel(
         number = 9,
@@ -351,7 +266,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
             ),
         ),
         bgIndex = TextureAsset.DESERT_2.ordinal,
-        musicIndex = MusicAsset.DESERT.ordinal
+        musicIndex = MusicAsset.DESERT_ALT.ordinal
     ),
 //    LevelModel(
 //        number = 10,
