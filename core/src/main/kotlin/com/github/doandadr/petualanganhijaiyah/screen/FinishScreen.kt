@@ -5,7 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
@@ -18,7 +23,12 @@ import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.preferences.get
-import ktx.scene2d.*
+import ktx.scene2d.KImageButton
+import ktx.scene2d.actors
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.table
 
 class FinishScreen(game: Main): BaseScreen(game) {
     private lateinit var portrait: Image
@@ -39,6 +49,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
 
     private fun setupData() {
         player = preferences[PrefKey.PLAYER.key, PlayerModel()]
+        log.debug { player.toString() }
     }
 
     private fun setupAudio() {

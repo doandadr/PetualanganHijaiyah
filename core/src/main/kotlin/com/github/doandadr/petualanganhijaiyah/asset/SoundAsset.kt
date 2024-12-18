@@ -9,7 +9,7 @@ enum class SoundAsset(
     directory: String = "audio/sound",
     val descriptor: AssetDescriptor<Sound> = AssetDescriptor("$directory/$fileName", Sound::class.java)
 ) {
-    BUTTON_POP("button-pop.ogg", 0.8f),
+    BUTTON_POP("button-pop.ogg", 0.7f),
     BUTTON_CLICK("button-click.ogg"),
     COIN_TRING("coin.ogg"),
     COMPLETE("complete-chime.ogg"),
@@ -20,7 +20,7 @@ enum class SoundAsset(
     FAILURE("negative-beeps.ogg"),
     POP_LOW("plop.ogg", 0.5f),
     POP_HIGH("pop.ogg", 0.5f),
-    STRETCH("pull-stretch.ogg", 0.7f),
+    STRETCH("pull-stretch.ogg"),
     DRAW_HEAVY("draw.ogg"),
     DRAW_LIGHT("scribble.ogg"),
     CHEER_BIG("crowd-cheer.ogg"),
