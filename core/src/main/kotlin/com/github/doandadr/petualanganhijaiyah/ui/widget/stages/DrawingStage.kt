@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.Timer
 import com.github.doandadr.petualanganhijaiyah.asset.*
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
@@ -41,29 +40,25 @@ class DrawingStage(
     private val batch: Batch,
     private val gameEventManager: GameEventManager,
     private val mlModel: SavedModelBundle,
-    private val skin: Skin = Scene2DSkin.defaultSkin
+    skin: Skin = Scene2DSkin.defaultSkin
 ) : Table(skin), KTable {
-    private var drawArea: Image
-    private var resetButton: ImageButton
-    private var submitButton: ImageTextButton
-    private var drawingBoard: Table
+    private val drawArea: Image
+    private val resetButton: ImageButton
+    private val submitButton: ImageTextButton
+    private val drawingBoard: Table
+    private val incorrectButton: Button
+    private val correctButton: Button
+    private val skipButton: ImageButton
+    private val hijaiyahText: Label
 
-    private var incorrectButton: Button
-    private var correctButton: Button
-    private var skipButton: ImageButton
-    private var hijaiyahText: Label
-    private val hijaiyahEntries = Hijaiyah.entries
+    private val hijaiyahEntries = Hijaiyah.entries.take(38)
     private lateinit var currentEntry: Hijaiyah
-
-    private var drawer = ShapeDrawer(batch, skin.getRegion(Drawables.CIRCLE_BRUSH.drawable))
-
     private val textAtlas = assets[TextureAtlasAsset.HIJAIYAH.descriptor]
+    private lateinit var drawer : ShapeDrawer
 
     // List to store the points of the drawing
     private val segments = mutableListOf<MutableList<Vector2>>()
-
-    //    private var boardRect: List<Float>? = null
-//    private var drawRect: List<Float>? = null
+    private lateinit var resultImageArray: Array<FloatArray>
     private var drawNow: Boolean = false
 
     init {
@@ -71,7 +66,7 @@ class DrawingStage(
 
         background(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
 
-        label("Tuliskan huruf...", Labels.SECONDARY_BORDER.style) {
+        label("Tulislah...", Labels.SECONDARY_BORDER.style) {
             it.padTop(PADDING_INNER_SCREEN).colspan(3)
         }
 
@@ -102,9 +97,8 @@ class DrawingStage(
                             }
                         }
                     }
-                    this@DrawingStage.drawImageFromInput()
+//                    this@DrawingStage.drawImageFromInput()
                 }
-
             })
         }
 
@@ -165,80 +159,11 @@ class DrawingStage(
         setTutorials()
     }
 
-    private fun initShapeDrawer() {
-        // Create a 1x1 white texture
-        val pixmap = Pixmap(1, 1, Pixmap.Format.RGBA8888)
-        pixmap.setColor(Color.WHITE)
-        pixmap.fill()
-        val whiteTexture = TextureRegion(Texture(pixmap))
-        pixmap.dispose()
-        // Initialize ShapeDrawer
-        drawer = ShapeDrawer(batch, whiteTexture)
-    }
-
-    lateinit var boardPos: Vector2
-    lateinit var preProcessHelper: PreProcessHelper
-    lateinit var resultImageArray: Array<FloatArray>
-
-    private fun drawImageFromInput() {
-        if (drawNow) {
-
-            val imageSize = 64
-            val pixelSize = 10f // Size of each pixel when drawn
-//            val input = TensorFlowUtils.normalizeAndReshape(image1DArray, 64, 64)
-
-            for (y in 0 until imageSize) {
-                for (x in 0 until imageSize) {
-//                    val pixelValue = input[y][x]
-                    val pixelValue = resultImageArray[y][x]
-                    val color = Color(pixelValue, pixelValue, pixelValue, 1f)
-                    this@DrawingStage.drawer.setColor(color)
-                    this@DrawingStage.drawer.filledRectangle(
-                        boardPos.x + x * pixelSize,
-                        boardPos.y + (imageSize - 1 - y) * pixelSize, pixelSize, pixelSize
-                    )
-                }
-            }
-        }
-    }
-
-    private fun resetDrawingBoard() {
-        segments.clear()
-    }
-
-    private fun setTutorials() {
-        Gdx.app.postRunnable {
-            gameEventManager.dispatchShowTutorialEvent(drawingBoard, TutorialType.DRAW_START)
-        }
-    }
-
-    private fun handleSubmission() {
-        // TODO capture image in middle of table
-        // TODO send image into ML
-        // Reset image
-
-        boardPos = drawingBoard.localToStageCoordinates(Vector2())
-        preProcessHelper = PreProcessHelper(segments, boardPos, SIZE_DRAWING_BOARD)
-        resultImageArray = preProcessHelper.getInputArray()
-
-        val prediction = TensorFlowUtils.predict(mlModel, resultImageArray)
-        log.debug { "Predicted: $prediction, ${hijaiyahEntries.find { it.id == prediction }}" }
-
-        segments.clear()
-        drawNow = true
-        Timer.schedule(object : Timer.Task() {
-            override fun run() {
-                drawNow = false
-            }
-        }, 3f)
-
-//        TensorFlowUtils.convertValuesToImage(TensorFlowUtils.normalize(image1DArray), true)
-    }
-
-
     private fun loadStage() {
         currentEntry = pickRandomEntries(1).first()
-        hijaiyahText.setText(currentEntry.reading.uppercase())
+
+        hijaiyahText.setText(currentEntry.reading.uppercase())// TODO if number
+
         segments.clear()
 
         correctButton.onChange {
@@ -264,7 +189,71 @@ class DrawingStage(
         })
     }
 
+    private fun setTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(drawingBoard, TutorialType.DRAW_START)
+        }
+    }
+
+    private fun initShapeDrawer() {
+        // Create a 1x1 white texture
+        val pixmap = Pixmap(1, 1, Pixmap.Format.RGBA8888)
+        pixmap.setColor(Color.WHITE)
+        pixmap.fill()
+        val whiteTexture = TextureRegion(Texture(pixmap))
+        pixmap.dispose()
+        // Initialize ShapeDrawer
+        drawer = ShapeDrawer(batch, whiteTexture)
+    }
+
+    private fun resetDrawingBoard() {
+        segments.clear()
+    }
+
+    private fun handleSubmission() {
+        // Preprocess the drawing
+        val preProcessHelper = PreProcessHelper()
+        val boardPos = drawingBoard.localToStageCoordinates(Vector2())
+        resultImageArray = preProcessHelper.preProcessDrawing(segments, boardPos,  SIZE_DRAWING_BOARD)
+
+        // Predict
+        val predictions = TensorFlowUtils.predict(mlModel, resultImageArray)
+        val sortedPredictions = TensorFlowUtils.sortPredictions(predictions)
+        val topPredictions = sortedPredictions.take(currentEntry.detectionSlack)
+
+        log.debug { topPredictions.joinToString(", ") { "${it.first}:${hijaiyahEntries.find { entry -> entry.id == it.first }}" } }
+
+        // Answer correct if answer in top prediction list
+        val isCorrect = currentEntry.id in topPredictions.map { it.first }
+        if (isCorrect) {
+            gameEventManager.dispatchAnswerCorrectEvent(true)
+        } else {
+            gameEventManager.dispatchAnswerIncorrectEvent(true)
+        }
+
+        // Clear drawing from screen
+        segments.clear()
+    }
+
     private fun pickRandomEntries(amount: Int): List<Hijaiyah> = hijaiyahEntries.shuffled().take(amount)
+
+    private fun drawImageFromInput() {
+        if (drawNow) {
+            val imageSize = 64
+            val pixelSize = 10f
+            for (y in 0 until imageSize) {
+                for (x in 0 until imageSize) {
+                    val pixelValue = resultImageArray[x][y]
+                    val color = Color(pixelValue, pixelValue, pixelValue, 1f)
+                    this@DrawingStage.drawer.setColor(color)
+                    this@DrawingStage.drawer.filledRectangle(
+                        50 + x * pixelSize,
+                        900 + (imageSize - 1 - y) * pixelSize, pixelSize, pixelSize
+                    )
+                }
+            }
+        }
+    }
 
     companion object {
         private val log = logger<DragAndDropStage>()

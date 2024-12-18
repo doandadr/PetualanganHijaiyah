@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ml
 
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import org.tensorflow.SavedModelBundle
 import org.tensorflow.ndarray.NdArrays
@@ -14,46 +15,15 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 
-class TensorFlowModel(private val model: SavedModelBundle) {
-    fun predict(input: Array<FloatArray>): Int {
-        // Create the NdArray with the desired shape (1, 64, 64, 1)
-        val inputShape = Shape.of(1, 64, 64, 1)
-        val inputBuffer = NdArrays.ofFloats(inputShape)
-
-        // Fill the input tensor with the normalized pixel values from the 2D array
-        for (row in 0 until 64) {
-            for (col in 0 until 64) {
-                inputBuffer.setFloat(input[row][col], 0, row.toLong(), col.toLong(), 0)
-            }
-        }
-
-        val inputTensor = TFloat32.tensorOf(inputBuffer)
-
-        val imagePredictions = run {
-            val result: TFloat32 = model.session().runner()
-                .feed("serving_default_conv2d_5_input:0", inputTensor)
-                .fetch("StatefulPartitionedCall:0")
-                .run().get(0) as TFloat32
-            println("Output Tensor: $result")
-            result.copyTo(NdArrays.ofFloats(result.shape()))
-        }
-
-        var maxIndex = 0
-        var maxValue = -Float.MAX_VALUE
-
-        for (j in 0 until imagePredictions.shape().size(1)) {
-            val value = imagePredictions.getFloat(0, j)
-            if (value > maxValue) {
-                maxValue = value
-                maxIndex = j.toInt()
-            }
-        }
-        return maxIndex
-    }
+interface Prediction {
+    fun predict(input: Array<FloatArray>): FloatArray
 }
 
-class PreProcessHelper(private val segments: List<List<Vector2>>, private val boardPosition: Vector2, private val boardSize: Float) {
-    // Constants
+class PreProcessHelper {
+    private lateinit var  segments: List<List<Vector2>>
+    private lateinit var boardPosition: Vector2
+    private var boardSize: Float = 0f
+
     companion object {
         private const val GRID_SIZE = 64
         private const val BRUSH_RADIUS = 4
@@ -64,24 +34,16 @@ class PreProcessHelper(private val segments: List<List<Vector2>>, private val bo
     private val booleanArray = Array(GRID_SIZE) { BooleanArray(GRID_SIZE) }
     private val grayscaleArray = Array(GRID_SIZE) { FloatArray(GRID_SIZE) }
 
-    init {
-        println(boardPosition)
-        println(boardSize)
-        processDrawing()
-    }
-
     // Function to convert local coordinates to grid indices
     private fun convertToGridCoordinates(localX: Float, localY: Float, boardX: Float, boardY: Float): Vector2 {
         // Assuming the drawing board is aligned to the stage and 0, 0 is the bottom left corner
         val gridX = ((localX - boardX) / boardSize * GRID_SIZE).toInt()
         val gridY = ((localY - boardY) / boardSize * GRID_SIZE).toInt()
-        return Vector2(gridX.toFloat(), (GRID_SIZE-gridY).toFloat())
+        return Vector2(gridX.toFloat(), (GRID_SIZE - gridY).toFloat())
     }
-
 
     // Function to populate the boolean array with segment locations and draw lines
     private fun populateBooleanArray() {
-        println(segments)
         for (segment in segments) {
             for (i in 0 until segment.size - 1) {
                 val start = segment[i]
@@ -95,7 +57,6 @@ class PreProcessHelper(private val segments: List<List<Vector2>>, private val bo
                 drawLine(startGrid.x.toInt(), startGrid.y.toInt(), endGrid.x.toInt(), endGrid.y.toInt())
             }
         }
-        println(booleanArray)
     }
 
     // Function to draw a line using Bresenham's algorithm
@@ -144,11 +105,13 @@ class PreProcessHelper(private val segments: List<List<Vector2>>, private val bo
 
                                 // If the distance is within the brush's radius, apply a diminishing value
                                 if (distance <= BRUSH_RADIUS) {
-                                    // Calculate the intensity based on the distance
-//                                    val intensity = (MAX_GRAYSCALE_VALUE - (distance / BRUSH_RADIUS)) * MathUtils.random(0.9f, 1.1f)
-//                                    grayscaleArray[nx][ny] = max(grayscaleArray[nx][ny], intensity)
+                                    // Calculate the intensity based on the distance with Gaussian distribution
                                     val sigma = BRUSH_RADIUS / 2.0
-                                    val intensity = exp(-0.5 * (distance * distance) / (sigma * sigma)).toFloat()
+                                    val intensity =
+                                        (exp(-0.5 * (distance * distance) / (sigma * sigma)) * MathUtils.random(
+                                            0.95f,
+                                            1.05f
+                                        )).toFloat()
                                     // Update the grayscale array with the maximum intensity
                                     grayscaleArray[nx][ny] = max(grayscaleArray[nx][ny], intensity)
                                     // Ensure the value does not exceed the maximum intensity
@@ -162,23 +125,30 @@ class PreProcessHelper(private val segments: List<List<Vector2>>, private val bo
                 }
             }
         }
-        println(grayscaleArray)
     }
 
     // Main function to process the drawing
-    private fun processDrawing() {
+    fun preProcessDrawing(
+        segments: List<List<Vector2>>,
+        boardPosition: Vector2,
+        boardSize: Float
+    ): Array<FloatArray> {
+        this.boardSize = boardSize
+        this.boardPosition = boardPosition
+        this.segments = segments
+
         // Step 1: Populate the boolean array with segment locations
         populateBooleanArray()
 
         // Step 2: Apply the brush effect to the grayscale array
         applyBrushEffect()
-    }
 
-    fun getInputArray() : Array<FloatArray> = grayscaleArray
+        return grayscaleArray
+    }
 }
 
 object TensorFlowUtils {
-    fun normalizeAndReshape(pixelArray: IntArray, height: Int, width: Int): Array<FloatArray> {
+    fun normalizeAndReshape(pixelArray: IntArray, height: Int = 64, width: Int = 64): Array<FloatArray> {
         val totalSize = height * width
         require(pixelArray.size == totalSize) { "The size of the input array does not match the specified dimensions." }
 
@@ -229,7 +199,7 @@ object TensorFlowUtils {
         return bufferedImage
     }
 
-    fun predict(model: SavedModelBundle, input: Array<FloatArray>): Int {
+    fun predict(model: SavedModelBundle, input: Array<FloatArray>): FloatArray {
         // Create the NdArray with the desired shape (1, 64, 64, 1)
         val inputShape = Shape.of(1, 64, 64, 1)
         val inputBuffer = NdArrays.ofFloats(inputShape)
@@ -240,35 +210,38 @@ object TensorFlowUtils {
                 inputBuffer.setFloat(input[row][col], 0, row.toLong(), col.toLong(), 0)
             }
         }
-
         val inputTensor = TFloat32.tensorOf(inputBuffer)
 
+        // Predict
         val imagePredictions = run {
             val result: TFloat32 = model.session().runner()
                 .feed("serving_default_conv2d_5_input:0", inputTensor)
                 .fetch("StatefulPartitionedCall:0")
                 .run().get(0) as TFloat32
-            println("Output Tensor: $result")
             result.copyTo(NdArrays.ofFloats(result.shape()))
         }
+        val predictionSize = imagePredictions.shape().size(1).toInt()
 
-        var maxIndex = 0
-        var maxValue = -Float.MAX_VALUE
-
-        for (i in 0 until imagePredictions.shape().size(1)) {
-            print("${"%2d".format(i)}     ")
+        val predictions = FloatArray(predictionSize)
+        // Fill the predictions array with the output values
+        for (i in 0 until predictionSize) {
+            predictions[i] = imagePredictions.getFloat(0, i.toLong())
         }
 
+        for (i in 0 until predictionSize) {
+            print("${"%2d".format(i)}   ")
+        }
         println()
         for (j in 0 until imagePredictions.shape().size(1)) {
             val value = imagePredictions.getFloat(0, j)
-            print("${"%.4f".format(value)} ")
-            if (value > maxValue) {
-                maxValue = value
-                maxIndex = j.toInt()
-            }
+            print("${"%.2f".format(value)} ")
         }
         println()
-        return maxIndex
+
+        return predictions
+    }
+
+    fun sortPredictions(predictions: FloatArray): List<Pair<Int, Float>> {
+        return predictions.mapIndexed { index, value -> index to value }.sortedByDescending { it.second }
     }
 }
