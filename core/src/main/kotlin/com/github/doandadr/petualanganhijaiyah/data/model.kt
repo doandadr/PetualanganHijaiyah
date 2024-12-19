@@ -268,49 +268,6 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         bgIndex = TextureAsset.DESERT_2.ordinal,
         musicIndex = MusicAsset.DESERT_ALT.ordinal
     ),
-//    LevelModel(
-//        number = 10,
-//        name = "Level 10",
-//        isTimed = true,
-//        timerSeconds = Difficulty.EASY.timerSeconds,
-//        isHealthCounted = true,
-//        maxHealth = Difficulty.EASY.maxHealth,
-//        isScored = true,
-//        stages = listOf(
-//            StageModel(
-//                type = StageType.MCQ,
-//                entries = Difficulty.HARD.entries,
-//                rounds = 4
-//            ),
-//            StageModel(
-//                type = StageType.MCQ_VOICE,
-//                entries = Difficulty.HARD.entries,
-//                rounds = 3
-//            ),
-//            StageModel(
-//                type = StageType.DRAG_AND_DROP,
-//                entries = Difficulty.HARD.entries,
-//                rounds = 2
-//            ),
-//            StageModel(
-//                type = StageType.MATCH_LINE,
-//                entries = Difficulty.HARD.entriesMatch,
-//                rounds = 2
-//            ),
-//            StageModel(
-//                type = StageType.MCQ_JOIN,
-//                entries = Difficulty.HARD.entries,
-//                rounds = 2
-//            ),
-//            StageModel(
-//                type = StageType.DRAWING,
-//                entries = 1,
-//                rounds = 1
-//            ),
-//        ),
-//        bgIndex = TextureAsset.DESERT_2.ordinal,
-//        musicIndex = MusicAsset.DESERT.ordinal
-//    )
 )
 
 
