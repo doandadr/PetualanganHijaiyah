@@ -27,6 +27,7 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
         super.show()
         log.debug { "Practice Screen is shown" }
         setupUI()
+        transitionIn()
     }
 
     private fun setupUI() {
@@ -45,7 +46,7 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                         this += Animations.pulseAnimation()
                     }
                     onChange {
-                        game.setScreen<HomeScreen>()
+                        transitionOut<HomeScreen>()
                     }
                     it.expand().align(Align.topLeft).padTop(PADDING_INNER_SCREEN).padLeft(PADDING_INNER_SCREEN)
                 }

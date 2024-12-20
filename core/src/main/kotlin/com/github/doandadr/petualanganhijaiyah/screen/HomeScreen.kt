@@ -76,6 +76,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
         setupAudio()
         setupUI()
         setupTutorials()
+        transitionIn()
     }
 
     private fun setupData() {
@@ -128,7 +129,8 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
-                                game.setScreen<PracticeScreen>()
+//                                game.setScreen<PracticeScreen>()
+                                transitionOut<PracticeScreen>()
                             }
                         }
                     }
@@ -148,7 +150,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
-                                game.setScreen<MapScreen>()
+                                transitionOut<MapScreen>()
                             }
                         }
                         settingButton = textButton("PENGATURAN", TextButtons.BOARD.style) {
@@ -285,7 +287,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             setPopup(PopupState.NONE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
             // Go to Finish Screen
-            game.setScreen<FinishScreen>()
+            transitionOut<FinishScreen>()
         }
     }
 

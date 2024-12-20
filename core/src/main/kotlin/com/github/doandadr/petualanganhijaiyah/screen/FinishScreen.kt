@@ -45,6 +45,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
         setupData()
         setupAudio()
         setupUI()
+        transitionIn()
     }
 
     private fun setupData() {
@@ -124,7 +125,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
                         this += Animations.pulseAnimation()
                     }
                     onChange {
-                        game.setScreen<HomeScreen>()
+                        transitionOut<HomeScreen>()
                     }
                 }
             }

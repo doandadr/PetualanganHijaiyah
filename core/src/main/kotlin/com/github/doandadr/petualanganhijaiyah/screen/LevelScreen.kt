@@ -98,6 +98,7 @@ class LevelScreen(
         setupData()
         setupUI()
         loadLevel(levelNumber)
+        transitionIn()
     }
 
     private fun setupData() {
@@ -167,7 +168,7 @@ class LevelScreen(
                             audioService.play(SoundAsset.BUTTON_POP)
                         }
                         onChange {
-                            game.setScreen<HomeScreen>()
+                            transitionOut<HomeScreen>()
                         }
                     }
                 }
@@ -182,7 +183,7 @@ class LevelScreen(
                             this += Animations.pulseAnimation()
                         }
                         onChange {
-                            game.setScreen<MapScreen>()
+                            transitionOut<MapScreen>()
                         }
                     }
                 }
@@ -240,7 +241,7 @@ class LevelScreen(
                             newBestTime
                         ) {
                             menuButton.onChangeEvent {
-                                game.setScreen<MapScreen>()
+                                transitionOut<MapScreen>()
                             }
                             repeatButton.onChangeEvent {
                                 loadLevel(currentLevel.number)
@@ -265,7 +266,7 @@ class LevelScreen(
                         audioService
                     ) {
                         menuButton.onChangeEvent {
-                            game.setScreen<MapScreen>()
+                            transitionOut<MapScreen>()
                         }
                         repeatButton.onChangeEvent {
                             loadLevel(currentLevel.number)
@@ -383,7 +384,7 @@ class LevelScreen(
             loadLevel(nextLevelNumber)
         } else {
             log.debug { "Adventure finished" }
-             game.setScreen<FinishScreen>()
+             transitionOut<FinishScreen>()
         }
     }
 
@@ -531,11 +532,13 @@ class LevelScreen(
             // load match line level
             loadLevel(levels[2].number)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-
+            timer.remainingSeconds = 15f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            // redo tutorial for this level
+            timer.remainingSeconds *= 0.30f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
-            // level hint
+            timer.remainingSeconds *= 0.60f
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
+            timer.remainingSeconds *= 0.80f
         }
     }
 

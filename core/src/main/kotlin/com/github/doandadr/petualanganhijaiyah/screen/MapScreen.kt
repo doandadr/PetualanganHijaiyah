@@ -69,6 +69,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
         Gdx.app.postRunnable {
             showTutorials()
         }
+        transitionIn()
     }
 
     private fun showTutorials() {
@@ -237,7 +238,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                         audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
-                        game.setScreen<HomeScreen>()
+                        transitionOut<HomeScreen>()
                     }
                 }
             }
@@ -301,7 +302,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
         }
         levelButton.onChangeEvent {
             preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
-            game.setScreen<LevelScreen>()
+            transitionOut<LevelScreen>()
         }
     }
 

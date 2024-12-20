@@ -16,6 +16,7 @@ class StartScreen(game: Main): BaseScreen(game) {
 
         setupData()
         setupUI()
+        transitionIn()
     }
 
     private fun setupData() {

@@ -11,6 +11,7 @@ enum class TextureAsset(
     FINISH("bg-finish.png"),
     HOME("bg-home.png"),
     DIM("bg-dim.png"),
+    WHITE("bg-white.png"),
     STAGE("bg-stage.png"),
 //    START("bg-start.png"),
     MAP("bg-map.png"),
