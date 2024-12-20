@@ -25,13 +25,7 @@ const val SCREEN_W = 720f
 const val SCREEN_H = 1280f
 private const val PREF_NAME = "petualangan-hijaiyah"
 
-
-class Main(recognition: Recognition) : KtxGame<KtxScreen>() {
-    var recognition: Recognition = recognition
-//    constructor(recognitionImpl: Recognition) : this() {
-//        this.recognition = recognitionImpl
-//    }
-
+class Main(val recognition: Recognition) : KtxGame<KtxScreen>() {
     val uiViewport = ExtendViewport(SCREEN_W, SCREEN_H)
     val batch: Batch by lazy { SpriteBatch() }
     val stage: Stage by lazy {

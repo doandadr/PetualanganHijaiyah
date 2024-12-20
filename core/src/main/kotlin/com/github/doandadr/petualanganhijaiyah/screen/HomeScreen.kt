@@ -13,12 +13,21 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextButtons
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
-import com.github.doandadr.petualanganhijaiyah.ui.values.*
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.characterSelectPopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.nameChangePopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.settingsPopup
@@ -27,7 +36,16 @@ import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.preferences.get
-import ktx.scene2d.*
+import ktx.scene2d.actors
+import ktx.scene2d.container
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.scene2d
+import ktx.scene2d.table
+import ktx.scene2d.textButton
+import ktx.scene2d.verticalGroup
 import ktx.scene2d.vis.floatingGroup
 
 
@@ -53,22 +71,16 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {
         super.show()
-        setupAudio()
+
         setupData()
+        setupAudio()
         setupUI()
         setupTutorials()
     }
 
-    private fun setupTutorials() {
-        Gdx.app.postRunnable {
-            gameEventManager.dispatchShowTutorialEvent(nameButton, TutorialType.HOME_NAME)
-            gameEventManager.dispatchShowTutorialEvent(bookButton, TutorialType.HOME_PRACTICE)
-            gameEventManager.dispatchShowTutorialEvent(startButton, TutorialType.HOME_START)
-        }
-    }
-
     private fun setupData() {
         player = preferences[PrefKey.PLAYER.key, PlayerModel()]
+        log.debug { player.toString() }
     }
 
     private fun setupAudio() {
@@ -180,7 +192,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 setFontScale(SCALE_FONT_MEDIUM)
                             }
                         }
-                        nameButton = textButton(player.name, TextButtons.SIGN.style) {
+                        nameButton = textButton("Default", TextButtons.SIGN.style) {
                             isTransform = true
                             setOrigin(Align.center)
                             onTouchDown {
@@ -203,6 +215,16 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                 align(Align.center)
                 isVisible = false
             }
+        }
+
+        nameButton.setText(player.name)
+    }
+
+    private fun setupTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(nameButton, TutorialType.HOME_NAME)
+            gameEventManager.dispatchShowTutorialEvent(bookButton, TutorialType.HOME_PRACTICE)
+            gameEventManager.dispatchShowTutorialEvent(startButton, TutorialType.HOME_START)
         }
     }
 

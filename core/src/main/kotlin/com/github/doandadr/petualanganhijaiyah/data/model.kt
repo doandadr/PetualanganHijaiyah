@@ -5,61 +5,6 @@ import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import ktx.collections.gdxArrayOf
 
-enum class StageType(val title: String) {
-    MCQ("Tebak Huruf"),
-    MCQ_JOIN("Sambungan"),
-    MCQ_VOICE("Ucapan"),
-    DRAG_AND_DROP("Cetakan"),
-    MATCH_LINE("Tarik Garis"),
-    DRAWING("Menggambar"),
-}
-
-data class StageModel(
-    val type: StageType,
-    val choices: Int = 3,
-    val rounds: Int = 5,
-)
-
-data class LevelModel(
-    val number: Int,
-    val name: String,
-    val isTimed: Boolean,
-    val timerSeconds: Float,
-    val isHealthCounted: Boolean,
-    val maxHealth: Int,
-    val isScored: Boolean,
-    val stages: List<StageModel>,
-    val bgIndex: Int,
-    val musicIndex: Int,
-)
-
-data class LevelSavedData(
-    var number: Int = 0,
-    var highScore: Float = 0f,
-    var recordTime: Float = Float.MAX_VALUE,
-    var starCount: Int = 0,
-    var hasCompleted: Boolean = false,
-)
-
-data class PlayerModel(
-    var name: String = " ",
-    var character: String = "girl", // boy, girl
-    var totalScore: Float = 0f,
-    var totalStar: Int = 0,
-    var tutorials: MutableSet<Int> = mutableSetOf()
-)
-
-enum class Difficulty(
-    val timerSeconds: Float,
-    val maxHealth: Int,
-    val entries: Int,
-    val entriesMatch: Int = entries + 2
-) {
-    EASY(240f, 5, 3),
-    MEDIUM(180f, 4, 4),
-    HARD(120f, 3, 5)
-}
-
 val levelsData: Array<LevelModel> = gdxArrayOf(
     LevelModel(
         number = 1,
@@ -187,7 +132,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
             ),
         ),
         bgIndex = TextureAsset.DESERT_1.ordinal,
-        musicIndex = MusicAsset.DESERT.ordinal
+        musicIndex = MusicAsset.DESERT_ALT.ordinal
     ),
     LevelModel(
         number = 7,
@@ -215,7 +160,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
             ),
         ),
         bgIndex = TextureAsset.DESERT_1.ordinal,
-        musicIndex = MusicAsset.DESERT.ordinal
+        musicIndex = MusicAsset.DESERT_ALT.ordinal
     ),
     LevelModel(
         number = 8,

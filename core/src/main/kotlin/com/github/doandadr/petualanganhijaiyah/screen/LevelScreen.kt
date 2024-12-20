@@ -101,10 +101,12 @@ class LevelScreen(
     }
 
     private fun setupData() {
-        levelNumber = preferences[PrefKey.CURRENT_LEVEL.key, 1]
+        with(preferences) {
+            levelNumber = this[PrefKey.CURRENT_LEVEL.key, 1]
+            levelsSavedData = this[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf()]
+            player = this[PrefKey.PLAYER.key, PlayerModel()]
+        }
         levels = levelsData
-        levelsSavedData = preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf()]
-        player = preferences[PrefKey.PLAYER.key, PlayerModel()]
         popupState = PopupState.NONE
         currentScore = 0f
         currentStar = 0
@@ -319,9 +321,7 @@ class LevelScreen(
         layout.touchable = Touchable.childrenOnly
 
         val level = levels.find { it.number == levelNumber }
-        if (level == null) {
-            throw KotlinNullPointerException("Trying to load a level that does not exist")
-        }
+            ?: throw KotlinNullPointerException("Trying to load a level that does not exist")
         currentLevel = level
 
         if (level.isHealthCounted) {

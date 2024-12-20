@@ -20,10 +20,6 @@ class AndroidRecognition(private val model: Model) : Recognition {
         }
         inputBuffer.loadArray(inputArray)
 
-//        // Prepare the input
-//        val inputTensorImage = TensorImage(DataType.FLOAT32)
-//        inputTensorImage.load(inputBuffer)
-
         // Run the model
         val outputs = model.process(inputBuffer)
         val outputBuffer = outputs.outputFeature0AsTensorBuffer
