@@ -15,5 +15,5 @@ enum class MusicAsset(
     HOME("home.mp3", 0.4f),
     MAP("map.mp3"),
     SNOW("snow.mp3"),
-    VICTORY("victory.mp3"),
+    VICTORY("victory.mp3", 0.3f),
 }
