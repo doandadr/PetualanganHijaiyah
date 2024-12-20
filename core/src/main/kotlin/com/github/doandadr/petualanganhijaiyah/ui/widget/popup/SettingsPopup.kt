@@ -1,9 +1,17 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.popup
 
 import com.badlogic.gdx.Preferences
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Slider
+import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.Align
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.CheckBoxes
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextButtons
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
@@ -18,7 +26,15 @@ import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.checkBox
+import ktx.scene2d.label
+import ktx.scene2d.slider
+import ktx.scene2d.table
+import ktx.scene2d.textButton
 
 private val log = logger<SettingsPopup>()
 
@@ -125,8 +141,8 @@ class SettingsPopup(
         confirmButton.onChangeEvent {
             log.debug { "Confirm button pressed" }
             preferences.flush {
-                preferences[PrefKey.MUSIC_VOLUME.key] = musicVolume
-                preferences[PrefKey.SOUND_VOLUME.key] = soundVolume
+                this[PrefKey.MUSIC_VOLUME.key] = musicVolume
+                this[PrefKey.SOUND_VOLUME.key] = soundVolume
             }
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.NONE)
         }

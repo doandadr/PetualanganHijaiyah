@@ -21,7 +21,7 @@ class TimerWidget(
     private var isTicking: Boolean = false
     private var deltaTimerCount: Float = 0f
     private var maxSeconds: Float = DEFAULT_MAX_TIME
-    private var remainingSeconds: Float = DEFAULT_MAX_TIME
+    var remainingSeconds: Float = DEFAULT_MAX_TIME
     var elapsedSeconds: Float = 0.0f
 
     val bar: TimerBar

@@ -17,7 +17,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.MCQ,
-                choices = Difficulty.EASY.entries,
+                choices = Difficulty.EASY.choices,
                 rounds = 8
             ),
         ),
@@ -35,12 +35,12 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.MCQ_VOICE,
-                choices = Difficulty.EASY.entries,
+                choices = Difficulty.EASY.choices,
                 rounds = 3
             ),
             StageModel(
                 type = StageType.DRAG_AND_DROP,
-                choices = Difficulty.EASY.entries,
+                choices = Difficulty.EASY.choices,
                 rounds = 2
             )
         ),
@@ -58,12 +58,12 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.MATCH_LINE,
-                choices = Difficulty.EASY.entriesMatch,
+                choices = Difficulty.EASY.choicesMatch,
                 rounds = 2
             ),
             StageModel(
                 type = StageType.MCQ,
-                choices = Difficulty.EASY.entries,
+                choices = Difficulty.EASY.choices,
                 rounds = 4
             ),
         ),
@@ -81,12 +81,12 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.MCQ_JOIN,
-                choices = Difficulty.MEDIUM.entries,
+                choices = Difficulty.MEDIUM.choices,
                 rounds = 2
             ),
             StageModel(
                 type = StageType.MCQ_VOICE,
-                choices = Difficulty.MEDIUM.entries,
+                choices = Difficulty.MEDIUM.choices,
                 rounds = 4
             ),
         ),
@@ -122,12 +122,12 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.MCQ_VOICE,
-                choices = Difficulty.MEDIUM.entries,
+                choices = Difficulty.MEDIUM.choices,
                 rounds = 4
             ),
             StageModel(
                 type = StageType.MATCH_LINE,
-                choices = Difficulty.MEDIUM.entriesMatch,
+                choices = Difficulty.MEDIUM.choicesMatch,
                 rounds = 2
             ),
         ),
@@ -145,17 +145,17 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.DRAG_AND_DROP,
-                choices = Difficulty.MEDIUM.entries,
+                choices = Difficulty.MEDIUM.choices,
                 rounds = 2
             ),
             StageModel(
                 type = StageType.MCQ,
-                choices = Difficulty.MEDIUM.entries,
+                choices = Difficulty.MEDIUM.choices,
                 rounds = 3
             ),
             StageModel(
                 type = StageType.MCQ_JOIN,
-                choices = Difficulty.MEDIUM.entries,
+                choices = Difficulty.MEDIUM.choices,
                 rounds = 2
             ),
         ),
@@ -173,7 +173,7 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.MATCH_LINE,
-                choices = Difficulty.HARD.entriesMatch,
+                choices = Difficulty.HARD.choicesMatch,
                 rounds = 2
             ),
             StageModel(
@@ -196,17 +196,17 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         stages = listOf(
             StageModel(
                 type = StageType.MCQ_VOICE,
-                choices = Difficulty.HARD.entries,
+                choices = Difficulty.HARD.choices,
                 rounds = 3
             ),
             StageModel(
                 type = StageType.DRAG_AND_DROP,
-                choices = Difficulty.HARD.entries,
+                choices = Difficulty.HARD.choices,
                 rounds = 2
             ),
             StageModel(
                 type = StageType.MCQ_JOIN,
-                choices = Difficulty.HARD.entries,
+                choices = Difficulty.HARD.choices,
                 rounds = 2
             ),
         ),
