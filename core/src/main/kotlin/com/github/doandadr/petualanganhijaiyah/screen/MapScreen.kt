@@ -25,8 +25,8 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_MAP_STAR
 import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
@@ -84,9 +84,9 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
     private fun setupData() {
         levels = levelsData
+        player = preferences[PrefKey.PLAYER.key]!!
         levelsSavedData =
             preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
-        player = preferences[PrefKey.PLAYER.key, PlayerModel()]
     }
 
     private fun setupUI() {
@@ -238,19 +238,6 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     }
                     onChange {
                         game.setScreen<HomeScreen>()
-                    }
-                }
-                tutorialButton = imageButton(ImageButtons.QUESTION.style) {
-                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
-                    isTransform = true
-                    setOrigin(Align.center)
-                    onTouchDown {
-                        this.clearActions()
-                        this += Animations.pulseAnimation()
-                        audioService.play(SoundAsset.BUTTON_POP)
-                    }
-                    onChange {
-                        log.debug { "Tutorial button pressed" }
                     }
                 }
             }

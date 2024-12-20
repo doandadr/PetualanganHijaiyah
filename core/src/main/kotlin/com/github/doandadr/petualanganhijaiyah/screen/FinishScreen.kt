@@ -37,7 +37,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
     private lateinit var homeButton: KImageButton
     private lateinit var totalScore: Label
     private lateinit var totalStar: Label
-    private lateinit var  player: PlayerModel
+    private lateinit var player: PlayerModel
 
     override fun show() {
         super.show()

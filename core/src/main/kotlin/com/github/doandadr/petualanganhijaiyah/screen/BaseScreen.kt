@@ -11,8 +11,8 @@ import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventListener
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialWidget
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.assets.disposeSafely
@@ -28,12 +28,13 @@ abstract class BaseScreen(
     val gameEventManager: GameEventManager = game.gameEventManager,
     val preferences: Preferences = game.preferences,
 ) : KtxScreen, GameEventListener {
-    private val tutorialView = TutorialWidget(preferences, gameEventManager)
+    private lateinit var tutorialView: TutorialWidget
 
     override fun show() {
         log.debug { "Show ${this::class.simpleName}" }
         gameEventManager.addGameEventListener(this)
         Gdx.app.postRunnable {
+            tutorialView = TutorialWidget(preferences, audioService)
             stage.addActor(tutorialView)
             tutorialView.toFront()
         }

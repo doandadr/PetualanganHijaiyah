@@ -34,7 +34,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_DRAWING_BOARD
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import ktx.actors.onChange
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
@@ -182,6 +182,7 @@ class DrawingStage(
             override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 val coords = drawingBoard.localToStageCoordinates(Vector2(x, y))
                 segments.add(mutableListOf(coords, coords))
+                audioService.play(listOf(SoundAsset.DRAW_HEAVY, SoundAsset.DRAW_LIGHT).random())
                 return true
             }
 
@@ -190,6 +191,8 @@ class DrawingStage(
             }
 
             override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+                audioService.stopSound(SoundAsset.DRAW_LIGHT)
+                audioService.stopSound(SoundAsset.DRAW_HEAVY)
             }
         })
     }
@@ -221,7 +224,7 @@ class DrawingStage(
         val boardPos = drawingBoard.localToStageCoordinates(Vector2())
         resultImageArray = preprocessingHelper.preProcessDrawing(segments, boardPos,  SIZE_DRAWING_BOARD)
 
-        // Predict
+        // Classify
         val predictions = recognition.predict(resultImageArray)
         val sortedPredictions = TensorFlowUtils.sortPredictions(predictions)
         val topPredictions = sortedPredictions.take(currentEntry.detectionSlack)

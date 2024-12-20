@@ -16,13 +16,20 @@ import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.screen.HomeScreen.PopupState
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.label
+import ktx.scene2d.textButton
+import ktx.scene2d.textField
 
 class NameChangePopup(
     private val preferences: Preferences,
@@ -71,7 +78,7 @@ class NameChangePopup(
             val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
             player.name = nameField.text
             preferences.flush {
-                preferences[PrefKey.PLAYER.key] = player
+                this[PrefKey.PLAYER.key] = player
             }
             gameEventManager.dispatchPlayerChangedEvent(player)
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.CHARACTER)
