@@ -272,15 +272,18 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     levelButton.setStarCount(level.starCount)
                     setOnTouchEvent(levelButton, index)
                 }
+
                 level.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true -> {
                     levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
                     levelButton.setStarCount(0)
                     setOnTouchEvent(levelButton, index)
                 }
+
                 level.number == 2 || levelsSavedData.find { it.number == number - 2 }?.hasCompleted == true -> {
                     levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
                     levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
                 }
+
                 else -> {
                     levelButton.setState(LevelButton.LevelButtonState.HIDDEN)
                 }
@@ -289,13 +292,16 @@ class MapScreen(game: Main) : BaseScreen(game) {
             log.debug { "Show ${levels[index].name}, completed? ${level.hasCompleted} with saved score:${level.highScore} star:${level.starCount} time:${level.recordTime}" }
         }
 
-        totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }.toString())
-        totalScore.setText(levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString())
+        totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }
+            .toString())
+        totalScore.setText(
+            levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString()
+        )
 
         scrollView.run {
             updateVisualScroll()
-            scrollPercentY = 1 - (levelButtons[levelsSavedData.findLast { it.hasCompleted }?.number
-                ?: 0].y / stage.height)
+            scrollPercentY = 1 - (levelButtons[(levelsSavedData.findLast { it.hasCompleted }?.number
+                ?: 1) - 1].y / stage.height)
         }
 
         preferences.flush {
