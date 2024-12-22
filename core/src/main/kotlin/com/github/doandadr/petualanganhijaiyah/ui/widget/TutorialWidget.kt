@@ -143,7 +143,6 @@ class TutorialWidget(
     private val audioService: AudioService,
     private val skin: Skin = Scene2DSkin.defaultSkin,
 ) : FloatingGroup(), KGroup {
-    private var player = preferences[PrefKey.PLAYER.key, PlayerModel()]
     private var tutorialQueue: Queue<Tutorial> = LinkedList()
     private lateinit var tutorial: Tutorial
     private var currentPageIndex = 0
@@ -216,17 +215,14 @@ class TutorialWidget(
     }
 
     private fun registerTutorial(type: TutorialType, actor: Actor, stage: Stage) {
+        val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
         if (player.tutorials.add(type.ordinal)) {
             tutorialQueue.add(Tutorial(type, actor, stage))
             tutorial = tutorialQueue.peek()
             currentPageIndex = 0
-            updatePlayer()
-        }
-    }
-
-    private fun updatePlayer() {
-        preferences.flush {
-            this[PrefKey.PLAYER.key] = player
+            preferences.flush {
+                this[PrefKey.PLAYER.key] = player
+            }
         }
     }
 

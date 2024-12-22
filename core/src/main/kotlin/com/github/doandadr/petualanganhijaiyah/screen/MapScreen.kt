@@ -51,11 +51,9 @@ class MapScreen(game: Main) : BaseScreen(game) {
     private lateinit var homeButton: ImageButton
     private lateinit var totalScore: Label
     private lateinit var totalStar: Label
-    private var levelButtons: MutableList<LevelButton> = mutableListOf()
+    private val levelButtons: MutableList<LevelButton> = mutableListOf()
 
-    private lateinit var levels: Array<LevelModel>
-    private lateinit var levelsSavedData: MutableList<LevelSavedData>
-    private lateinit var player: PlayerModel
+    private val levels = levelsData
 
     override fun show() {
         super.show()
@@ -63,16 +61,20 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
         audioService.play(MusicAsset.MAP)
 
-        setupData()
         setupUI()
         loadLevels()
-        Gdx.app.postRunnable {
-            showTutorials()
-        }
         transitionIn()
+        Timer.schedule(object : Timer.Task() {
+            override fun run() {
+                showTutorials()
+            }
+        }, 0.3f)
+
     }
 
     private fun showTutorials() {
+        val levelsSavedData =
+            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
         if (levelsSavedData.find { it.number == 1 && !it.hasCompleted } != null) {
             gameEventManager.dispatchShowTutorialEvent(levelButtons.first().label, TutorialType.MAP_LEVEL1)
         }
@@ -255,8 +257,9 @@ class MapScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun loadLevels() {
-        var totalScoreSum = 0f
-        var totalStarSum = 0
+        val levelsSavedData =
+            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
+
         levelButtons.forEachIndexed { index, levelButton ->
             levelButton.setLevel(levels[index])
             val number = index + 1
@@ -320,6 +323,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
             show()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             // Unlock all levels
+            val levelsSavedData =
+                preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
             levelsSavedData.forEach { it.hasCompleted = true }
             loadLevels()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {

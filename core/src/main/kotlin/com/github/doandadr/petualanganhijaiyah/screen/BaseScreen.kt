@@ -38,13 +38,13 @@ abstract class BaseScreen(
     private lateinit var tutorialView: TutorialWidget
     lateinit var transitionImg : Image
 
-
     override fun show() {
         log.debug { "Show ${this::class.simpleName}" }
         gameEventManager.addGameEventListener(this)
 
+        tutorialView = TutorialWidget(preferences, audioService)
+        tutorialView.toFront()
         Gdx.app.postRunnable {
-            tutorialView = TutorialWidget(preferences, audioService).apply { toFront() }
             stage.addActor(tutorialView)
         }
     }
@@ -102,7 +102,6 @@ abstract class BaseScreen(
         transitionImg = Image(assets[TextureAsset.WHITE.descriptor]).apply {
             setFillParent(true)
             setScaling(Scaling.fill)
-            toFront()
         }
     }
 

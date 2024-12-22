@@ -76,10 +76,7 @@ class LevelScreen(
     private lateinit var backButton: ImageButton
     private lateinit var homeButton: ImageButton
 
-    private var levelNumber: Int = 1
     private lateinit var levels: Array<LevelModel>
-    private lateinit var levelsSavedData: MutableList<LevelSavedData>
-    private lateinit var player: PlayerModel
 
     private var popupState = PopupState.NONE
     private var currentScore = 0f
@@ -97,16 +94,11 @@ class LevelScreen(
 
         setupData()
         setupUI()
-        loadLevel(levelNumber)
+        loadLevel(preferences[PrefKey.CURRENT_LEVEL.key, 1])
         transitionIn()
     }
 
     private fun setupData() {
-        with(preferences) {
-            levelNumber = this[PrefKey.CURRENT_LEVEL.key, 1]
-            levelsSavedData = this[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf()]
-            player = this[PrefKey.PLAYER.key, PlayerModel()]
-        }
         levels = levelsData
         popupState = PopupState.NONE
         currentScore = 0f
@@ -130,7 +122,7 @@ class LevelScreen(
                 setFillParent(true)
 
                 timer = timerWidget(audioService, gameEventManager) {
-                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expand().align(Align.topLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).align(Align.topLeft)
                 }
 
                 playerInfo = playerInfoWidget(preferences, gameEventManager) {
@@ -181,6 +173,7 @@ class LevelScreen(
                         onTouchDown {
                             this.clearActions()
                             this += Animations.pulseAnimation()
+                            audioService.play(SoundAsset.BUTTON_POP)
                         }
                         onChange {
                             transitionOut<MapScreen>()
@@ -419,6 +412,9 @@ class LevelScreen(
 
     private fun updateLevelData(level: LevelModel, newScore: Float, newStars: Int, newRecordTime: Float) {
         log.debug { "Updating level data of ${level.name}" }
+
+        val levelsSavedData = preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()]
+        val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
 
         if (levelsSavedData.isNotEmpty() && level.isScored) {
             var levelData = levelsSavedData.find { it.number == level.number }

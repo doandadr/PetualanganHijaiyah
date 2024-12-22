@@ -50,8 +50,6 @@ import ktx.scene2d.vis.floatingGroup
 
 
 class HomeScreen(game: Main) : BaseScreen(game) {
-    private lateinit var player: PlayerModel
-
     private lateinit var exitButton: TextButton
     private lateinit var settingButton: TextButton
     private lateinit var startButton: TextButton
@@ -72,16 +70,10 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     override fun show() {
         super.show()
 
-        setupData()
         setupAudio()
         setupUI()
-        setupTutorials()
         transitionIn()
-    }
-
-    private fun setupData() {
-        player = preferences[PrefKey.PLAYER.key, PlayerModel()]
-        log.debug { player.toString() }
+        setupTutorials()
     }
 
     private fun setupAudio() {
@@ -129,7 +121,6 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
-//                                game.setScreen<PracticeScreen>()
                                 transitionOut<PracticeScreen>()
                             }
                         }
@@ -219,6 +210,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             }
         }
 
+        val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
         nameButton.setText(player.name)
     }
 
