@@ -47,7 +47,7 @@ import ktx.scene2d.vis.floatingGroup
 private val log = logger<MapScreen>()
 
 class MapScreen(game: Main) : BaseScreen(game) {
-    private lateinit var tutorialButton: ImageButton
+    private lateinit var scrollView: ScrollPane
     private lateinit var homeButton: ImageButton
     private lateinit var totalScore: Label
     private lateinit var totalStar: Label
@@ -94,10 +94,11 @@ class MapScreen(game: Main) : BaseScreen(game) {
         val bgMap = assets[TextureAsset.MAP.descriptor]
 
         stage.actors {
-            scrollPane {
+            scrollView = scrollPane {
                 setFillParent(true)
                 setScrollingDisabled(true, false)
-                setSmoothScrolling(false)
+                scrollPercentY = 1f
+                updateVisualScroll()
 
                 table {
                     background(TextureRegionDrawable(bgMap))
@@ -198,7 +199,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
             table {
                 setFillParent(true)
                 table {
-                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX()
+                        .align(Align.topLeft)
                     image(Drawables.ICON_STAR_SMALL.drawable) {
                         it.padRight(-40f)
                     }
@@ -208,7 +210,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     }
                 }
                 table {
-                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topRight)
+                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX()
+                        .align(Align.topRight)
                     image(Drawables.ICON_DIAMOND.drawable) {
                         it.padRight(-40f)
                     }
@@ -229,7 +232,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
                 row()
                 homeButton = imageButton(ImageButtons.HOME.style) {
-                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN)
+                        .align(Align.bottomLeft)
                     isTransform = true
                     setOrigin(Align.center)
                     onTouchDown {
@@ -254,43 +258,47 @@ class MapScreen(game: Main) : BaseScreen(game) {
         var totalScoreSum = 0f
         var totalStarSum = 0
         levelButtons.forEachIndexed { index, levelButton ->
-            val number = index + 1
-
-            var levelSave = levelsSavedData.find { it.number == number }
-            if (levelSave == null) {
-                levelSave = LevelSavedData(number = number)
-                levelsSavedData.add(levelSave)
-            }
-
             levelButton.setLevel(levels[index])
+            val number = index + 1
+            val level = levelsSavedData.find { it.number == number }
+                ?: LevelSavedData(number = number).also {
+                    levelsSavedData.add(it)
+                }
 
-            if (levelSave.hasCompleted) {
-                levelButton.setState(LevelButton.LevelButtonState.PASSED)
-                levelButton.setStarCount(levelSave.starCount)
-                setOnTouchEvent(levelButton, index)
-                totalScoreSum += levelSave.highScore
-                totalStarSum += levelSave.starCount
-            } else {
-                if (levelSave.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true) {
+            when {
+                level.hasCompleted -> {
+                    levelButton.setState(LevelButton.LevelButtonState.PASSED)
+                    levelButton.setStarCount(level.starCount)
+                    setOnTouchEvent(levelButton, index)
+                }
+                level.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true -> {
                     levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
                     levelButton.setStarCount(0)
                     setOnTouchEvent(levelButton, index)
-                } else if (levelSave.number in listOf(2) || levelsSavedData.find { it.number in listOf(number - 2) }?.hasCompleted == true) {
+                }
+                level.number == 2 || levelsSavedData.find { it.number == number - 2 }?.hasCompleted == true -> {
                     levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
                     levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
-                } else {
+                }
+                else -> {
                     levelButton.setState(LevelButton.LevelButtonState.HIDDEN)
                 }
             }
 
-            log.debug { "Show ${levels[index].name}, completed? ${levelSave.hasCompleted} with saved score:${levelSave.highScore} star:${levelSave.starCount} time:${levelSave.recordTime}" }
+            log.debug { "Show ${levels[index].name}, completed? ${level.hasCompleted} with saved score:${level.highScore} star:${level.starCount} time:${level.recordTime}" }
         }
-        totalStar.setText(totalStarSum.toString())
-        totalScore.setText(totalScoreSum.toInt().toString())
+
+        totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }.toString())
+        totalScore.setText(levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString())
+
+        scrollView.run {
+            updateVisualScroll()
+            scrollPercentY = 1 - (levelButtons[levelsSavedData.findLast { it.hasCompleted }?.number
+                ?: 0].y / stage.height)
+        }
 
         preferences.flush {
             this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
-            this[PrefKey.PLAYER.key] = player
         }
     }
 
@@ -319,16 +327,10 @@ class MapScreen(game: Main) : BaseScreen(game) {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             levelButtons.first().setState(LevelButton.LevelButtonState.PASSED)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.HIDDEN)
+            scrollView.scrollPercentY = 0f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.ZERO)
+            scrollView.scrollPercentY = 1f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.ONE)
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.TWO)
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.THREE)
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
             levelButtons.first().starWidget.setState(StarWidget.StarState.HIDDEN)
             levelButtons.first().setState(LevelButton.LevelButtonState.HIDDEN)
         }
