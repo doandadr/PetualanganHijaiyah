@@ -125,7 +125,7 @@ class LevelScreen(
                     it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).align(Align.topLeft)
                 }
 
-                playerInfo = playerInfoWidget(preferences, gameEventManager) {
+                playerInfo = playerInfoWidget(preferences) {
                     it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).align(Align.topRight)
                 }
 

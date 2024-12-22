@@ -32,7 +32,7 @@ class DragAndDropStage(
 ):Table(skin), KTable {
     private var correctCount: Int = 0
     private val hijaiyahEntries = Hijaiyah.entries.take(28)
-    lateinit var dragEntries: List<Hijaiyah>
+    private lateinit var dragEntries: List<Hijaiyah>
     lateinit var dropEntries: List<Hijaiyah>
 
     private val dragGroup: HorizontalGroup
@@ -41,7 +41,7 @@ class DragAndDropStage(
     private val dragAndDrop = DragAndDrop()
 
     init {
-        setBackground(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
+        background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
 
         this@DragAndDropStage.dropGroup = horizontalGroup {
             space(50f)
@@ -104,7 +104,7 @@ class DragAndDropStage(
             val frame = Container<HijaiyahBox>().size(SIZE_HIJAIYAH_MEDIUM)
             box.setType(HijaiyahBox.Type.DROP)
             box.userObject = frame
-            frame.setBackground(skin.getDrawable(Drawables.ICONBUTTON_BACKGROUND_ROUNDED.drawable))
+            frame.background = skin.getDrawable(Drawables.ICONBUTTON_BACKGROUND_ROUNDED.drawable)
             frame.actor = box
 
             addDropTarget(frame)

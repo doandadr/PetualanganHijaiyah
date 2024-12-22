@@ -7,7 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.image
+import ktx.scene2d.label
 
 class TimerCounter(
     var maxSeconds: Float,
@@ -45,7 +50,6 @@ class TimerCounter(
 
 inline fun <S> KWidget<S>.timerCounter(
     setSeconds: Float,
-    skin: Skin = Scene2DSkin.defaultSkin,
     init: TimerCounter.(S) -> Unit = {}
 ) = actor(
     TimerCounter(

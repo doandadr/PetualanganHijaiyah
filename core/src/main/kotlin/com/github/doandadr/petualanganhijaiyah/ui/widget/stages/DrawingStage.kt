@@ -55,7 +55,7 @@ import space.earlygrey.shapedrawer.scene2d.ShapeDrawerDrawable
 
 
 class DrawingStage(
-    private val assets: AssetStorage,
+    assets: AssetStorage,
     private val audioService: AudioService,
     private val batch: Batch,
     private val gameEventManager: GameEventManager,

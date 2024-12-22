@@ -44,14 +44,14 @@ class SettingsPopup(
     private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
-    val confirmButton: TextButton
+    private val confirmButton: TextButton
     private val soundSlider: Slider
     private val soundToggle: CheckBox
     private val musicSlider: Slider
     private val musicToggle: CheckBox
 
-    var soundVolume: Float = preferences[PrefKey.SOUND_VOLUME.key, 1f]
-    var musicVolume: Float = preferences[PrefKey.MUSIC_VOLUME.key, 1f]
+    private var soundVolume: Float = preferences[PrefKey.SOUND_VOLUME.key, 1f]
+    private var musicVolume: Float = preferences[PrefKey.MUSIC_VOLUME.key, 1f]
 
     init {
         label("PENGATURAN", Labels.BOARD.style) {

@@ -37,8 +37,8 @@ class NameChangePopup(
     private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ) : Table(skin), KTable {
-    val nameField: TextField
-    val confirmButton: TextButton
+    private val nameField: TextField
+    private val confirmButton: TextButton
 
     init {
         label("Ubah Nama", Labels.BOARD.style) {

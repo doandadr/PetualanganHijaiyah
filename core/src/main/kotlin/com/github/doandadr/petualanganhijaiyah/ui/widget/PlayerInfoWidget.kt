@@ -11,7 +11,6 @@ import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
-import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import ktx.preferences.get
 import ktx.scene2d.KTable
@@ -24,7 +23,6 @@ import ktx.scene2d.table
 
 class PlayerInfoWidget(
     private val preferences: Preferences,
-    private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ): Table(skin), KTable {
     private val nameSign: Label
@@ -91,11 +89,9 @@ class PlayerInfoWidget(
 
 inline fun <S> KWidget<S>.playerInfoWidget(
     preferences: Preferences,
-    gameEventManager: GameEventManager,
     init: PlayerInfoWidget.(S) -> Unit = {}
 ) = actor(
     PlayerInfoWidget(
         preferences,
-        gameEventManager,
     ), init
 )

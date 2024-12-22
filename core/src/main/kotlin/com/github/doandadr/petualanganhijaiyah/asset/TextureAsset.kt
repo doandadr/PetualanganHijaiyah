@@ -4,7 +4,7 @@ import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
 
 enum class TextureAsset(
-    val fileName:String,
+    private val fileName:String,
     directory: String = "graphics/bg",
     val descriptor: AssetDescriptor<Texture> = AssetDescriptor("$directory/$fileName", Texture::class.java)
 ) {

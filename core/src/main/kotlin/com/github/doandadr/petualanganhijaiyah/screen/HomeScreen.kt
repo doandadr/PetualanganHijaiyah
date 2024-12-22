@@ -47,6 +47,7 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ktx.scene2d.verticalGroup
 import ktx.scene2d.vis.floatingGroup
+import kotlin.system.exitProcess
 
 
 class HomeScreen(game: Main) : BaseScreen(game) {
@@ -169,7 +170,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             }
                             onChange {
                                 Gdx.app.exit()
-                                System.exit(0)
+                                exitProcess(0)
                             }
                         }
                     }
@@ -204,7 +205,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
             popup = table {
                 setFillParent(true)
-                setBackground(bgDim)
+                background = bgDim
                 align(Align.center)
                 isVisible = false
             }

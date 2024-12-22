@@ -211,14 +211,12 @@ class MatchLineStage(
             ) {
                 log.debug { "Stop dragging source" }
 
-                val sourceBox = box
-
                 if (payload != null) {
                     if (target == null) {
-                        sourceBox.rightCircle.actor = payload.dragActor
+                        box.rightCircle.actor = payload.dragActor
                         audioService.play(SoundAsset.CANCEL)
-                    } else if ((target.actor as MatchBox).hijaiyah != sourceBox.hijaiyah) {
-                        sourceBox.rightCircle.actor = payload.dragActor
+                    } else if ((target.actor as MatchBox).hijaiyah != box.hijaiyah) {
+                        box.rightCircle.actor = payload.dragActor
                     }
                     currentLine = null
                 }

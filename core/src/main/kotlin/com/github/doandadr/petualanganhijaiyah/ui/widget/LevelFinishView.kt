@@ -73,7 +73,7 @@ class LevelFinishView(
         row()
         table {
             it.prefWidth(POPUP_WIDTH).prefHeight(POPUP_HEIGHT)
-            setBackground(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
+            background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
             toBack()
 
             this@LevelFinishView.starStack = floatingGroup {

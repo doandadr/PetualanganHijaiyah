@@ -1,8 +1,12 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.Button
+import com.badlogic.gdx.scenes.scene2d.ui.Container
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.data.LevelModel
@@ -17,12 +21,12 @@ class LevelButton(
     buttonStyle: String,
     private val skin: Skin = Scene2DSkin.defaultSkin,
     val label: Label = Label("", skin, Labels.PRIMARY_GREY_WHITE_BORDER.style),
-    val button: Button = Button(skin, buttonStyle),
+    button: Button = Button(skin, buttonStyle),
     val text: Container<Label> = Container(label),
     val dots: LevelDots = LevelDots(),
     val starWidget: StarWidget = StarWidget(),
 ) : WidgetGroup(button, text, dots, starWidget), KGroup {
-    lateinit var levelModel: LevelModel
+    private lateinit var levelModel: LevelModel
 
     init {
         button.isTransform = true
@@ -37,7 +41,7 @@ class LevelButton(
         text.rotation = degrees
     }
 
-    fun setTitle(text: String) {
+    private fun setTitle(text: String) {
         label.setText(text)
     }
 

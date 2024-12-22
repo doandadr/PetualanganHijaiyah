@@ -91,10 +91,6 @@ enum class TextButtons(val style: String) {
     ORANGE_SMALL("orange-small"),
 }
 
-enum class TextTooltips(val style: String) {
-    LEFT_UP("left-up"),
-}
-
 enum class Drawables(val drawable: String) {
     BISMILLAH("bismillah"),
     BISMILLAH_WHITE("bismillah-white"),
