@@ -312,7 +312,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
     private fun setOnTouchEvent(levelButton: LevelButton, index: Int) {
         levelButton.onTouchDown {
             this.clearActions()
-            this += Animations.pulseAnimation(0.1f)
+            this += Animations.pulseAnimation(scale = 0.1f)
             audioService.play(SoundAsset.BUTTON_POP)
         }
         levelButton.onChangeEvent {

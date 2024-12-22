@@ -131,7 +131,7 @@ class DrawingStage(
                 onTouchDown {
                     setScale(SCALE_BTN_SMALL)
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulseAnimation(initScale = SCALE_BTN_SMALL)
                     this@DrawingStage.audioService.play(SoundAsset.BUTTON_POP)
                 }
                 onChange {
@@ -145,7 +145,7 @@ class DrawingStage(
                 onTouchDown {
                     setScale(SCALE_BTN_SMALL)
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulseAnimation(initScale = SCALE_BTN_SMALL)
                     this@DrawingStage.audioService.play(SoundAsset.BUTTON_POP)
                 }
                 onChange {

@@ -137,7 +137,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             setOrigin(Align.center)
                             onTouchDown {
                                 this.clearActions()
-                                this += Animations.pulseAnimation()
+                                this += Animations.pulseAnimation(initScale = SCALE_BTN_MEDIUM)
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
@@ -164,7 +164,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             setOrigin(Align.center)
                             onTouchDown {
                                 this.clearActions()
-                                this += Animations.pulseAnimation()
+                                this += Animations.pulseAnimation(initScale = SCALE_BTN_SMALL)
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
