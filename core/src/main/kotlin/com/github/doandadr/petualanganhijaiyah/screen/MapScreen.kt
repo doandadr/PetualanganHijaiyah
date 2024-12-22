@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.Timer
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
@@ -15,9 +16,7 @@ import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.data.LevelModel
 import com.github.doandadr.petualanganhijaiyah.data.LevelSavedData
-import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.data.levelsData
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
@@ -76,20 +75,19 @@ class MapScreen(game: Main) : BaseScreen(game) {
         val levelsSavedData =
             preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
         if (levelsSavedData.find { it.number == 1 && !it.hasCompleted } != null) {
-            gameEventManager.dispatchShowTutorialEvent(levelButtons.first().label, TutorialType.MAP_LEVEL1)
+            gameEventManager.dispatchShowTutorialEvent(
+                levelButtons.first().label,
+                TutorialType.MAP_LEVEL1
+            )
         }
         if (levelsSavedData.find { it.number == 8 && it.hasCompleted } != null
             && levelsSavedData.find { it.number == 9 && !it.hasCompleted } != null
         ) {
-            gameEventManager.dispatchShowTutorialEvent(levelButtons[8].label, TutorialType.MAP_LEVEL9)
+            gameEventManager.dispatchShowTutorialEvent(
+                levelButtons[8].label,
+                TutorialType.MAP_LEVEL9
+            )
         }
-    }
-
-    private fun setupData() {
-        levels = levelsData
-        player = preferences[PrefKey.PLAYER.key]!!
-        levelsSavedData =
-            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
     }
 
     private fun setupUI() {

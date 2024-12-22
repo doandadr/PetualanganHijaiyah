@@ -123,6 +123,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
                     onTouchDown {
                         this.clearActions()
                         this += Animations.pulseAnimation()
+                        audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
                         transitionOut<HomeScreen>()

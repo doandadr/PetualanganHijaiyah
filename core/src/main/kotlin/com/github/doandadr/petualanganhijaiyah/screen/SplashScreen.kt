@@ -47,13 +47,12 @@ class SplashScreen(game: Main) : BaseScreen(game) {
             if (Gdx.app.logLevel == Application.LOG_DEBUG) {
                 loadScreens()
                 return@launch
-            } else {
-                Timer.schedule(object : Timer.Task() {
-                    override fun run() {
-                        loadScreens()
-                    }
-                }, SPLASH_DELAY_SECONDS)
             }
+            Timer.schedule(object : Timer.Task() {
+                override fun run() {
+                    loadScreens()
+                }
+            }, SPLASH_DELAY_SECONDS)
 
         }
 
@@ -84,7 +83,10 @@ class SplashScreen(game: Main) : BaseScreen(game) {
                 }
 
                 row()
-                label("ayo berjelajah sambil belajar hijaiyah!", Labels.SECONDARY_GREEN_WHITE_BORDER.style) {
+                label(
+                    "ayo berjelajah sambil belajar hijaiyah!",
+                    Labels.SECONDARY_GREEN_WHITE_BORDER.style
+                ) {
                     setAlignment(Align.center)
                     setFontScale(SCALE_FONT_SMALL)
                     it.padBottom(300f)
@@ -101,10 +103,7 @@ class SplashScreen(game: Main) : BaseScreen(game) {
         game.addScreen(StartScreen(game))
         game.addScreen(FinishScreen(game))
 
-
         transitionOut<HomeScreen>()
-//        game.removeScreen<SplashScreen>()
-//        dispose()
     }
 
     override fun dispose() {
@@ -113,7 +112,8 @@ class SplashScreen(game: Main) : BaseScreen(game) {
     }
 
     companion object {
-        private const val SPLASH_DELAY_SECONDS = 1f
         private val log = logger<SplashScreen>()
+
+        private const val SPLASH_DELAY_SECONDS = 1f
     }
 }
