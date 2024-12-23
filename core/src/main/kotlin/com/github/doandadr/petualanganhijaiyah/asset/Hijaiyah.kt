@@ -25,10 +25,10 @@ enum class Hijaiyah(
         SoundAsset.V01_ALIF_U
     ),
     BA("ب", 11, "02", "ba", 5, SoundAsset.V02_BA, SoundAsset.V02_BA_A, SoundAsset.V02_BA_I, SoundAsset.V02_BA_U),
-    TA("ت", 12, "03", "ta", 5, SoundAsset.V03_TA, SoundAsset.V03_TA_A, SoundAsset.V03_TA_I, SoundAsset.V03_TA_U),
+    TA("ت", 12, "03", "ta", 6, SoundAsset.V03_TA, SoundAsset.V03_TA_A, SoundAsset.V03_TA_I, SoundAsset.V03_TA_U),
     TSA(
         "ث", 13,
-        "04", "tsa", 3,
+        "04", "tsa", 4,
         SoundAsset.V04_TSA,
         SoundAsset.V04_TSA_A,
         SoundAsset.V04_TSA_I,
@@ -36,7 +36,7 @@ enum class Hijaiyah(
     ),
     JIM(
         "ج", 14,
-        "05", "jim", 2,
+        "05", "jim", 3,
         SoundAsset.V05_JIM,
         SoundAsset.V05_JIM_A,
         SoundAsset.V05_JIM_I,
@@ -52,7 +52,7 @@ enum class Hijaiyah(
     ),
     KHO(
         "خ", 16,
-        "07", "kho", 2,
+        "07", "kho", 3,
         SoundAsset.V07_KHO,
         SoundAsset.V07_KHO_A,
         SoundAsset.V07_KHO_I,
@@ -60,7 +60,7 @@ enum class Hijaiyah(
     ),
     DAL(
         "د", 17,
-        "08", "dal", 5,
+        "08", "dal", 7,
         SoundAsset.V08_DAL,
         SoundAsset.V08_DAL_A,
         SoundAsset.V08_DAL_I,
@@ -68,7 +68,7 @@ enum class Hijaiyah(
     ),
     DZAL(
         "ذ", 18,
-        "09", "dzal", 2,
+        "09", "dzal", 5,
         SoundAsset.V09_DZAL,
         SoundAsset.V09_DZAL_A,
         SoundAsset.V09_DZAL_I,
@@ -94,7 +94,7 @@ enum class Hijaiyah(
     ),
     SHOD(
         "ص", 23,
-        "14", "shod", 5,
+        "14", "shod", 6,
         SoundAsset.V14_SHOD,
         SoundAsset.V14_SHOD_A,
         SoundAsset.V14_SHOD_I,
@@ -110,7 +110,7 @@ enum class Hijaiyah(
     ),
     THO(
         "ط", 25,
-        "16", "tho", 5,
+        "16", "tho", 6,
         SoundAsset.V16_THO,
         SoundAsset.V16_THO_A,
         SoundAsset.V16_THO_I,
@@ -196,8 +196,8 @@ enum class Hijaiyah(
     N02("٢", 2, "102", "itsnan", 5, SoundAsset.V102_ITSNAN),
     N03("٣", 3, "103", "tsalatsah", 1, SoundAsset.V103_TSALATSAH),
     N04("٤", 4, "104", "arba'ah", 2, SoundAsset.V104_ARBAAH),
-    N05("٥", 5, "105", "khamsah", 2, SoundAsset.V105_KHOMSAH),
-    N06("٦", 6, "106", "sittah", 1, SoundAsset.V106_SITTAH),
+    N05("٥", 5, "105", "khamsah", 3, SoundAsset.V105_KHOMSAH),
+    N06("٦", 6, "106", "sittah", 2, SoundAsset.V106_SITTAH),
     N07("٧", 7, "107", "sab'ah", 1, SoundAsset.V107_SABAH),
     N08("٨", 8, "108", "tsamaniyah", 1, SoundAsset.V108_TSAMANIYAH),
     N09("٩", 9, "109", "tis'ah", 3, SoundAsset.V109_TISAH),
