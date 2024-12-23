@@ -37,6 +37,7 @@ dependencies {
   api "net.onedaybeard.artemis:artemis-odb:$artemisOdbVersion"
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
-  implementation "com.github.raeleus.stripe:freetype:$stripeVersion"
-  implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
+  api "com.github.raeleus.stripe:freetype:$stripeVersion"
+  api "space.earlygrey:shapedrawer:$shapedrawerVersion"
+  api "com.github.crykn:libgdx-screenmanager:$screenManagerVersion"
 }

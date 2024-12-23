@@ -21,7 +21,13 @@ import ktx.actors.plusAssign
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.button
+import ktx.scene2d.label
+import ktx.scene2d.verticalGroup
 
 class CharacterSelectPopup(
     private val preferences: Preferences,
@@ -71,14 +77,16 @@ class CharacterSelectPopup(
     private fun setupListeners() {
         girlButton.onChangeEvent {
             preferences.flush {
-                preferences[PrefKey.PLAYER.key] = player.apply { character = GIRL }
+                player.character = GIRL
+                this[PrefKey.PLAYER.key] = player
             }
             handleSelected(GIRL)
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.NONE)
         }
         boyButton.onChangeEvent {
             preferences.flush {
-                preferences[PrefKey.PLAYER.key] = player.apply { character = BOY }
+                player.character = BOY
+                this[PrefKey.PLAYER.key] = player
             }
             handleSelected(BOY)
             gameEventManager.dispatchSetHomePopupStateEvent(PopupState.NONE)

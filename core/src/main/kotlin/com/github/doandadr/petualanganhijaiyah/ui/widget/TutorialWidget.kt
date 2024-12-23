@@ -1,20 +1,25 @@
-package com.github.doandadr.petualanganhijaiyah.ui.widget.popup
+package com.github.doandadr.petualanganhijaiyah.ui.widget
 
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.delay
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.hide
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.show
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
-import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.Tutorial.Orientation
+import com.github.doandadr.petualanganhijaiyah.ui.widget.Tutorial.Orientation
 import com.kotcrab.vis.ui.layout.FloatingGroup
 import ktx.actors.onClick
 import ktx.actors.plus
@@ -24,8 +29,11 @@ import ktx.math.plus
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
-import ktx.scene2d.*
-import java.util.*
+import ktx.scene2d.KGroup
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.label
+import java.util.LinkedList
+import java.util.Queue
 
 enum class TutorialType(
     val pages: List<String>,
@@ -132,10 +140,9 @@ class Tutorial(
 
 class TutorialWidget(
     private val preferences: Preferences,
-    private val gameEventManager: GameEventManager,
+    private val audioService: AudioService,
     private val skin: Skin = Scene2DSkin.defaultSkin,
 ) : FloatingGroup(), KGroup {
-    private val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
     private var tutorialQueue: Queue<Tutorial> = LinkedList()
     private lateinit var tutorial: Tutorial
     private var currentPageIndex = 0
@@ -189,34 +196,33 @@ class TutorialWidget(
     private fun hideTutorial(fadeTime: Float = 0.2f) {
         this.clearActions()
         this += fadeOut(fadeTime) + hide()
+        audioService.play(SoundAsset.MIN_LOW)
     }
 
     private fun showTutorial(delayTime: Float = 0.2f) {
         if (tutorialQueue.peek() != null) {
             this.clearActions()
             this += delay(delayTime) + show() + fadeIn(0.2f)
+            audioService.play(SoundAsset.MAX_LOW)
             loadTutorial()
         }
     }
 
     fun addTutorial(actor: Actor, type: TutorialType, stage: Stage) {
-        registerTutorial(player, type, actor, stage)
+        registerTutorial(type, actor, stage)
         isStart = true
         showTutorial()
     }
 
-    private fun registerTutorial(player: PlayerModel, type: TutorialType, actor: Actor, stage: Stage) {
+    private fun registerTutorial(type: TutorialType, actor: Actor, stage: Stage) {
+        val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
         if (player.tutorials.add(type.ordinal)) {
             tutorialQueue.add(Tutorial(type, actor, stage))
             tutorial = tutorialQueue.peek()
             currentPageIndex = 0
-            updatePlayer()
-        }
-    }
-
-    private fun updatePlayer() {
-        preferences.flush {
-            this[PrefKey.PLAYER.key] = player
+            preferences.flush {
+                this[PrefKey.PLAYER.key] = player
+            }
         }
     }
 
@@ -234,15 +240,3 @@ class TutorialWidget(
         private val log = logger<TutorialWidget>()
     }
 }
-
-inline fun <S> KWidget<S>.tutorialWidget(
-    preferences: Preferences,
-    gameEventManager: GameEventManager,
-    init: TutorialWidget.(S) -> Unit = {}
-) = actor(
-    TutorialWidget(
-        preferences,
-        gameEventManager,
-    ), init
-)
-

@@ -13,12 +13,21 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextButtons
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
-import com.github.doandadr.petualanganhijaiyah.ui.values.*
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
+import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.characterSelectPopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.nameChangePopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.settingsPopup
@@ -27,13 +36,21 @@ import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.preferences.get
-import ktx.scene2d.*
+import ktx.scene2d.actors
+import ktx.scene2d.container
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.scene2d
+import ktx.scene2d.table
+import ktx.scene2d.textButton
+import ktx.scene2d.verticalGroup
 import ktx.scene2d.vis.floatingGroup
+import kotlin.system.exitProcess
 
 
 class HomeScreen(game: Main) : BaseScreen(game) {
-    private lateinit var player: PlayerModel
-
     private lateinit var exitButton: TextButton
     private lateinit var settingButton: TextButton
     private lateinit var startButton: TextButton
@@ -53,22 +70,11 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
     override fun show() {
         super.show()
+
         setupAudio()
-        setupData()
         setupUI()
+        transitionIn()
         setupTutorials()
-    }
-
-    private fun setupTutorials() {
-        Gdx.app.postRunnable {
-            gameEventManager.dispatchShowTutorialEvent(nameButton, TutorialType.HOME_NAME)
-            gameEventManager.dispatchShowTutorialEvent(bookButton, TutorialType.HOME_PRACTICE)
-            gameEventManager.dispatchShowTutorialEvent(startButton, TutorialType.HOME_START)
-        }
-    }
-
-    private fun setupData() {
-        player = preferences[PrefKey.PLAYER.key, PlayerModel()]
     }
 
     private fun setupAudio() {
@@ -116,7 +122,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
-                                game.setScreen<PracticeScreen>()
+                                transitionOut<PracticeScreen>()
                             }
                         }
                     }
@@ -132,11 +138,11 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             setOrigin(Align.center)
                             onTouchDown {
                                 this.clearActions()
-                                this += Animations.pulseAnimation()
+                                this += Animations.pulseAnimation(initScale = SCALE_BTN_MEDIUM)
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
-                                game.setScreen<MapScreen>()
+                                transitionOut<MapScreen>()
                             }
                         }
                         settingButton = textButton("PENGATURAN", TextButtons.BOARD.style) {
@@ -159,12 +165,12 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                             setOrigin(Align.center)
                             onTouchDown {
                                 this.clearActions()
-                                this += Animations.pulseAnimation()
+                                this += Animations.pulseAnimation(initScale = SCALE_BTN_SMALL)
                                 audioService.play(SoundAsset.BUTTON_POP)
                             }
                             onChange {
                                 Gdx.app.exit()
-                                System.exit(0)
+                                exitProcess(0)
                             }
                         }
                     }
@@ -180,7 +186,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
                                 setFontScale(SCALE_FONT_MEDIUM)
                             }
                         }
-                        nameButton = textButton(player.name, TextButtons.SIGN.style) {
+                        nameButton = textButton("Default", TextButtons.SIGN.style) {
                             isTransform = true
                             setOrigin(Align.center)
                             onTouchDown {
@@ -199,10 +205,21 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
             popup = table {
                 setFillParent(true)
-                setBackground(bgDim)
+                background = bgDim
                 align(Align.center)
                 isVisible = false
             }
+        }
+
+        val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
+        nameButton.setText(player.name)
+    }
+
+    private fun setupTutorials() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(nameButton, TutorialType.HOME_NAME)
+            gameEventManager.dispatchShowTutorialEvent(bookButton, TutorialType.HOME_PRACTICE)
+            gameEventManager.dispatchShowTutorialEvent(startButton, TutorialType.HOME_START)
         }
     }
 
@@ -263,7 +280,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
             setPopup(PopupState.NONE)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
             // Go to Finish Screen
-            game.setScreen<FinishScreen>()
+            transitionOut<FinishScreen>()
         }
     }
 

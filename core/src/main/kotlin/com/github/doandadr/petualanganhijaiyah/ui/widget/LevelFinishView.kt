@@ -2,7 +2,11 @@ package com.github.doandadr.petualanganhijaiyah.ui.widget
 
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.IntAction
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
@@ -17,7 +21,15 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
 import com.kotcrab.vis.ui.layout.FloatingGroup
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.table
 import ktx.scene2d.vis.floatingGroup
 
 class LevelFinishView(
@@ -40,7 +52,6 @@ class LevelFinishView(
     private val scoreView: Label
     private val stars: StarWidget
 
-    //    private val starStack: Stack
     private val starStack: FloatingGroup
 
     private val starState: StarWidget.StarState = run {
@@ -62,7 +73,7 @@ class LevelFinishView(
         row()
         table {
             it.prefWidth(POPUP_WIDTH).prefHeight(POPUP_HEIGHT)
-            setBackground(skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable))
+            background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
             toBack()
 
             this@LevelFinishView.starStack = floatingGroup {

@@ -1,18 +1,34 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Stack
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Buttons
+import com.github.doandadr.petualanganhijaiyah.asset.Colors
+import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_HIJAIYAH
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SIZE_HIJAIYAH_SMALL
 import ktx.assets.async.AssetStorage
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.button
+import ktx.scene2d.image
+import ktx.scene2d.label
+import ktx.scene2d.stack
 
 class HijaiyahBox(
     var hijaiyah: Hijaiyah,
@@ -84,7 +100,6 @@ class HijaiyahBox(
             Type.DEFAULT -> {
                 hijaiyahText.isVisible = false
                 image.isVisible = true
-
             }
             Type.TEXT -> {
                 hijaiyahText.isVisible = true

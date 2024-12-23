@@ -118,7 +118,7 @@ enum class Hijaiyah(
     ),
     DHO(
         "ظ", 26,
-        "17", "dho", 3,
+        "17", "dho", 5,
         SoundAsset.V17_DHO,
         SoundAsset.V17_DHO_A,
         SoundAsset.V17_DHO_I,
@@ -167,7 +167,7 @@ enum class Hijaiyah(
     ),
     MIM(
         "م", 33,
-        "24", "mim", 8,
+        "24", "mim", 10,
         SoundAsset.V24_MIM,
         SoundAsset.V24_MIM_A,
         SoundAsset.V24_MIM_I,

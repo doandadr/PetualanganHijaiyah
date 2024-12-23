@@ -15,7 +15,6 @@ fun main() {
         return
 
     val mlModel: SavedModelBundle by lazy {
-//        SavedModelBundle.load("assets/ml", "serve")
         SavedModelBundle.load("lwjgl3/src/main/ml", "serve")
     }
 

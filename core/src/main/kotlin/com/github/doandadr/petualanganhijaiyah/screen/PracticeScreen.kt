@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
-import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
@@ -15,7 +15,10 @@ import ktx.actors.onChange
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.log.logger
-import ktx.scene2d.*
+import ktx.scene2d.actors
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.table
 
 private val log = logger<PracticeScreen>()
 
@@ -25,13 +28,11 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
         super.show()
         log.debug { "Practice Screen is shown" }
         setupUI()
+        transitionIn()
     }
 
     private fun setupUI() {
-        val skin = Scene2DSkin.defaultSkin
         val bgPractice = assets[TextureAsset.STAGE.descriptor]
-
-        audioService.play(MusicAsset.FIELD)
 
         stage.actors {
             table {
@@ -44,9 +45,10 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                     onTouchDown {
                         this.clearActions()
                         this += Animations.pulseAnimation()
+                        audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
-                        game.setScreen<HomeScreen>()
+                        transitionOut<HomeScreen>()
                     }
                     it.expand().align(Align.topLeft).padTop(PADDING_INNER_SCREEN).padLeft(PADDING_INNER_SCREEN)
                 }
@@ -61,12 +63,6 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 practiceStage(assets, audioService, gameEventManager) {
                     //it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT)
                     it.grow()
-                }
-
-                row()
-                imageButton(ImageButtons.QUESTION.style) {
-                    it.expand().align(Align.bottomRight).padBottom(PADDING_INNER_SCREEN).padRight(PADDING_INNER_SCREEN)
-                    isVisible = false
                 }
             }
         }

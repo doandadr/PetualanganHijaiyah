@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.utils.Array
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.screen.HomeScreen
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import ktx.app.KtxInputAdapter
 
 class GameEventManager : KtxInputAdapter {

@@ -76,10 +76,7 @@ class LevelScreen(
     private lateinit var backButton: ImageButton
     private lateinit var homeButton: ImageButton
 
-    private var levelNumber: Int = 1
     private lateinit var levels: Array<LevelModel>
-    private lateinit var levelsSavedData: MutableList<LevelSavedData>
-    private lateinit var player: PlayerModel
 
     private var popupState = PopupState.NONE
     private var currentScore = 0f
@@ -97,14 +94,12 @@ class LevelScreen(
 
         setupData()
         setupUI()
-        loadLevel(levelNumber)
+        loadLevel(preferences[PrefKey.CURRENT_LEVEL.key, 1])
+        transitionIn()
     }
 
     private fun setupData() {
-        levelNumber = preferences[PrefKey.CURRENT_LEVEL.key, 1]
         levels = levelsData
-        levelsSavedData = preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf()]
-        player = preferences[PrefKey.PLAYER.key, PlayerModel()]
         popupState = PopupState.NONE
         currentScore = 0f
         currentStar = 0
@@ -127,10 +122,10 @@ class LevelScreen(
                 setFillParent(true)
 
                 timer = timerWidget(audioService, gameEventManager) {
-                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expand().align(Align.topLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).align(Align.topLeft)
                 }
 
-                playerInfo = playerInfoWidget(preferences, gameEventManager) {
+                playerInfo = playerInfoWidget(preferences) {
                     it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).align(Align.topRight)
                 }
 
@@ -165,7 +160,7 @@ class LevelScreen(
                             audioService.play(SoundAsset.BUTTON_POP)
                         }
                         onChange {
-                            game.setScreen<HomeScreen>()
+                            transitionOut<HomeScreen>()
                         }
                     }
                 }
@@ -178,9 +173,10 @@ class LevelScreen(
                         onTouchDown {
                             this.clearActions()
                             this += Animations.pulseAnimation()
+                            audioService.play(SoundAsset.BUTTON_POP)
                         }
                         onChange {
-                            game.setScreen<MapScreen>()
+                            transitionOut<MapScreen>()
                         }
                     }
                 }
@@ -238,7 +234,7 @@ class LevelScreen(
                             newBestTime
                         ) {
                             menuButton.onChangeEvent {
-                                game.setScreen<MapScreen>()
+                                transitionOut<MapScreen>()
                             }
                             repeatButton.onChangeEvent {
                                 loadLevel(currentLevel.number)
@@ -263,7 +259,7 @@ class LevelScreen(
                         audioService
                     ) {
                         menuButton.onChangeEvent {
-                            game.setScreen<MapScreen>()
+                            transitionOut<MapScreen>()
                         }
                         repeatButton.onChangeEvent {
                             loadLevel(currentLevel.number)
@@ -319,9 +315,7 @@ class LevelScreen(
         layout.touchable = Touchable.childrenOnly
 
         val level = levels.find { it.number == levelNumber }
-        if (level == null) {
-            throw KotlinNullPointerException("Trying to load a level that does not exist")
-        }
+            ?: throw KotlinNullPointerException("Trying to load a level that does not exist")
         currentLevel = level
 
         if (level.isHealthCounted) {
@@ -383,7 +377,7 @@ class LevelScreen(
             loadLevel(nextLevelNumber)
         } else {
             log.debug { "Adventure finished" }
-             game.setScreen<FinishScreen>()
+             transitionOut<FinishScreen>()
         }
     }
 
@@ -418,6 +412,9 @@ class LevelScreen(
 
     private fun updateLevelData(level: LevelModel, newScore: Float, newStars: Int, newRecordTime: Float) {
         log.debug { "Updating level data of ${level.name}" }
+
+        val levelsSavedData = preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()]
+        val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
 
         if (levelsSavedData.isNotEmpty() && level.isScored) {
             var levelData = levelsSavedData.find { it.number == level.number }
@@ -531,11 +528,13 @@ class LevelScreen(
             // load match line level
             loadLevel(levels[2].number)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-
+            timer.remainingSeconds = 15f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            // redo tutorial for this level
+            timer.remainingSeconds *= 0.30f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
-            // level hint
+            timer.remainingSeconds *= 0.60f
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
+            timer.remainingSeconds *= 0.80f
         }
     }
 

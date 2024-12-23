@@ -37,7 +37,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
     private lateinit var homeButton: KImageButton
     private lateinit var totalScore: Label
     private lateinit var totalStar: Label
-    private lateinit var  player: PlayerModel
+    private lateinit var player: PlayerModel
 
     override fun show() {
         super.show()
@@ -45,6 +45,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
         setupData()
         setupAudio()
         setupUI()
+        transitionIn()
     }
 
     private fun setupData() {
@@ -122,9 +123,10 @@ class FinishScreen(game: Main): BaseScreen(game) {
                     onTouchDown {
                         this.clearActions()
                         this += Animations.pulseAnimation()
+                        audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
-                        game.setScreen<HomeScreen>()
+                        transitionOut<HomeScreen>()
                     }
                 }
             }

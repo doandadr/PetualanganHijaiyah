@@ -1,21 +1,42 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.Harakat
+import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import ktx.actors.onChange
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
-import ktx.scene2d.*
+import ktx.scene2d.KImageButton
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.container
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageButton
+import ktx.scene2d.label
+import ktx.scene2d.table
 
 class PracticeStage(
     private val assets: AssetStorage,
@@ -53,7 +74,7 @@ class PracticeStage(
             onTouchDown {
                 setScale(SCALE_BTN_MEDIUM)
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulseAnimation(initScale = SCALE_BTN_MEDIUM)
                 this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
             }
         }
@@ -74,7 +95,7 @@ class PracticeStage(
             onTouchDown {
                 setScale(SCALE_BTN_MEDIUM)
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulseAnimation(initScale = SCALE_BTN_MEDIUM)
                 this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
             }
         }

@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.Timer
 import com.github.doandadr.petualanganhijaiyah.Main
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
@@ -15,9 +16,7 @@ import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.MusicAsset
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
-import com.github.doandadr.petualanganhijaiyah.data.LevelModel
 import com.github.doandadr.petualanganhijaiyah.data.LevelSavedData
-import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.data.levelsData
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
@@ -25,8 +24,8 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_MAP_STAR
 import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
 import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
@@ -47,15 +46,13 @@ import ktx.scene2d.vis.floatingGroup
 private val log = logger<MapScreen>()
 
 class MapScreen(game: Main) : BaseScreen(game) {
-    private lateinit var tutorialButton: ImageButton
+    private lateinit var scrollView: ScrollPane
     private lateinit var homeButton: ImageButton
     private lateinit var totalScore: Label
     private lateinit var totalStar: Label
-    private var levelButtons: MutableList<LevelButton> = mutableListOf()
+    private val levelButtons: MutableList<LevelButton> = mutableListOf()
 
-    private lateinit var levels: Array<LevelModel>
-    private lateinit var levelsSavedData: MutableList<LevelSavedData>
-    private lateinit var player: PlayerModel
+    private val levels = levelsData
 
     override fun show() {
         super.show()
@@ -63,40 +60,45 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
         audioService.play(MusicAsset.MAP)
 
-        setupData()
         setupUI()
         loadLevels()
-        Gdx.app.postRunnable {
-            showTutorials()
-        }
+        transitionIn()
+        Timer.schedule(object : Timer.Task() {
+            override fun run() {
+                showTutorials()
+            }
+        }, 0.3f)
+
     }
 
     private fun showTutorials() {
+        val levelsSavedData =
+            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
         if (levelsSavedData.find { it.number == 1 && !it.hasCompleted } != null) {
-            gameEventManager.dispatchShowTutorialEvent(levelButtons.first().label, TutorialType.MAP_LEVEL1)
+            gameEventManager.dispatchShowTutorialEvent(
+                levelButtons.first().label,
+                TutorialType.MAP_LEVEL1
+            )
         }
         if (levelsSavedData.find { it.number == 8 && it.hasCompleted } != null
             && levelsSavedData.find { it.number == 9 && !it.hasCompleted } != null
         ) {
-            gameEventManager.dispatchShowTutorialEvent(levelButtons[8].label, TutorialType.MAP_LEVEL9)
+            gameEventManager.dispatchShowTutorialEvent(
+                levelButtons[8].label,
+                TutorialType.MAP_LEVEL9
+            )
         }
-    }
-
-    private fun setupData() {
-        levels = levelsData
-        levelsSavedData =
-            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
-        player = preferences[PrefKey.PLAYER.key, PlayerModel()]
     }
 
     private fun setupUI() {
         val bgMap = assets[TextureAsset.MAP.descriptor]
 
         stage.actors {
-            scrollPane {
+            scrollView = scrollPane {
                 setFillParent(true)
                 setScrollingDisabled(true, false)
-                setSmoothScrolling(false)
+                scrollPercentY = 1f
+                updateVisualScroll()
 
                 table {
                     background(TextureRegionDrawable(bgMap))
@@ -197,7 +199,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
             table {
                 setFillParent(true)
                 table {
-                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX()
+                        .align(Align.topLeft)
                     image(Drawables.ICON_STAR_SMALL.drawable) {
                         it.padRight(-40f)
                     }
@@ -207,7 +210,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     }
                 }
                 table {
-                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX().align(Align.topRight)
+                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expandX()
+                        .align(Align.topRight)
                     image(Drawables.ICON_DIAMOND.drawable) {
                         it.padRight(-40f)
                     }
@@ -228,7 +232,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
 
                 row()
                 homeButton = imageButton(ImageButtons.HOME.style) {
-                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN)
+                        .align(Align.bottomLeft)
                     isTransform = true
                     setOrigin(Align.center)
                     onTouchDown {
@@ -237,20 +242,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                         audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
-                        game.setScreen<HomeScreen>()
-                    }
-                }
-                tutorialButton = imageButton(ImageButtons.QUESTION.style) {
-                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
-                    isTransform = true
-                    setOrigin(Align.center)
-                    onTouchDown {
-                        this.clearActions()
-                        this += Animations.pulseAnimation()
-                        audioService.play(SoundAsset.BUTTON_POP)
-                    }
-                    onChange {
-                        log.debug { "Tutorial button pressed" }
+                        transitionOut<HomeScreen>()
                     }
                 }
             }
@@ -263,58 +255,69 @@ class MapScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun loadLevels() {
-        var totalScoreSum = 0f
-        var totalStarSum = 0
+        val levelsSavedData =
+            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
+
         levelButtons.forEachIndexed { index, levelButton ->
-            val number = index + 1
-
-            var levelSave = levelsSavedData.find { it.number == number }
-            if (levelSave == null) {
-                levelSave = LevelSavedData(number = number)
-                levelsSavedData.add(levelSave)
-            }
-
             levelButton.setLevel(levels[index])
+            val number = index + 1
+            val level = levelsSavedData.find { it.number == number }
+                ?: LevelSavedData(number = number).also {
+                    levelsSavedData.add(it)
+                }
 
-            if (levelSave.hasCompleted) {
-                levelButton.setState(LevelButton.LevelButtonState.PASSED)
-                levelButton.setStarCount(levelSave.starCount)
-                setOnTouchEvent(levelButton, index)
-                totalScoreSum += levelSave.highScore
-                totalStarSum += levelSave.starCount
-            } else {
-                if (levelSave.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true) {
+            when {
+                level.hasCompleted -> {
+                    levelButton.setState(LevelButton.LevelButtonState.PASSED)
+                    levelButton.setStarCount(level.starCount)
+                    setOnTouchEvent(levelButton, index)
+                }
+
+                level.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true -> {
                     levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
                     levelButton.setStarCount(0)
                     setOnTouchEvent(levelButton, index)
-                } else if (levelSave.number in listOf(2) || levelsSavedData.find { it.number in listOf(number - 2) }?.hasCompleted == true) {
+                }
+
+                level.number == 2 || levelsSavedData.find { it.number == number - 2 }?.hasCompleted == true -> {
                     levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
                     levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
-                } else {
+                }
+
+                else -> {
                     levelButton.setState(LevelButton.LevelButtonState.HIDDEN)
                 }
             }
 
-            log.debug { "Show ${levels[index].name}, completed? ${levelSave.hasCompleted} with saved score:${levelSave.highScore} star:${levelSave.starCount} time:${levelSave.recordTime}" }
+            log.debug { "Show ${levels[index].name}, completed? ${level.hasCompleted} with saved score:${level.highScore} star:${level.starCount} time:${level.recordTime}" }
         }
-        totalStar.setText(totalStarSum.toString())
-        totalScore.setText(totalScoreSum.toInt().toString())
+
+        totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }
+            .toString())
+        totalScore.setText(
+            levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString()
+        )
+
+        scrollView.run {
+            updateVisualScroll()
+            scrollPercentY = 1 - (levelButtons[(levelsSavedData.findLast { it.hasCompleted }?.number
+                ?: 1) - 1].y / stage.height)
+        }
 
         preferences.flush {
             this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
-            this[PrefKey.PLAYER.key] = player
         }
     }
 
     private fun setOnTouchEvent(levelButton: LevelButton, index: Int) {
         levelButton.onTouchDown {
             this.clearActions()
-            this += Animations.pulseAnimation(0.1f)
+            this += Animations.pulseAnimation(scale = 0.1f)
             audioService.play(SoundAsset.BUTTON_POP)
         }
         levelButton.onChangeEvent {
             preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
-            game.setScreen<LevelScreen>()
+            transitionOut<LevelScreen>()
         }
     }
 
@@ -324,6 +327,8 @@ class MapScreen(game: Main) : BaseScreen(game) {
             show()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             // Unlock all levels
+            val levelsSavedData =
+                preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
             levelsSavedData.forEach { it.hasCompleted = true }
             loadLevels()
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
@@ -331,16 +336,10 @@ class MapScreen(game: Main) : BaseScreen(game) {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             levelButtons.first().setState(LevelButton.LevelButtonState.PASSED)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.HIDDEN)
+            scrollView.scrollPercentY = 0f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.ZERO)
+            scrollView.scrollPercentY = 1f
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.ONE)
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.TWO)
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            levelButtons.first().starWidget.setState(StarWidget.StarState.THREE)
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
             levelButtons.first().starWidget.setState(StarWidget.StarState.HIDDEN)
             levelButtons.first().setState(LevelButton.LevelButtonState.HIDDEN)
         }

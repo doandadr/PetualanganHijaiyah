@@ -6,7 +6,11 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Stack
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.utils.Align
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
@@ -20,14 +24,22 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.MatchBox
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import ktx.actors.alpha
 import ktx.actors.onChange
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
-import ktx.scene2d.*
+import ktx.scene2d.KGroup
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.image
+import ktx.scene2d.imageTextButton
+import ktx.scene2d.table
+import ktx.scene2d.verticalGroup
 import space.earlygrey.shapedrawer.ShapeDrawer
 import space.earlygrey.shapedrawer.scene2d.ShapeDrawerDrawable
 
@@ -36,7 +48,7 @@ private data class Line(var sX: Float, var sY: Float, var eX: Float, var eY: Flo
 class MatchLineStage(
     private val assets: AssetStorage,
     private val audioService: AudioService,
-    private val batch: Batch,
+    batch: Batch,
     private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin
 ) : Stack(), KGroup {
@@ -46,8 +58,8 @@ class MatchLineStage(
     private var drawArea: Image
 
     private val hijaiyahEntries = Hijaiyah.entries.take(28)
-    lateinit var leftEntries: List<Hijaiyah>
-    lateinit var rightEntries: List<Hijaiyah>
+    private lateinit var leftEntries: List<Hijaiyah>
+    private lateinit var rightEntries: List<Hijaiyah>
     private var correctCount: Int = 0
 
     private val dragAndDrop = DragAndDrop()
@@ -66,7 +78,6 @@ class MatchLineStage(
                 this@MatchLineStage.leftGroup = verticalGroup {
                     space(25f)
                 }
-
                 this@MatchLineStage.rightGroup = verticalGroup {
                     space(25f)
                 }
@@ -80,7 +91,7 @@ class MatchLineStage(
                 setScale(SCALE_BTN_SMALL)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulseAnimation(initScale = SCALE_BTN_SMALL)
                     this@MatchLineStage.audioService.play(SoundAsset.BUTTON_POP)
                 }
                 onChange {
@@ -200,14 +211,12 @@ class MatchLineStage(
             ) {
                 log.debug { "Stop dragging source" }
 
-                val sourceBox = box
-
                 if (payload != null) {
                     if (target == null) {
-                        sourceBox.rightCircle.actor = payload.dragActor
+                        box.rightCircle.actor = payload.dragActor
                         audioService.play(SoundAsset.CANCEL)
-                    } else if ((target.actor as MatchBox).hijaiyah != sourceBox.hijaiyah) {
-                        sourceBox.rightCircle.actor = payload.dragActor
+                    } else if ((target.actor as MatchBox).hijaiyah != box.hijaiyah) {
+                        box.rightCircle.actor = payload.dragActor
                     }
                     currentLine = null
                 }

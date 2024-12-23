@@ -17,7 +17,7 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
 import com.github.doandadr.petualanganhijaiyah.ui.widget.JoinBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.joinBox
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown

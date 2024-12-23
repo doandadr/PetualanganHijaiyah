@@ -11,14 +11,18 @@ import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
-import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import ktx.preferences.get
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.image
+import ktx.scene2d.label
+import ktx.scene2d.table
 
 class PlayerInfoWidget(
     private val preferences: Preferences,
-    private val gameEventManager: GameEventManager,
     skin: Skin = Scene2DSkin.defaultSkin,
 ): Table(skin), KTable {
     private val nameSign: Label
@@ -32,15 +36,14 @@ class PlayerInfoWidget(
     init {
         table {
             this@PlayerInfoWidget.nameSign = label(this@PlayerInfoWidget.player.name, Labels.SIGN_NAME.style) {
-                it.padLeft(10f).padRight(-50f).growX()
+                it.padLeft(10f).padRight(-20f).minWidth(200f)
                 setAlignment(Align.center)
-                setFontScale(5f / MathUtils.clamp(this@PlayerInfoWidget.player.name.length, 3, 8))
+                setFontScale(4f / MathUtils.clamp(this@PlayerInfoWidget.player.name.length, 4, 8))
                 setScale(SCALE_BTN_SMALL)
             }
-
             row()
             this@PlayerInfoWidget.heartsView = table {
-                it.padRight(10f)
+                it.padRight(10f).padTop(10f)
             }
         }
         this@PlayerInfoWidget.portrait = image {
@@ -86,11 +89,9 @@ class PlayerInfoWidget(
 
 inline fun <S> KWidget<S>.playerInfoWidget(
     preferences: Preferences,
-    gameEventManager: GameEventManager,
     init: PlayerInfoWidget.(S) -> Unit = {}
 ) = actor(
     PlayerInfoWidget(
         preferences,
-        gameEventManager,
     ), init
 )

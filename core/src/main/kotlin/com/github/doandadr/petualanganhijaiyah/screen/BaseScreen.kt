@@ -6,13 +6,20 @@ import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.doandadr.petualanganhijaiyah.Main
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventListener
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialType
-import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.TutorialWidget
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialWidget
+import ktx.actors.alpha
+import ktx.actors.plus
+import ktx.actors.plusAssign
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.assets.disposeSafely
@@ -28,14 +35,17 @@ abstract class BaseScreen(
     val gameEventManager: GameEventManager = game.gameEventManager,
     val preferences: Preferences = game.preferences,
 ) : KtxScreen, GameEventListener {
-    private val tutorialView = TutorialWidget(preferences, gameEventManager)
+    private lateinit var tutorialView: TutorialWidget
+    lateinit var transitionImg : Image
 
     override fun show() {
         log.debug { "Show ${this::class.simpleName}" }
         gameEventManager.addGameEventListener(this)
+
+        tutorialView = TutorialWidget(preferences, audioService)
+        tutorialView.toFront()
         Gdx.app.postRunnable {
             stage.addActor(tutorialView)
-            tutorialView.toFront()
         }
     }
 
@@ -66,6 +76,33 @@ abstract class BaseScreen(
 
     override fun dispose() {
         stage.disposeSafely()
+    }
+
+    fun transitionIn() {
+        initTransitionImage()
+        stage.addActor(transitionImg)
+        transitionImg.run {
+            isVisible = true
+            alpha = 1f
+            clearActions()
+            this += Actions.fadeOut(0.5f) + Actions.hide()
+        }
+    }
+    inline fun <reified Type : KtxScreen> transitionOut() {
+        initTransitionImage()
+        stage.addActor(transitionImg)
+        transitionImg.run {
+            isVisible = true
+            alpha = 0f
+            clearActions()
+            this += Actions.fadeIn(0.5f) + Actions.run { game.setScreen<Type>() }
+        }
+    }
+    fun initTransitionImage() {
+        transitionImg = Image(assets[TextureAsset.WHITE.descriptor]).apply {
+            setFillParent(true)
+            setScaling(Scaling.fill)
+        }
     }
 
     override fun showTutorial(actor: Actor, type: TutorialType) {

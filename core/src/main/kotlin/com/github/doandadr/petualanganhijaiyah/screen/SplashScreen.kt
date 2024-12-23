@@ -1,11 +1,17 @@
 package com.github.doandadr.petualanganhijaiyah.screen
 
+import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.Timer
 import com.github.doandadr.petualanganhijaiyah.Main
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
+import com.github.doandadr.petualanganhijaiyah.asset.TextureAtlasAsset
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_SPLASH
 import kotlinx.coroutines.joinAll
@@ -33,17 +39,21 @@ class SplashScreen(game: Main) : BaseScreen(game) {
             },
             TextureAtlasAsset.entries.map { game.assets.loadAsync(it.descriptor) },
             SoundAsset.entries.map { game.assets.loadAsync(it.descriptor) }
-
         ).flatten()
 
         KtxAsync.launch {
             assetRefs.joinAll()
             log.debug { "Time for assets to be loaded: ${System.currentTimeMillis() - old} ms" }
-//            Timer.schedule(object : Timer.Task() {
-//                override fun run() {
+            if (Gdx.app.logLevel == Application.LOG_DEBUG) {
+                loadScreens()
+                return@launch
+            }
+            Timer.schedule(object : Timer.Task() {
+                override fun run() {
                     loadScreens()
-//                }
-//            }, SPLASH_DELAY_SECONDS)
+                }
+            }, SPLASH_DELAY_SECONDS)
+
         }
 
         setupUI()
@@ -73,7 +83,10 @@ class SplashScreen(game: Main) : BaseScreen(game) {
                 }
 
                 row()
-                label("ayo berjelajah sambil belajar hijaiyah!", Labels.SECONDARY_GREEN_WHITE_BORDER.style) {
+                label(
+                    "ayo berjelajah sambil belajar hijaiyah!",
+                    Labels.SECONDARY_GREEN_WHITE_BORDER.style
+                ) {
                     setAlignment(Align.center)
                     setFontScale(SCALE_FONT_SMALL)
                     it.padBottom(300f)
@@ -90,17 +103,17 @@ class SplashScreen(game: Main) : BaseScreen(game) {
         game.addScreen(StartScreen(game))
         game.addScreen(FinishScreen(game))
 
-        game.setScreen<HomeScreen>()
-        game.removeScreen<SplashScreen>()
-        dispose()
+        transitionOut<HomeScreen>()
     }
 
     override fun dispose() {
+
         bgSplash.disposeSafely()
     }
 
     companion object {
-        private const val SPLASH_DELAY_SECONDS = 1f
         private val log = logger<SplashScreen>()
+
+        private const val SPLASH_DELAY_SECONDS = 1f
     }
 }

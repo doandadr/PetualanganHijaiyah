@@ -1,9 +1,5 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Container
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -52,18 +48,13 @@ class MatchBox(
         this@MatchBox.rightCircle = container{
             background = skin.getDrawable(Drawables.CIRCLE_GREEN.drawable)
             isVisible = this@MatchBox.state == State.LEFT
-//            touchable = Touchable.enabled
             log.debug { "rightCircle isTouchable $touchable" }
             it.padLeft(PADDING_IN)
             this@MatchBox.rightDot = image(Drawables.CIRCLE_BRUSH.drawable) {
                 alpha = 1f
-//                touchable
                 log.debug { "rightDot isTouchable $touchable" }
             }
         }
-
-//        leftDot.userObject = this@MatchBox
-//        rightDot.userObject = this@MatchBox
     }
 
     enum class State {
@@ -77,20 +68,3 @@ class MatchBox(
         private const val PADDING_IN = -10f
     }
 }
-
-class PixmapDemo() {
-    lateinit var pixmap : Pixmap
-    lateinit var texture: Texture
-    fun initPixmap() {
-        pixmap = Pixmap(Gdx.graphics.width, Gdx.graphics.height, Pixmap.Format.RGBA8888)
-        texture = Texture(pixmap)
-    }
-
-    fun touchDraggedSnippet(screenX: Int,  screenY:Int) {
-        pixmap.setColor(Color.BLACK)
-//        pixmap.drawLine()
-        pixmap.fillCircle(screenX, screenY - (Gdx.graphics.height - pixmap.height), 5)
-    }
-
-}
-
