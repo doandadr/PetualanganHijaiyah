@@ -75,7 +75,7 @@ class PracticeStage(
                 setScale(SCALE_BTN_MEDIUM)
                 this.clearActions()
                 this += Animations.pulseAnimation(initScale = SCALE_BTN_MEDIUM)
-                this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
+                this@PracticeStage.audioService.play(SoundAsset.TOUCH)
             }
         }
         container {
@@ -96,7 +96,7 @@ class PracticeStage(
                 setScale(SCALE_BTN_MEDIUM)
                 this.clearActions()
                 this += Animations.pulseAnimation(initScale = SCALE_BTN_MEDIUM)
-                this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
+                this@PracticeStage.audioService.play(SoundAsset.TOUCH)
             }
         }
 
@@ -109,7 +109,7 @@ class PracticeStage(
                 setScale(1f)
                 this.clearActions()
                 this += Animations.pulseAnimation()
-                this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
+                this@PracticeStage.audioService.play(SoundAsset.TOUCH)
             }
         }
 
@@ -136,7 +136,7 @@ class PracticeStage(
                         setScale(1f)
                         this.clearActions()
                         this += Animations.pulseAnimation()
-                        this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
+                        this@PracticeStage.audioService.play(SoundAsset.TOUCH)
                     }
                 }
             }
@@ -159,7 +159,7 @@ class PracticeStage(
                         setScale(1f)
                         this.clearActions()
                         this += Animations.pulseAnimation()
-                        this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
+                        this@PracticeStage.audioService.play(SoundAsset.TOUCH)
                     }
                 }
             }
@@ -182,7 +182,7 @@ class PracticeStage(
                         setScale(1f)
                         this.clearActions()
                         this += Animations.pulseAnimation()
-                        this@PracticeStage.audioService.play(SoundAsset.BUTTON_POP)
+                        this@PracticeStage.audioService.play(SoundAsset.TOUCH)
                     }
                 }
             }

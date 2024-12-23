@@ -1,9 +1,18 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Stack
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
@@ -13,12 +22,18 @@ import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_HIJAIYAH_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.widget.HijaiyahBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.hijaiyahBox
 import ktx.actors.onChange
-import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.imageTextButton
+import ktx.scene2d.label
+import ktx.scene2d.stack
 
 class MCQStage(
     private val assets: AssetStorage,
@@ -111,10 +126,18 @@ class MCQStage(
         currentEntries.forEachIndexed { index, letter ->
             val box = HijaiyahBox(letter, HijaiyahBox.Size.MEDIUM, assets)
             box.setType(if (state == State.ARABIC) HijaiyahBox.Type.DEFAULT else HijaiyahBox.Type.TEXT)
-            box.onChangeEvent {
-                this@MCQStage.handleAnswer(index)
+            box.apply {
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@MCQStage.audioService.play(SoundAsset.TOUCH)
+                }
+                onChange {
+                    this@MCQStage.handleAnswer(index)
+                }
             }
-
             choiceBoxes += box
             horiGroup.addActor(box)
         }

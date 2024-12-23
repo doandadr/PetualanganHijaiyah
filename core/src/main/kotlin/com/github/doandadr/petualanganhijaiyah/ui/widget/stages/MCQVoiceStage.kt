@@ -1,9 +1,18 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget.stages
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
-import com.github.doandadr.petualanganhijaiyah.asset.*
+import com.github.doandadr.petualanganhijaiyah.asset.Drawables
+import com.github.doandadr.petualanganhijaiyah.asset.Hijaiyah
+import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
+import com.github.doandadr.petualanganhijaiyah.asset.ImageTextButtons
+import com.github.doandadr.petualanganhijaiyah.asset.Labels
+import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
 import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
@@ -16,7 +25,14 @@ import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.imageButton
+import ktx.scene2d.imageTextButton
+import ktx.scene2d.label
 
 class MCQVoiceStage(
     private val assets: AssetStorage,
@@ -47,7 +63,7 @@ class MCQVoiceStage(
             onTouchDown {
                 this.clearActions()
                 this += Animations.pulseAnimation()
-                this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+                this@MCQVoiceStage.audioService.play(SoundAsset.TOUCH)
             }
             onChange {
                 this@MCQVoiceStage.apply {
@@ -121,7 +137,7 @@ class MCQVoiceStage(
                 onTouchDown {
                     this.clearActions()
                     this += Animations.pulseAnimation()
-                    this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
+                    this@MCQVoiceStage.audioService.play(SoundAsset.TOUCH)
                 }
                 onChange {
                     this@MCQVoiceStage.handleAnswer(index)

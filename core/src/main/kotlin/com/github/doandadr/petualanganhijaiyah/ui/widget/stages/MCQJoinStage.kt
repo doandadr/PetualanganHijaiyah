@@ -16,15 +16,19 @@ import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SPACE_BETWEEN_BUTTONS
 import com.github.doandadr.petualanganhijaiyah.ui.widget.JoinBox
-import com.github.doandadr.petualanganhijaiyah.ui.widget.joinBox
 import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
+import com.github.doandadr.petualanganhijaiyah.ui.widget.joinBox
 import ktx.actors.onChange
-import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.assets.async.AssetStorage
 import ktx.log.logger
-import ktx.scene2d.*
+import ktx.scene2d.KTable
+import ktx.scene2d.KWidget
+import ktx.scene2d.Scene2DSkin
+import ktx.scene2d.actor
+import ktx.scene2d.imageTextButton
+import ktx.scene2d.verticalGroup
 
 
 class MCQJoinStage(
@@ -85,7 +89,18 @@ class MCQJoinStage(
         val choices = listOf(JoinBox.Content.ANSWER, JoinBox.Content.OPTION_1, JoinBox.Content.OPTION_2)
         choices.shuffled().forEach { content ->
             val box = JoinBox(currentEntry, JoinBox.Type.OPTION, content, assets)
-            box.onChangeEvent { this@MCQJoinStage.handleAnswer(box) }
+            box.apply {
+                isTransform = true
+                setOrigin(Align.center)
+                onTouchDown {
+                    this.clearActions()
+                    this += Animations.pulseAnimation()
+                    this@MCQJoinStage.audioService.play(SoundAsset.TOUCH)
+                }
+                onChange {
+                    this@MCQJoinStage.handleAnswer(this)
+                }
+            }
             vertGroup.addActor(box)
         }
 
