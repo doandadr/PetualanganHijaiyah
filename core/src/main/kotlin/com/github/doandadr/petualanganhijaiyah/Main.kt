@@ -1,6 +1,5 @@
 package com.github.doandadr.petualanganhijaiyah
 
-import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -48,7 +47,6 @@ class Main(val recognition: Recognition) : KtxGame<KtxScreen>() {
 
     override fun create() {
         KtxAsync.initiate()
-        Gdx.app.logLevel = LOG_DEBUG
         log.debug { "Create game instance" }
 
         addScreen(SplashScreen(this))
