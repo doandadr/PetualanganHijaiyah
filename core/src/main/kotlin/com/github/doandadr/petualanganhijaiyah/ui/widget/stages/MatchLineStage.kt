@@ -91,7 +91,7 @@ class MatchLineStage(
                 setScale(SCALE_BTN_SMALL)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation(initScale = SCALE_BTN_SMALL)
+                    this += Animations.pulse(initScale = SCALE_BTN_SMALL)
                     this@MatchLineStage.audioService.play(SoundAsset.BUTTON_POP)
                 }
                 onChange {

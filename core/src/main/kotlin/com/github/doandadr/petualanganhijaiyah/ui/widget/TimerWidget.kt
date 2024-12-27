@@ -24,9 +24,9 @@ class TimerWidget(
     var remainingSeconds: Float = DEFAULT_MAX_TIME
     var elapsedSeconds: Float = 0.0f
 
-    val bar: TimerBar
     private val counter: TimerCounter
     private var state: State = State.STOP
+    val bar: TimerBar
 
     init {
         this@TimerWidget.bar = timerBar(DEFAULT_MAX_TIME) {
@@ -109,8 +109,16 @@ class TimerWidget(
         setState(State.STOPWATCH)
     }
 
+    fun start() {
+        setState(State.START)
+    }
+
     fun stop() {
         setState(State.STOP)
+    }
+
+    fun loseSeconds(time: Float) {
+        remainingSeconds -= time
     }
 
     enum class State {

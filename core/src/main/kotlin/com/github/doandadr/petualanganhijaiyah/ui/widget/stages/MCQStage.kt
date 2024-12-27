@@ -85,7 +85,7 @@ class MCQStage(
             setOrigin(Align.center)
             onTouchDown {
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulse()
                 this@MCQStage.audioService.play(SoundAsset.BUTTON_POP)
             }
             onChange {
@@ -131,7 +131,7 @@ class MCQStage(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@MCQStage.audioService.play(SoundAsset.TOUCH)
                 }
                 onChange {

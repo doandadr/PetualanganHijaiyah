@@ -62,7 +62,7 @@ class MCQVoiceStage(
             setOrigin(Align.center)
             onTouchDown {
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulse()
                 this@MCQVoiceStage.audioService.play(SoundAsset.TOUCH)
             }
             onChange {
@@ -85,7 +85,7 @@ class MCQVoiceStage(
             setOrigin(Align.center)
             onTouchDown {
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulse()
                 this@MCQVoiceStage.audioService.play(SoundAsset.BUTTON_POP)
             }
             onChange {
@@ -136,7 +136,7 @@ class MCQVoiceStage(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@MCQVoiceStage.audioService.play(SoundAsset.TOUCH)
                 }
                 onChange {

@@ -71,7 +71,7 @@ class SettingsPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
@@ -88,7 +88,7 @@ class SettingsPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
@@ -107,7 +107,7 @@ class SettingsPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }

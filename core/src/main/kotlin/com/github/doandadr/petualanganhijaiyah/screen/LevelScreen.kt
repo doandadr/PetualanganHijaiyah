@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -48,7 +46,12 @@ import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqJoin
 import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqStage
 import com.github.doandadr.petualanganhijaiyah.ui.widget.stages.mcqVoiceStage
 import com.github.doandadr.petualanganhijaiyah.ui.widget.timerWidget
-import ktx.actors.*
+import ktx.actors.onChange
+import ktx.actors.onChangeEvent
+import ktx.actors.onClick
+import ktx.actors.onTouchDown
+import ktx.actors.plus
+import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
@@ -78,7 +81,6 @@ class LevelScreen(
 
     private lateinit var levels: Array<LevelModel>
 
-    private var popupState = PopupState.NONE
     private var currentScore = 0f
     private var currentStar = 0
     private var currentRecordTime = Float.MAX_VALUE
@@ -100,7 +102,6 @@ class LevelScreen(
 
     private fun setupData() {
         levels = levelsData
-        popupState = PopupState.NONE
         currentScore = 0f
         currentStar = 0
         currentRecordTime = Float.MAX_VALUE
@@ -122,11 +123,13 @@ class LevelScreen(
                 setFillParent(true)
 
                 timer = timerWidget(audioService, gameEventManager) {
-                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).align(Align.topLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN)
+                        .align(Align.topLeft)
                 }
 
                 playerInfo = playerInfoWidget(preferences) {
-                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).align(Align.topRight)
+                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN)
+                        .align(Align.topRight)
                 }
 
                 row()
@@ -144,19 +147,21 @@ class LevelScreen(
 
                 row()
                 stageBoard = table {
-                    it.colspan(2).expand().growY().prefWidth(STAGE_BOX_WIDTH).prefHeight(STAGE_BOX_HEIGHT)
+                    it.colspan(2).expand().growY().prefWidth(STAGE_BOX_WIDTH)
+                        .prefHeight(STAGE_BOX_HEIGHT)
                 }
 
                 row()
                 horizontalGroup {
-                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).expand().align(Align.bottomLeft)
+                    it.padLeft(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).expand()
+                        .align(Align.bottomLeft)
                     space(SPACE_BETWEEN_BUTTONS)
                     homeButton = imageButton(ImageButtons.HOME.style) {
                         isTransform = true
                         setOrigin(Align.center)
                         onTouchDown {
                             this.clearActions()
-                            this += Animations.pulseAnimation()
+                            this += Animations.pulse()
                             audioService.play(SoundAsset.BUTTON_POP)
                         }
                         onChange {
@@ -165,14 +170,15 @@ class LevelScreen(
                     }
                 }
                 horizontalGroup {
-                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN).align(Align.bottomRight)
+                    it.padRight(PADDING_INNER_SCREEN).padBottom(PADDING_INNER_SCREEN)
+                        .align(Align.bottomRight)
                     space(SPACE_BETWEEN_BUTTONS)
                     backButton = imageButton(ImageButtons.BACK.style) {
                         isTransform = true
                         setOrigin(Align.center)
                         onTouchDown {
                             this.clearActions()
-                            this += Animations.pulseAnimation()
+                            this += Animations.pulse()
                             audioService.play(SoundAsset.BUTTON_POP)
                         }
                         onChange {
@@ -188,6 +194,8 @@ class LevelScreen(
                 isVisible = false
             }
         }
+
+        setPopup(PopupState.NONE)
     }
 
     override fun render(delta: Float) {
@@ -196,20 +204,18 @@ class LevelScreen(
     }
 
     private fun setPopup(state: PopupState) {
-        popupState = state
-
-        if (popupState != PopupState.NONE) {
+        if (state != PopupState.NONE) {
             layout.touchable = Touchable.disabled
 
             popup.clear()
-            popup += Actions.sequence(Actions.show(), fadeIn(0.2f))
+            popup += Animations.appear(0.2f)
         } else {
             layout.touchable = Touchable.childrenOnly
 
-            popup += Actions.sequence(fadeOut(0.2f), Actions.hide(), Actions.run { popup.clear() })
+            popup += Animations.disappear(0.2f) + Actions.run { popup.clear() }
         }
 
-        when (popupState) {
+        when (state) {
             PopupState.FINISH -> {
                 popup.add(
                     scene2d.stack {
@@ -275,18 +281,16 @@ class LevelScreen(
 
             PopupState.CORRECT -> {
                 popup.add(scene2d.answerPopup(AnswerPopup.State.CORRECT, preferences) {
-                    this@answerPopup.clearActions()
-                    this@answerPopup += Actions.sequence(Animations.fadeInOutAnimation(), Actions.run {
-                        if (popupState != PopupState.FINISH) {
-                            setPopup(PopupState.NONE)
-                            nextRound()
-                        }
-                    })
-                    onClick {
-                        this@answerPopup.clearActions()
+                    this.clearActions()
+                    this += Animations.fadeInOut() + Actions.run {
                         setPopup(PopupState.NONE)
                         nextRound()
-                        this@answerPopup.touchable = Touchable.disabled
+                    }
+                    onClick {
+                        this.clearActions()
+                        setPopup(PopupState.NONE)
+                        nextRound()
+                        this.touchable = Touchable.disabled
                     }
                 })
             }
@@ -294,7 +298,7 @@ class LevelScreen(
             PopupState.INCORRECT -> {
                 popup.add(scene2d.answerPopup(AnswerPopup.State.INCORRECT, preferences) {
                     this.clearActions()
-                    this@answerPopup += Actions.sequence(Animations.fadeInOutAnimation(), Actions.run {
+                    this += Actions.sequence(Animations.fadeInOut(), Actions.run {
                         setPopup(PopupState.NONE)
                         loadStage(currentStage)
                     })
@@ -327,16 +331,16 @@ class LevelScreen(
 
         if (level.isTimed) {
             timer.loadWidget(level.timerSeconds)
-            timer.setState(TimerWidget.State.START)
+            timer.start()
             timer.isVisible = true
         } else {
-            timer.setState(TimerWidget.State.STOP)
+            timer.stop()
             timer.isVisible = false
         }
 
         levelTitle.setText(level.name.uppercase())
-        backgroundImg.drawable = TextureRegionDrawable(assets[TextureAsset.entries[level.bgIndex].descriptor])
-
+        backgroundImg.drawable =
+            TextureRegionDrawable(assets[TextureAsset.entries[level.bgIndex].descriptor])
         audioService.play(MusicAsset.entries[level.musicIndex])
 
         loadStage(level.stages.first())
@@ -344,24 +348,16 @@ class LevelScreen(
 
     private fun loadStage(stage: StageModel) {
         currentStage = stage
-
         val newStage = scene2d {
             when (stage.type) {
                 StageType.MCQ -> mcqStage(assets, audioService, gameEventManager)
                 StageType.MCQ_JOIN -> mcqJoin(assets, audioService, gameEventManager)
                 StageType.MCQ_VOICE -> mcqVoiceStage(assets, audioService, gameEventManager)
                 StageType.DRAG_AND_DROP -> dragAndDropStage(assets, audioService, gameEventManager)
-                StageType.MATCH_LINE -> matchLineStage(
-                    assets,
-                    audioService,
-                    batch,
-                    gameEventManager
-                )
-
+                StageType.MATCH_LINE -> matchLineStage(assets, audioService, batch, gameEventManager)
                 StageType.DRAWING -> drawingStage(assets, audioService, batch, gameEventManager, game.recognition)
             }
         }
-
         newStage.setFillParent(true)
         stageBoard.clear()
         stageBoard.addActor(newStage)
@@ -377,16 +373,14 @@ class LevelScreen(
             loadLevel(nextLevelNumber)
         } else {
             log.debug { "Adventure finished" }
-             transitionOut<FinishScreen>()
+            transitionOut<FinishScreen>()
         }
     }
 
     private fun nextStage() {
         currentStageIndex++
-
-        val stages = currentLevel.stages
-        if (stages.size > currentStageIndex) {
-            log.debug { "Next stage of index $currentStageIndex" }
+        if (currentStageIndex < currentLevel.stages.size) {
+            log.debug { "Next stage $currentStageIndex" }
             currentStage = currentLevel.stages[currentStageIndex]
             loadStage(currentStage)
         } else {
@@ -398,22 +392,28 @@ class LevelScreen(
 
     private fun nextRound() {
         currentRound++
-        if (currentRound > currentStage.rounds) {
-            currentRound = 1
-            nextStage()
-        } else {
+        if (currentRound <= currentStage.rounds) {
             log.debug { "Next round $currentRound" }
             loadStage(currentStage)
+        } else {
+            currentRound = 1
+            nextStage()
         }
     }
 
     private fun isEndOfLevel(): Boolean =
         currentStageIndex + 1 >= currentLevel.stages.size && currentRound >= currentStage.rounds
 
-    private fun updateLevelData(level: LevelModel, newScore: Float, newStars: Int, newRecordTime: Float) {
+    private fun updateLevelData(
+        level: LevelModel,
+        newScore: Float,
+        newStars: Int,
+        newRecordTime: Float
+    ) {
         log.debug { "Updating level data of ${level.name}" }
 
-        val levelsSavedData = preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()]
+        val levelsSavedData =
+            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()]
         val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
 
         if (levelsSavedData.isNotEmpty() && level.isScored) {
@@ -426,18 +426,14 @@ class LevelScreen(
 
             with(levelData) {
                 number = level.number
-                recordTime = if (newRecordTime <= recordTime) newRecordTime.also {
-                    newBestTime = true
-                } else recordTime.also { newBestTime = false }
-                highScore = if (newScore >= highScore) newScore.also {
-                    newBestScore = true
-                } else highScore.also { newBestScore = false }
-                starCount = if (newStars >= starCount) newStars else starCount
+                recordTime = newRecordTime.takeIf { it <= recordTime }?.also { newBestTime = true } ?: recordTime.also { newBestTime = false }
+                highScore = newScore.takeIf { it >= highScore }?.also { newBestScore = true } ?: highScore.also { newBestScore = false }
+                starCount = maxOf(newStars, starCount)
                 hasCompleted = true
             }
 
-            player.totalScore = levelsSavedData.fold(0f) {sum, data -> sum + data.highScore}
-            player.totalStar = levelsSavedData.fold(0) {sum, data -> sum + data.starCount}
+            player.totalScore = levelsSavedData.fold(0f) { sum, data -> sum + data.highScore }
+            player.totalStar = levelsSavedData.fold(0) { sum, data -> sum + data.starCount }
 
             preferences.flush {
                 this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
@@ -464,6 +460,7 @@ class LevelScreen(
         log.debug { "Answer is wrong, continue? $isContinue" }
         audioService.play(if (isContinue) SoundAsset.INCORRECT_BIG else SoundAsset.INCORRECT)
 
+        timer.loseSeconds(10f)
         if (playerInfo.loseHealth() <= 0) {
             levelFailed()
             return

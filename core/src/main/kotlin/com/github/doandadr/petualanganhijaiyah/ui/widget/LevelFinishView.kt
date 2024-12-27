@@ -129,7 +129,7 @@ class LevelFinishView(
                         setOrigin(Align.center)
                         onTouchDown {
                             this.clearActions()
-                            this += Animations.pulseAnimation()
+                            this += Animations.pulse()
                             this@LevelFinishView.audioService.play(SoundAsset.BUTTON_POP)
                         }
                     }
@@ -139,7 +139,7 @@ class LevelFinishView(
                         setOrigin(Align.center)
                         onTouchDown {
                             this.clearActions()
-                            this += Animations.pulseAnimation()
+                            this += Animations.pulse()
                             this@LevelFinishView.audioService.play(SoundAsset.BUTTON_POP)
                         }
                     }
@@ -149,7 +149,7 @@ class LevelFinishView(
                         setOrigin(Align.center)
                         onTouchDown {
                             this.clearActions()
-                            this += Animations.pulseAnimation()
+                            this += Animations.pulse()
                             this@LevelFinishView.audioService.play(SoundAsset.BUTTON_POP)
                         }
                     }

@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
@@ -22,7 +20,6 @@ import com.github.doandadr.petualanganhijaiyah.asset.TextureAsset
 import com.github.doandadr.petualanganhijaiyah.data.PlayerModel
 import com.github.doandadr.petualanganhijaiyah.data.PrefKey
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
-import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_MEDIUM
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_BTN_SMALL
 import com.github.doandadr.petualanganhijaiyah.ui.values.SCALE_FONT_MEDIUM
@@ -33,12 +30,12 @@ import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.nameChangePopup
 import com.github.doandadr.petualanganhijaiyah.ui.widget.popup.settingsPopup
 import ktx.actors.onChange
 import ktx.actors.onTouchDown
+import ktx.actors.plus
 import ktx.actors.plusAssign
 import ktx.log.logger
 import ktx.preferences.get
 import ktx.scene2d.actors
 import ktx.scene2d.container
-import ktx.scene2d.horizontalGroup
 import ktx.scene2d.image
 import ktx.scene2d.imageButton
 import ktx.scene2d.label
@@ -46,7 +43,6 @@ import ktx.scene2d.scene2d
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ktx.scene2d.verticalGroup
-import ktx.scene2d.vis.floatingGroup
 import kotlin.system.exitProcess
 
 
@@ -58,7 +54,6 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     private lateinit var bookButton: ImageButton
     private var popup: Table = Table()
     private var layout: Table = Table()
-    private var popupState = PopupState.NONE
     private val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
     enum class PopupState {
@@ -94,114 +89,102 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
             layout = table {
                 setFillParent(true)
-                align(Align.bottomLeft)
 
-                floatingGroup {
-                    setFillParent(true)
+                label("PETUALANGAN\nHIJAIYAH", Labels.PRIMARY_GREEN_WHITE_BORDER.style) {
+                    it.padLeft(30.0f).padTop(30.0f).expandX().align(Align.topLeft)
+                    setAlignment(Align.center)
+                    setOrigin(Align.center)
+                    setFontScale(SCALE_FONT_MEDIUM)
+                }
+                bookButton = imageButton(ImageButtons.BOOK.style) {
+                    it.padRight(30.0f).padTop(30.0f).expandX().align(Align.topRight)
+                    isTransform = true
+                    setOrigin(Align.center)
+                    onTouchDown {
+                        this.clearActions()
+                        this += Animations.pulse()
+                        audioService.play(SoundAsset.BUTTON_POP)
+                    }
+                    onChange {
+                        transitionOut<PracticeScreen>()
+                    }
+                }
+
+                row()
+                verticalGroup {
+                    it.expand().colspan(2)
+                    space(40f)
+                    startButton = textButton("MULAI", TextButtons.BOARD.style) {
+                        setScale(SCALE_BTN_MEDIUM)
+                        rotation = 10f
+                        isTransform = true
+                        setOrigin(Align.center)
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulse(initScale = SCALE_BTN_MEDIUM)
+                            audioService.play(SoundAsset.BUTTON_POP)
+                        }
+                        onChange {
+                            transitionOut<MapScreen>()
+                        }
+                    }
+                    settingButton = textButton("PENGATURAN", TextButtons.BOARD.style) {
+                        this.label.setFontScale(SCALE_FONT_SMALL)
+                        isTransform = true
+                        setOrigin(Align.center)
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulse()
+                            audioService.play(SoundAsset.BUTTON_POP)
+                        }
+                        onChange {
+                            setPopup(PopupState.SETTING)
+                        }
+                    }
+                    exitButton = textButton("KELUAR", TextButtons.BOARD.style) {
+                        this.label.setFontScale(SCALE_FONT_SMALL)
+                        setScale(SCALE_BTN_SMALL)
+                        isTransform = true
+                        setOrigin(Align.center)
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulse(initScale = SCALE_BTN_SMALL)
+                            audioService.play(SoundAsset.BUTTON_POP)
+                        }
+                        onChange {
+                            Gdx.app.exit()
+                            exitProcess(0)
+                        }
+                    }
+                }
+
+                row()
+                verticalGroup {
+                    it.padLeft(30.0f).expandX().align(Align.bottomLeft).colspan(2)
                     container {
-                        setFillParent(true)
-                        align(Align.topLeft)
-                        pad(50f)
-                        label("PETUALANGAN\nHIJAIYAH", Labels.PRIMARY_GREEN_WHITE_BORDER.style) {
-                            setAlignment(Align.center)
-                            setOrigin(Align.center)
+                        isTransform = true
+                        setOrigin(Align.center)
+                        rotation = 5f
+                        label("Selamat\nDatang!", Labels.PRIMARY_GREEN_WHITE_BORDER.style) {
                             setFontScale(SCALE_FONT_MEDIUM)
                         }
                     }
-                    horizontalGroup {
-                        setFillParent(true)
-                        align(Align.topRight)
-                        pad(50f)
-                        space(50f)
-                        bookButton = imageButton(ImageButtons.BOOK.style) {
-                            isTransform = true
-                            setOrigin(Align.center)
-                            onTouchDown {
-                                this.clearActions()
-                                this += Animations.pulseAnimation()
-                                audioService.play(SoundAsset.BUTTON_POP)
-                            }
-                            onChange {
-                                transitionOut<PracticeScreen>()
-                            }
+                    nameButton = textButton("Default", TextButtons.SIGN.style) {
+                        isTransform = true
+                        setOrigin(Align.center)
+                        onTouchDown {
+                            this.clearActions()
+                            this += Animations.pulse()
+                            audioService.play(SoundAsset.BUTTON_POP)
                         }
-                    }
-                    verticalGroup {
-                        setFillParent(true)
-                        center()
-                        space(40f)
-                        padBottom(250f)
-                        startButton = textButton("MULAI", TextButtons.BOARD.style) {
-                            setScale(SCALE_BTN_MEDIUM)
-                            rotation = 10f
-                            isTransform = true
-                            setOrigin(Align.center)
-                            onTouchDown {
-                                this.clearActions()
-                                this += Animations.pulseAnimation(initScale = SCALE_BTN_MEDIUM)
-                                audioService.play(SoundAsset.BUTTON_POP)
-                            }
-                            onChange {
-                                transitionOut<MapScreen>()
-                            }
+                        onChange {
+                            setPopup(HomeScreen.PopupState.NAME)
                         }
-                        settingButton = textButton("PENGATURAN", TextButtons.BOARD.style) {
-                            this.label.setFontScale(SCALE_FONT_SMALL)
-                            isTransform = true
-                            setOrigin(Align.center)
-                            onTouchDown {
-                                this.clearActions()
-                                this += Animations.pulseAnimation()
-                                audioService.play(SoundAsset.BUTTON_POP)
-                            }
-                            onChange {
-                                setPopup(PopupState.SETTING)
-                            }
-                        }
-                        exitButton = textButton("KELUAR", TextButtons.BOARD.style) {
-                            this.label.setFontScale(SCALE_FONT_SMALL)
-                            setScale(SCALE_BTN_SMALL)
-                            isTransform = true
-                            setOrigin(Align.center)
-                            onTouchDown {
-                                this.clearActions()
-                                this += Animations.pulseAnimation(initScale = SCALE_BTN_SMALL)
-                                audioService.play(SoundAsset.BUTTON_POP)
-                            }
-                            onChange {
-                                Gdx.app.exit()
-                                exitProcess(0)
-                            }
-                        }
-                    }
-                    verticalGroup {
-                        setFillParent(true)
-                        align(Align.bottomLeft)
-                        space(20f)
-                        container {
-                            isTransform = true
-                            setOrigin(Align.center)
-                            rotation = 5f
-                            label("Selamat\nDatang!", Labels.PRIMARY_GREEN_WHITE_BORDER.style) {
-                                setFontScale(SCALE_FONT_MEDIUM)
-                            }
-                        }
-                        nameButton = textButton("Default", TextButtons.SIGN.style) {
-                            isTransform = true
-                            setOrigin(Align.center)
-                            onTouchDown {
-                                this.clearActions()
-                                this += Animations.pulseAnimation()
-                                audioService.play(SoundAsset.BUTTON_POP)
-                            }
-                            onChange {
-                                setPopup(PopupState.NAME)
-                            }
-                        }
-                        padLeft(PADDING_INNER_SCREEN)
                     }
                 }
             }
+
+
 
             popup = table {
                 setFillParent(true)
@@ -213,6 +196,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
         val player = preferences[PrefKey.PLAYER.key, PlayerModel()]
         nameButton.setText(player.name)
+        setPopup(PopupState.NONE)
     }
 
     private fun setupTutorials() {
@@ -224,18 +208,16 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setPopup(state: PopupState) {
-        popupState = state
-
-        if (popupState != PopupState.NONE) {
+        if (state != PopupState.NONE) {
             layout.touchable = Touchable.disabled
             popup.clear()
-            popup += Actions.sequence(Actions.show(), fadeIn(0.5f))
+            popup += Animations.appear()
         } else {
             layout.touchable = Touchable.childrenOnly
-            popup += Actions.sequence(fadeOut(0.5f), Actions.hide(), Actions.run { popup.clear() })
+            popup += Animations.disappear() + Actions.run { popup.clear() }
         }
 
-        when (popupState) {
+        when (state) {
             PopupState.SETTING -> {
                 popup.add(scene2d.settingsPopup(preferences, audioService, gameEventManager))
             }
