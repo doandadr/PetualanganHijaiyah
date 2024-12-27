@@ -113,7 +113,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(5f)
                             dots.setPosition(centerX(width) - 20f, 100f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(450f, 200f)
+                            starWidget.setPosition(480f, 200f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL2.style) {
@@ -123,7 +123,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) - 10f, -80f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(0f, -50f)
+                            starWidget.setPosition(30f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL3.style) {
@@ -132,7 +132,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(-8f)
                             dots.setPosition(-130f, -100f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(0f, -50f)
+                            starWidget.setPosition(30f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL4.style) {
@@ -142,7 +142,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) + 120f, -50f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(150f, -50f)
+                            starWidget.setPosition(180f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL5.style) {
@@ -150,7 +150,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             text.setPosition(370f, 300f)
                             dots.setPosition(centerX(width) - 100f, -100f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(250f, 150f)
+                            starWidget.setPosition(280f, 150f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL6.style) {
@@ -159,7 +159,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(5f)
                             dots.setPosition(-120f, -120f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(20f, -50f)
+                            starWidget.setPosition(50f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL7.style) {
@@ -169,7 +169,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) - 30f, -30f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(20f, 0f)
+                            starWidget.setPosition(50f, 0f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL8.style) {
@@ -178,7 +178,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(8f)
                             dots.setPosition(0f, -180f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(100f, -50f)
+                            starWidget.setPosition(130f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL9.style) {
@@ -188,7 +188,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) - 40f, -120f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(0f, -50f)
+                            starWidget.setPosition(30f, -50f)
                         }
                     }
                 }

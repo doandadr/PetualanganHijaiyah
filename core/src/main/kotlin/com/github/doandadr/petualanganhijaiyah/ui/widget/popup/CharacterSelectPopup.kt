@@ -50,7 +50,7 @@ class CharacterSelectPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@CharacterSelectPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
@@ -60,7 +60,7 @@ class CharacterSelectPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@CharacterSelectPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
