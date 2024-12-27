@@ -25,7 +25,7 @@ enum class Hijaiyah(
         SoundAsset.V01_ALIF_U
     ),
     BA("ب", 11, "02", "ba", 5, SoundAsset.V02_BA, SoundAsset.V02_BA_A, SoundAsset.V02_BA_I, SoundAsset.V02_BA_U),
-    TA("ت", 12, "03", "ta", 6, SoundAsset.V03_TA, SoundAsset.V03_TA_A, SoundAsset.V03_TA_I, SoundAsset.V03_TA_U),
+    TA("ت", 12, "03", "ta", 7, SoundAsset.V03_TA, SoundAsset.V03_TA_A, SoundAsset.V03_TA_I, SoundAsset.V03_TA_U),
     TSA(
         "ث", 13,
         "04", "tsa", 4,
@@ -60,7 +60,7 @@ enum class Hijaiyah(
     ),
     DAL(
         "د", 17,
-        "08", "dal", 7,
+        "08", "dal", 10,
         SoundAsset.V08_DAL,
         SoundAsset.V08_DAL_A,
         SoundAsset.V08_DAL_I,
@@ -68,7 +68,7 @@ enum class Hijaiyah(
     ),
     DZAL(
         "ذ", 18,
-        "09", "dzal", 5,
+        "09", "dzal", 7,
         SoundAsset.V09_DZAL,
         SoundAsset.V09_DZAL_A,
         SoundAsset.V09_DZAL_I,
