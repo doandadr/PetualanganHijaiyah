@@ -237,9 +237,8 @@ class DragAndDropStage(
     }
 
     companion object {
-        private const val ENTRY_COUNT = 3
-
         private val log = logger<DragAndDropStage>()
+        private const val ENTRY_COUNT = 3
     }
 }
 

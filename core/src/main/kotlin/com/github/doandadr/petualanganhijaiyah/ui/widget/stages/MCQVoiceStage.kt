@@ -151,9 +151,8 @@ class MCQVoiceStage(
 
 
     companion object {
-        private const val ENTRY_COUNT = 3
-
         private val log = logger<MCQVoiceStage>()
+        private const val ENTRY_COUNT = 3
     }
 }
 

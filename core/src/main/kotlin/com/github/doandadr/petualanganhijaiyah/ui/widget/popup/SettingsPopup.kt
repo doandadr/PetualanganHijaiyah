@@ -36,7 +36,6 @@ import ktx.scene2d.slider
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 
-private val log = logger<SettingsPopup>()
 
 class SettingsPopup(
     private val preferences: Preferences,
@@ -149,6 +148,7 @@ class SettingsPopup(
     }
 
     companion object {
+        private val log = logger<SettingsPopup>()
         private const val TOGGLE_SIZE = 100f
         private const val SLIDER_WIDTH = 300f
         private const val OPTION_PADDING = 50f

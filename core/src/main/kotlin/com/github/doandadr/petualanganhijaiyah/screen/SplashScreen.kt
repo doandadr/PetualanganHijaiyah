@@ -113,7 +113,6 @@ class SplashScreen(game: Main) : BaseScreen(game) {
 
     companion object {
         private val log = logger<SplashScreen>()
-
         private const val SPLASH_DELAY_SECONDS = 1f
     }
 }

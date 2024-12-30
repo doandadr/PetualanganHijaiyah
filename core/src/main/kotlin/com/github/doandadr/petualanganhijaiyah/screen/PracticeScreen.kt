@@ -20,7 +20,6 @@ import ktx.scene2d.imageButton
 import ktx.scene2d.label
 import ktx.scene2d.table
 
-private val log = logger<PracticeScreen>()
 
 class PracticeScreen(game: Main) : BaseScreen(game) {
 
@@ -66,5 +65,9 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                 }
             }
         }
+    }
+
+    companion object {
+        private val log = logger<PracticeScreen>()
     }
 }

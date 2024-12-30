@@ -154,9 +154,8 @@ class MCQStage(
     }
 
     companion object {
-        private const val ENTRY_COUNT = 3
-
         private val log = logger<MCQStage>()
+        private const val ENTRY_COUNT = 3
     }
 }
 

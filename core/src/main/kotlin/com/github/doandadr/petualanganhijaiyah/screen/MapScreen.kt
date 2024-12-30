@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Timer
 import com.github.doandadr.petualanganhijaiyah.Main
+import com.github.doandadr.petualanganhijaiyah.SCREEN_W
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
@@ -26,7 +27,6 @@ import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
-import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown
@@ -43,7 +43,6 @@ import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.vis.floatingGroup
 
-private val log = logger<MapScreen>()
 
 class MapScreen(game: Main) : BaseScreen(game) {
     private lateinit var scrollView: ScrollPane
@@ -302,6 +301,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
             updateVisualScroll()
             scrollPercentY = 1 - (levelButtons[(levelsSavedData.findLast { it.hasCompleted }?.number
                 ?: 1) - 1].y / stage.height)
+            log.debug { "ScrollY percent: $scrollPercentY" }
         }
 
         preferences.flush {
@@ -343,5 +343,10 @@ class MapScreen(game: Main) : BaseScreen(game) {
             levelButtons.first().starWidget.setState(StarWidget.StarState.HIDDEN)
             levelButtons.first().setState(LevelButton.LevelButtonState.HIDDEN)
         }
+    }
+
+    companion object {
+        private val log = logger<MapScreen>()
+        private fun centerX(x:Float) = SCREEN_W /2f-x/2f
     }
 }

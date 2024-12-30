@@ -327,8 +327,8 @@ class MatchLineStage(
     }
 
     companion object {
-        private const val ENTRY_COUNT = 5
         private val log = logger<MatchLineStage>()
+        private const val ENTRY_COUNT = 5
     }
 }
 

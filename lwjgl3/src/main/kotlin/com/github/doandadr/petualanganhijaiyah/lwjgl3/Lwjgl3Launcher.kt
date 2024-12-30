@@ -23,6 +23,8 @@ fun main() {
         // figma (360, 706)
         // phone (432, 960)
         // real phone (1080, 1920)
+        // 22/9 (393, 960)
+        // 16/9 (540, 960)
         setWindowedMode(432, 960)
         setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
     })
