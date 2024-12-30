@@ -386,7 +386,7 @@ class LevelScreen(
         } else {
             currentStageIndex = 0
             currentRound = 1
-            levelComplete(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
+            gameEventManager.dispatchLevelCompleteEvent(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
         }
     }
 
@@ -508,7 +508,7 @@ class LevelScreen(
             stage.isDebugAll = !stage.isDebugAll
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             // finish level
-            levelComplete(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
+            gameEventManager.dispatchLevelCompleteEvent(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
             // restart level
             loadLevel(currentLevel.number)
