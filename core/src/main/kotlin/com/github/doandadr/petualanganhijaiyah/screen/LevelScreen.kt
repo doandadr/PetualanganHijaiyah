@@ -123,12 +123,12 @@ class LevelScreen(
                 setFillParent(true)
 
                 timer = timerWidget(audioService, gameEventManager) {
-                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN)
+                    it.padLeft(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expand()
                         .align(Align.topLeft)
                 }
 
                 playerInfo = playerInfoWidget(preferences) {
-                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN)
+                    it.padRight(PADDING_INNER_SCREEN).padTop(PADDING_INNER_SCREEN).expand()
                         .align(Align.topRight)
                 }
 
