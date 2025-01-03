@@ -44,33 +44,36 @@ enum class TutorialType(
 
     NAME_CHANGE(listOf("Ketikkan namamu disini!")),
 
-    MAP_LEVEL1(listOf("Click Level 1 untuk\nmemulai permainan!")),
-    MAP_LEVEL9(listOf("Semangat! sebentar lagi\nkamu dapat menyelesaikan misi")),
+    MAP_LEVEL1(listOf("Klik Level 1 untuk\nmemulai permainan!")),
+    MAP_LEVEL9(listOf("Semangat! sebentar lagi\nkamu dapat menyelesaikan\npetualangan")),
 
     PRACTICE_NEXT(listOf("Lanjut")),
-    PRACTICE_PREVIOUS(listOf("Sebelumnya")),
+    PRACTICE_PREVIOUS(listOf("Kembali")),
 
-    MATCH_START(listOf("Tarik garis dari\nhuruf hijaiyah,")),
-    MATCH_END(listOf("Lalu arahkan sesuai eja-an\nhuruf hijaiyah tersebut!")),
+    MATCH_START(listOf("Tarik garis dari\n kotak hijaiyah,")),
+    MATCH_END(listOf("Lalu arahkan\nsesuai ejaannya!")),
 
     DRAW_START(
         listOf(
-            "Gambarlah huruf hijaiyah\ndi dalam kotak kosong,",
-            "sesuai dengan yang tertulis\ndi kotak kecil."
+            "Tulislah huruf hijaiyah\ndi dalam kotak putih,",
+            "sesuai dengan\nyang tertulis\ndi kotak hijau."
         )
     ),
     VOICE_START(listOf("Klik disini untuk\nmendengarkan bunyi\nhuruf hijaiyah nya")),
     VOICE_OPTION(
         listOf(
-            "Lalu, pilihlah salah\nsatu huruf hijaiyah",
-            "yang sesuai dengan\nbunyi yang kamu dengar!"
+            "Lalu, pilihlah salah\nsatu huruf hijaiyah\nyang sesuai dengan\nbunyi yang kamu dengar!"
         )
     ),
     DRAG_DROP_START(listOf("Pilih huruf hijaiyah")),
     DRAG_DROP_END(listOf("Lalu geret ke\ncetakan yang sesuai!")),
 
     JOIN_START(listOf("Perhatikan huruf hijaiyah\ntersambung berikut!")),
-    JOIN_OPTION(listOf("Pilih salah satu\nyang merupakan", "huruf-huruf bagiannya\njika terpisah!")),
+    JOIN_OPTION(listOf("Pilih salah satu\nyang merupakan\nhuruf-huruf bagiannya\njika terpisah!")),
+
+    DRAW_CLEAR(listOf("Klik tombol ini\nuntuk menghapus tulisan!")),
+    DRAW_SKIP(listOf("Klik tombol ini\nuntuk ganti huruf!")),
+    DRAW_ANSWER(listOf("Setelah menulis,\njawab di sini!")),
 }
 
 class Tutorial(
