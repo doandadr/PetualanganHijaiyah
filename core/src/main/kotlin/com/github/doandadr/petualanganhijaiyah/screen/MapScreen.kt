@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Timer
 import com.github.doandadr.petualanganhijaiyah.Main
+import com.github.doandadr.petualanganhijaiyah.SCREEN_W
 import com.github.doandadr.petualanganhijaiyah.asset.Buttons
 import com.github.doandadr.petualanganhijaiyah.asset.Drawables
 import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
@@ -26,7 +27,6 @@ import com.github.doandadr.petualanganhijaiyah.ui.widget.LevelButton
 import com.github.doandadr.petualanganhijaiyah.ui.widget.StarWidget
 import com.github.doandadr.petualanganhijaiyah.ui.widget.TutorialType
 import com.github.doandadr.petualanganhijaiyah.ui.widget.levelButton
-import com.github.doandadr.petualanganhijaiyah.util.centerX
 import ktx.actors.onChange
 import ktx.actors.onChangeEvent
 import ktx.actors.onTouchDown
@@ -43,7 +43,6 @@ import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.vis.floatingGroup
 
-private val log = logger<MapScreen>()
 
 class MapScreen(game: Main) : BaseScreen(game) {
     private lateinit var scrollView: ScrollPane
@@ -68,7 +67,6 @@ class MapScreen(game: Main) : BaseScreen(game) {
                 showTutorials()
             }
         }, 0.3f)
-
     }
 
     private fun showTutorials() {
@@ -91,7 +89,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setupUI() {
-        val bgMap = assets[TextureAsset.MAP.descriptor]
+        val bgMap = TextureRegionDrawable(assets[TextureAsset.MAP.descriptor])
 
         stage.actors {
             scrollView = scrollPane {
@@ -101,19 +99,19 @@ class MapScreen(game: Main) : BaseScreen(game) {
                 updateVisualScroll()
 
                 table {
-                    background(TextureRegionDrawable(bgMap))
+                    background(bgMap)
                     align(Align.bottomLeft)
 
                     floatingGroup {
                         setFillParent(true)
-
+                        levelButtons.clear()
                         levelButtons += levelButton(Buttons.LEVEL1.style) {
                             setPosition(-30f, -40f)
                             text.setPosition(570f, 380f)
                             rotateText(5f)
                             dots.setPosition(centerX(width) - 20f, 100f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(450f, 200f)
+                            starWidget.setPosition(480f, 200f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL2.style) {
@@ -123,7 +121,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) - 10f, -80f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(0f, -50f)
+                            starWidget.setPosition(30f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL3.style) {
@@ -132,7 +130,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(-8f)
                             dots.setPosition(-130f, -100f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(0f, -50f)
+                            starWidget.setPosition(30f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL4.style) {
@@ -142,7 +140,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) + 120f, -50f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(150f, -50f)
+                            starWidget.setPosition(180f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL5.style) {
@@ -150,7 +148,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             text.setPosition(370f, 300f)
                             dots.setPosition(centerX(width) - 100f, -100f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(250f, 150f)
+                            starWidget.setPosition(280f, 150f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL6.style) {
@@ -159,7 +157,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(5f)
                             dots.setPosition(-120f, -120f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(20f, -50f)
+                            starWidget.setPosition(50f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL7.style) {
@@ -169,7 +167,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) - 30f, -30f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(20f, 0f)
+                            starWidget.setPosition(50f, 0f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL8.style) {
@@ -178,7 +176,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             rotateText(8f)
                             dots.setPosition(0f, -180f)
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(100f, -50f)
+                            starWidget.setPosition(130f, -50f)
                         }
 
                         levelButtons += levelButton(Buttons.LEVEL9.style) {
@@ -188,7 +186,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                             dots.setPosition(centerX(width) - 40f, -120f)
                             dots.flipHorizontal()
                             starWidget.setScale(SCALE_MAP_STAR)
-                            starWidget.setPosition(0f, -50f)
+                            starWidget.setPosition(30f, -50f)
                         }
                     }
                 }
@@ -238,7 +236,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
                     setOrigin(Align.center)
                     onTouchDown {
                         this.clearActions()
-                        this += Animations.pulseAnimation()
+                        this += Animations.pulse()
                         audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {
@@ -249,77 +247,73 @@ class MapScreen(game: Main) : BaseScreen(game) {
         }
     }
 
-    override fun hide() {
-        super.hide()
-        levelButtons.clear()
-    }
+private fun loadLevels() {
+    val levelsSavedData =
+        preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
 
-    private fun loadLevels() {
-        val levelsSavedData =
-            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
-
-        levelButtons.forEachIndexed { index, levelButton ->
-            levelButton.setLevel(levels[index])
-            val number = index + 1
-            val level = levelsSavedData.find { it.number == number }
-                ?: LevelSavedData(number = number).also {
-                    levelsSavedData.add(it)
-                }
-
-            when {
-                level.hasCompleted -> {
-                    levelButton.setState(LevelButton.LevelButtonState.PASSED)
-                    levelButton.setStarCount(level.starCount)
-                    setOnTouchEvent(levelButton, index)
-                }
-
-                level.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true -> {
-                    levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
-                    levelButton.setStarCount(0)
-                    setOnTouchEvent(levelButton, index)
-                }
-
-                level.number == 2 || levelsSavedData.find { it.number == number - 2 }?.hasCompleted == true -> {
-                    levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
-                    levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
-                }
-
-                else -> {
-                    levelButton.setState(LevelButton.LevelButtonState.HIDDEN)
-                }
+    levelButtons.forEachIndexed { index, levelButton ->
+        levelButton.setLevel(levels[index])
+        val number = index + 1
+        val level = levelsSavedData.find { it.number == number }
+            ?: LevelSavedData(number = number).also {
+                levelsSavedData.add(it)
             }
 
-            log.debug { "Show ${levels[index].name}, completed? ${level.hasCompleted} with saved score:${level.highScore} star:${level.starCount} time:${level.recordTime}" }
+        when {
+            level.hasCompleted -> {
+                levelButton.setState(LevelButton.LevelButtonState.PASSED)
+                levelButton.setStarCount(level.starCount)
+                setListener(levelButton, index)
+            }
+
+            level.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true -> {
+                levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
+                levelButton.setStarCount(0)
+                setListener(levelButton, index)
+            }
+
+            level.number == 2 || levelsSavedData.find { it.number == number - 2 }?.hasCompleted == true -> {
+                levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
+                levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
+            }
+
+            else -> {
+                levelButton.setState(LevelButton.LevelButtonState.HIDDEN)
+            }
         }
 
-        totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }
-            .toString())
-        totalScore.setText(
-            levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString()
-        )
-
-        scrollView.run {
-            updateVisualScroll()
-            scrollPercentY = 1 - (levelButtons[(levelsSavedData.findLast { it.hasCompleted }?.number
-                ?: 1) - 1].y / stage.height)
-        }
-
-        preferences.flush {
-            this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
-        }
+        log.debug { "Show ${levels[index].name}, completed? ${level.hasCompleted} with saved score:${level.highScore} star:${level.starCount} time:${level.recordTime}" }
     }
 
-    private fun setOnTouchEvent(levelButton: LevelButton, index: Int) {
-        levelButton.onTouchDown {
-            this.clearActions()
-            this += Animations.pulseAnimation(scale = 0.1f)
-            audioService.play(SoundAsset.BUTTON_POP)
-        }
-        levelButton.onChangeEvent {
-            preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
-            transitionOut<LevelScreen>()
-        }
+    totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }
+        .toString())
+    totalScore.setText(
+        levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString()
+    )
+
+    scrollView.run {
+        updateVisualScroll()
+        scrollPercentY = 1 - (levelButtons[(levelsSavedData.findLast { it.hasCompleted }?.number
+            ?: 1) - 1].y / stage.height)
+        log.debug { "ScrollY percent: $scrollPercentY" }
     }
+
+    preferences.flush {
+        this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
+    }
+}
+
+private fun setListener(levelButton: LevelButton, index: Int) {
+    levelButton.onTouchDown {
+        this.clearActions()
+        this += Animations.pulse(scale = 0.1f)
+        audioService.play(SoundAsset.BUTTON_POP)
+    }
+    levelButton.onChangeEvent {
+        preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
+        transitionOut<LevelScreen>()
+    }
+}
 
     override fun debugMode() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
@@ -343,5 +337,10 @@ class MapScreen(game: Main) : BaseScreen(game) {
             levelButtons.first().starWidget.setState(StarWidget.StarState.HIDDEN)
             levelButtons.first().setState(LevelButton.LevelButtonState.HIDDEN)
         }
+    }
+
+    companion object {
+        private val log = logger<MapScreen>()
+        private fun centerX(x:Float) = SCREEN_W /2f-x/2f
     }
 }

@@ -58,16 +58,16 @@ class NameChangePopup(
             setOrigin(Align.center)
             onTouchDown {
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulse()
                 this@NameChangePopup.audioService.play(SoundAsset.BUTTON_POP)
             }
         }
 
         setupListeners()
-        setupTutorial()
+        showTutorial()
     }
 
-    private fun setupTutorial() {
+    private fun showTutorial() {
         Gdx.app.postRunnable {
             gameEventManager.dispatchShowTutorialEvent(nameField, TutorialType.NAME_CHANGE)
         }

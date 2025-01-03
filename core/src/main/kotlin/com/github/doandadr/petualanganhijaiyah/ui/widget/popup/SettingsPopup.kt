@@ -36,7 +36,6 @@ import ktx.scene2d.slider
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 
-private val log = logger<SettingsPopup>()
 
 class SettingsPopup(
     private val preferences: Preferences,
@@ -61,6 +60,7 @@ class SettingsPopup(
 
         row()
         table {
+            it.spaceTop(20f).spaceTop(40f).prefWidth(500f).prefHeight(600f)
             background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
             align(Align.top)
 
@@ -71,7 +71,7 @@ class SettingsPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
@@ -88,7 +88,7 @@ class SettingsPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
@@ -107,11 +107,10 @@ class SettingsPopup(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
-            it.spaceTop(20f).spaceTop(40f).prefWidth(500f).prefHeight(600f)
         }
 
         setupListeners()
@@ -149,6 +148,7 @@ class SettingsPopup(
     }
 
     companion object {
+        private val log = logger<SettingsPopup>()
         private const val TOGGLE_SIZE = 100f
         private const val SLIDER_WIDTH = 300f
         private const val OPTION_PADDING = 50f

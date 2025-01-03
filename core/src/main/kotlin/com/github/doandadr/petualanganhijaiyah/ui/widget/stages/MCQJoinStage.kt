@@ -62,7 +62,7 @@ class MCQJoinStage(
             setOrigin(Align.center)
             onTouchDown {
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulse()
                 this@MCQJoinStage.audioService.play(SoundAsset.BUTTON_POP)
             }
             onChange {
@@ -94,7 +94,7 @@ class MCQJoinStage(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@MCQJoinStage.audioService.play(SoundAsset.TOUCH)
                 }
                 onChange {

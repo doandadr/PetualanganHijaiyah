@@ -1,58 +1,81 @@
 package com.github.doandadr.petualanganhijaiyah.ui.animation
 
 import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.hide
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.rotateBy
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleBy
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.show
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import ktx.actors.plus
 
 object Animations {
-    fun starAnimation(duration: Float = 0.5f): SequenceAction {
-        val showStart = Actions.show()
-        val alphaStart = Actions.alpha(0f)
-        val moveByStart = Actions.moveBy(-20f, -20f)
-        val scaleToStart = Actions.scaleBy(4f, 4f)
-        val rotateByStart = Actions.rotateBy(-360f)
+    fun star(duration: Float = 0.5f): SequenceAction {
+        val showStart = show()
+        val alphaStart = alpha(0f)
+        val moveByStart = moveBy(-20f, -20f)
+        val scaleToStart = scaleBy(4f, 4f)
+        val rotateByStart = rotateBy(-360f)
         val start =
-            Actions.parallel(showStart, alphaStart, moveByStart, scaleToStart, rotateByStart)
+            parallel(showStart, alphaStart, moveByStart, scaleToStart, rotateByStart)
 
-        val alpha = Actions.fadeIn(duration)
-        val moveBy = Actions.moveBy(20f, 20f, duration, Interpolation.fade)
-        val scaleTo = Actions.scaleBy(-4f, -4f, duration, Interpolation.fade)
-        val rotateBy = Actions.rotateBy(360f, duration, Interpolation.fade)
-        val animation = Actions.parallel(alpha, moveBy, scaleTo, rotateBy)
+        val alpha = fadeIn(duration)
+        val moveBy = moveBy(20f, 20f, duration, Interpolation.fade)
+        val scaleBy = scaleBy(-4f, -4f, duration, Interpolation.fade)
+        val rotateBy = rotateBy(360f, duration, Interpolation.fade)
+        val animation = parallel(alpha, moveBy, scaleBy, rotateBy)
 
         return start + animation
     }
 
-    fun pulseAnimation(
+    fun pulse(
         scale: Float = 0.2f,
         initScale: Float = 1f,
         duration: Float = 0.3f
     ): SequenceAction {
-        val scaleTo = Actions.scaleTo(initScale, initScale)
-        val scaleUp = Actions.scaleBy(scale, scale, duration, Interpolation.fade)
-        val scaleDown = Actions.scaleBy(-scale, -scale, duration, Interpolation.fade)
+        val scaleTo = scaleTo(initScale, initScale)
+        val scaleUp = scaleBy(scale, scale, duration, Interpolation.fade)
+        val scaleDown = scaleBy(-scale, -scale, duration, Interpolation.fade)
 
         return scaleTo + scaleUp + scaleDown
     }
 
-    fun fadeInOutAnimation(
+    fun fadeInOut(
         fadeDuration: Float = 0.2f,
         stillDuration: Float = 0.5f
     ): SequenceAction {
-        val fadeIn = Actions.fadeIn(fadeDuration)
+        val fadeIn = fadeIn(fadeDuration)
         val delay = DelayAction(stillDuration)
-        val fadeOut = Actions.fadeOut(fadeDuration)
+        val fadeOut = fadeOut(fadeDuration)
 
         return fadeIn + delay + fadeOut
     }
 
-    fun popInAnimation(duration: Float = 0.3f): SequenceAction {
-        val initScale = Actions.scaleTo(0.1f, 0.1f)
-        val show = Actions.show()
-        val popIn = Actions.scaleTo(1f, 1f, duration, Interpolation.fade)
+    fun popIn(duration: Float = 0.3f, scale: Float = 1f): SequenceAction {
+        val initScale = scaleTo(0.1f, 0.1f)
+        val show = show()
+        val popIn = scaleTo(scale, scale, duration, Interpolation.fade)
 
         return initScale + show + popIn
+    }
+
+    fun appear(duration: Float = 0.5f): SequenceAction {
+        val show = show()
+        val fadeIn = fadeIn(duration)
+
+        return show + fadeIn
+    }
+
+    fun disappear(duration: Float = 0.5f): SequenceAction {
+        val fadeOut = fadeOut(duration)
+        val hide = hide()
+
+        return fadeOut + hide
     }
 }

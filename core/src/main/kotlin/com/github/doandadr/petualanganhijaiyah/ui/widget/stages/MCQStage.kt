@@ -85,7 +85,7 @@ class MCQStage(
             setOrigin(Align.center)
             onTouchDown {
                 this.clearActions()
-                this += Animations.pulseAnimation()
+                this += Animations.pulse()
                 this@MCQStage.audioService.play(SoundAsset.BUTTON_POP)
             }
             onChange {
@@ -131,7 +131,7 @@ class MCQStage(
                 setOrigin(Align.center)
                 onTouchDown {
                     this.clearActions()
-                    this += Animations.pulseAnimation()
+                    this += Animations.pulse()
                     this@MCQStage.audioService.play(SoundAsset.TOUCH)
                 }
                 onChange {
@@ -154,9 +154,8 @@ class MCQStage(
     }
 
     companion object {
-        private const val ENTRY_COUNT = 3
-
         private val log = logger<MCQStage>()
+        private const val ENTRY_COUNT = 3
     }
 }
 

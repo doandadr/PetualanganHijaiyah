@@ -122,7 +122,7 @@ class FinishScreen(game: Main): BaseScreen(game) {
                     setOrigin(Align.center)
                     onTouchDown {
                         this.clearActions()
-                        this += Animations.pulseAnimation()
+                        this += Animations.pulse()
                         audioService.play(SoundAsset.BUTTON_POP)
                     }
                     onChange {

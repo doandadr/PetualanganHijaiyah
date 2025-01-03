@@ -172,13 +172,18 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         isScored = true,
         stages = listOf(
             StageModel(
-                type = StageType.MATCH_LINE,
-                choices = Difficulty.HARD.choicesMatch,
-                rounds = 2
+                type = StageType.MCQ,
+                choices = Difficulty.HARD.choices,
+                rounds = 3
             ),
             StageModel(
-                type = StageType.DRAWING,
-                choices = 1,
+                type = StageType.MCQ_VOICE,
+                choices = Difficulty.HARD.choices,
+                rounds = 3
+            ),
+            StageModel(
+                type = StageType.MATCH_LINE,
+                choices = Difficulty.HARD.choicesMatch,
                 rounds = 2
             ),
         ),
@@ -195,18 +200,18 @@ val levelsData: Array<LevelModel> = gdxArrayOf(
         isScored = true,
         stages = listOf(
             StageModel(
-                type = StageType.MCQ_VOICE,
-                choices = Difficulty.HARD.choices,
-                rounds = 3
-            ),
-            StageModel(
                 type = StageType.DRAG_AND_DROP,
                 choices = Difficulty.HARD.choices,
-                rounds = 2
+                rounds = 1
             ),
             StageModel(
                 type = StageType.MCQ_JOIN,
                 choices = Difficulty.HARD.choices,
+                rounds = 2
+            ),
+            StageModel(
+                type = StageType.DRAWING,
+                choices = 1,
                 rounds = 2
             ),
         ),
