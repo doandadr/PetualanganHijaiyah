@@ -235,6 +235,7 @@ class PracticeStage(
                 gameEventManager.dispatchShowTutorialEvent(nextButton, TutorialType.PRACTICE_NEXT)
             if (currentEntry == Hijaiyah.BA)
                 gameEventManager.dispatchShowTutorialEvent(prevButton, TutorialType.PRACTICE_PREVIOUS)
+            gameEventManager.dispatchShowTutorialEvent(voiceButton, TutorialType.PRACTICE_VOICE)
         }
     }
 

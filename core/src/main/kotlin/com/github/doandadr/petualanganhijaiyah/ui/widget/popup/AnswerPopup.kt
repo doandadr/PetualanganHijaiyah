@@ -27,7 +27,7 @@ class AnswerPopup(
 ) : Table(skin), KTable {
     private val character = preferences[PrefKey.PLAYER.key, PlayerModel()].character
     private val charImg = if (character == "girl") Drawables.GIRL_SELECT.drawable else Drawables.BOY_SELECT.drawable
-    private val bannerText = if (state==State.CORRECT) "BENAR" else "KURANG TEPAT"
+    private val bannerText = if (state==State.CORRECT) "BENAR" else "SALAH"
     private val bannerStyle = if (state == State.CORRECT) Labels.BANNER_GREEN.style else Labels.BANNER_RED.style
 
     init {

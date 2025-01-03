@@ -1,5 +1,6 @@
 package com.github.doandadr.petualanganhijaiyah.ui.widget
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.IntAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -14,6 +15,7 @@ import com.github.doandadr.petualanganhijaiyah.asset.ImageButtons
 import com.github.doandadr.petualanganhijaiyah.asset.Labels
 import com.github.doandadr.petualanganhijaiyah.asset.SoundAsset
 import com.github.doandadr.petualanganhijaiyah.audio.AudioService
+import com.github.doandadr.petualanganhijaiyah.event.GameEventManager
 import com.github.doandadr.petualanganhijaiyah.ui.animation.Animations
 import com.github.doandadr.petualanganhijaiyah.ui.values.BANNER_TOP_PADDING
 import com.github.doandadr.petualanganhijaiyah.ui.values.PADDING_INNER_SCREEN
@@ -38,6 +40,7 @@ class LevelFinishView(
     private val time: Float,
     private val state: State,
     private val audioService: AudioService,
+    private val gameEventManager: GameEventManager,
     private val isBestScore: Boolean,
     private val isBestTime: Boolean,
     skin: Skin = Scene2DSkin.defaultSkin
@@ -157,6 +160,16 @@ class LevelFinishView(
         }
 
         loadWidget()
+        showTutorial()
+    }
+
+    private fun showTutorial() {
+        Gdx.app.postRunnable {
+            gameEventManager.dispatchShowTutorialEvent(menuButton, TutorialType.LEVEL_FINISH_MENU)
+            gameEventManager.dispatchShowTutorialEvent(repeatButton, TutorialType.LEVEL_FINISH_REPEAT)
+            if (nextButton.isVisible)
+                gameEventManager.dispatchShowTutorialEvent(nextButton, TutorialType.LEVEL_FINISH_NEXT)
+        }
     }
 
     private fun loadWidget() {
@@ -198,6 +211,7 @@ inline fun <S> KWidget<S>.levelFinishView(
     time: Float,
     state: LevelFinishView.State,
     audioService: AudioService,
+    gameEventManager: GameEventManager,
     bestScore: Boolean = false,
     bestTime: Boolean = false,
     init: LevelFinishView.(S) -> Unit = {}
@@ -208,6 +222,7 @@ inline fun <S> KWidget<S>.levelFinishView(
         time,
         state,
         audioService,
+        gameEventManager,
         bestScore,
         bestTime,
     ), init

@@ -236,6 +236,7 @@ class LevelScreen(
                             currentRecordTime,
                             LevelFinishView.State.FINISH,
                             audioService,
+                            gameEventManager,
                             newBestScore,
                             newBestTime
                         ) {
@@ -262,7 +263,8 @@ class LevelScreen(
                         currentStar,
                         currentRecordTime,
                         LevelFinishView.State.FAILED,
-                        audioService
+                        audioService,
+                        gameEventManager
                     ) {
                         menuButton.onChangeEvent {
                             transitionOut<MapScreen>()
@@ -386,7 +388,7 @@ class LevelScreen(
         } else {
             currentStageIndex = 0
             currentRound = 1
-            gameEventManager.dispatchLevelCompleteEvent(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
+            levelComplete(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
         }
     }
 
@@ -508,7 +510,7 @@ class LevelScreen(
             stage.isDebugAll = !stage.isDebugAll
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             // finish level
-            gameEventManager.dispatchLevelCompleteEvent(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
+            levelComplete(timer.bar.levelScore, timer.bar.levelStars, timer.elapsedSeconds)
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
             // restart level
             loadLevel(currentLevel.number)

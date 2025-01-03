@@ -74,6 +74,12 @@ enum class TutorialType(
     DRAW_CLEAR(listOf("Klik tombol ini\nuntuk menghapus tulisan!")),
     DRAW_SKIP(listOf("Klik tombol ini\nuntuk ganti huruf!")),
     DRAW_ANSWER(listOf("Setelah menulis,\njawab di sini!")),
+
+    PRACTICE_VOICE(listOf("Klik untuk\nmendengarkan suara!")),
+
+    LEVEL_FINISH_MENU(listOf("Kembali ke peta")),
+    LEVEL_FINISH_REPEAT(listOf("Ulangi level")),
+    LEVEL_FINISH_NEXT(listOf("Ke level selanjutnya")),
 }
 
 class Tutorial(
