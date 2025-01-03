@@ -67,7 +67,6 @@ class MapScreen(game: Main) : BaseScreen(game) {
                 showTutorials()
             }
         }, 0.3f)
-
     }
 
     private fun showTutorials() {
@@ -90,7 +89,7 @@ class MapScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setupUI() {
-        val bgMap = assets[TextureAsset.MAP.descriptor]
+        val bgMap = TextureRegionDrawable(assets[TextureAsset.MAP.descriptor])
 
         stage.actors {
             scrollView = scrollPane {
@@ -100,12 +99,12 @@ class MapScreen(game: Main) : BaseScreen(game) {
                 updateVisualScroll()
 
                 table {
-                    background(TextureRegionDrawable(bgMap))
+                    background(bgMap)
                     align(Align.bottomLeft)
 
                     floatingGroup {
                         setFillParent(true)
-
+                        levelButtons.clear()
                         levelButtons += levelButton(Buttons.LEVEL1.style) {
                             setPosition(-30f, -40f)
                             text.setPosition(570f, 380f)
@@ -248,78 +247,73 @@ class MapScreen(game: Main) : BaseScreen(game) {
         }
     }
 
-    override fun hide() {
-        super.hide()
-        levelButtons.clear()
-    }
+private fun loadLevels() {
+    val levelsSavedData =
+        preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
 
-    private fun loadLevels() {
-        val levelsSavedData =
-            preferences[PrefKey.LEVEL_SAVE_DATA.key, mutableListOf<LevelSavedData>()].apply { this.sortBy { it.number } }
-
-        levelButtons.forEachIndexed { index, levelButton ->
-            levelButton.setLevel(levels[index])
-            val number = index + 1
-            val level = levelsSavedData.find { it.number == number }
-                ?: LevelSavedData(number = number).also {
-                    levelsSavedData.add(it)
-                }
-
-            when {
-                level.hasCompleted -> {
-                    levelButton.setState(LevelButton.LevelButtonState.PASSED)
-                    levelButton.setStarCount(level.starCount)
-                    setOnTouchEvent(levelButton, index)
-                }
-
-                level.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true -> {
-                    levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
-                    levelButton.setStarCount(0)
-                    setOnTouchEvent(levelButton, index)
-                }
-
-                level.number == 2 || levelsSavedData.find { it.number == number - 2 }?.hasCompleted == true -> {
-                    levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
-                    levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
-                }
-
-                else -> {
-                    levelButton.setState(LevelButton.LevelButtonState.HIDDEN)
-                }
+    levelButtons.forEachIndexed { index, levelButton ->
+        levelButton.setLevel(levels[index])
+        val number = index + 1
+        val level = levelsSavedData.find { it.number == number }
+            ?: LevelSavedData(number = number).also {
+                levelsSavedData.add(it)
             }
 
-            log.debug { "Show ${levels[index].name}, completed? ${level.hasCompleted} with saved score:${level.highScore} star:${level.starCount} time:${level.recordTime}" }
+        when {
+            level.hasCompleted -> {
+                levelButton.setState(LevelButton.LevelButtonState.PASSED)
+                levelButton.setStarCount(level.starCount)
+                setListener(levelButton, index)
+            }
+
+            level.number == 1 || levelsSavedData.find { it.number == number - 1 }?.hasCompleted == true -> {
+                levelButton.setState(LevelButton.LevelButtonState.AVAILABLE)
+                levelButton.setStarCount(0)
+                setListener(levelButton, index)
+            }
+
+            level.number == 2 || levelsSavedData.find { it.number == number - 2 }?.hasCompleted == true -> {
+                levelButton.setState(LevelButton.LevelButtonState.INACCESSIBLE)
+                levelButton.starWidget.setState(StarWidget.StarState.HIDDEN)
+            }
+
+            else -> {
+                levelButton.setState(LevelButton.LevelButtonState.HIDDEN)
+            }
         }
 
-        totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }
-            .toString())
-        totalScore.setText(
-            levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString()
-        )
-
-        scrollView.run {
-            updateVisualScroll()
-            scrollPercentY = 1 - (levelButtons[(levelsSavedData.findLast { it.hasCompleted }?.number
-                ?: 1) - 1].y / stage.height)
-            log.debug { "ScrollY percent: $scrollPercentY" }
-        }
-
-        preferences.flush {
-            this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
-        }
+        log.debug { "Show ${levels[index].name}, completed? ${level.hasCompleted} with saved score:${level.highScore} star:${level.starCount} time:${level.recordTime}" }
     }
 
-    private fun setOnTouchEvent(levelButton: LevelButton, index: Int) {
-        levelButton.onTouchDown {
-            this.clearActions()
-            this += Animations.pulse(scale = 0.1f)
-            audioService.play(SoundAsset.BUTTON_POP)
-        }
-        levelButton.onChangeEvent {
-            preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
-            transitionOut<LevelScreen>()
-        }
+    totalStar.setText(levelsSavedData.fold(0) { sum, level -> sum + level.starCount }
+        .toString())
+    totalScore.setText(
+        levelsSavedData.fold(0f) { sum, level -> sum + level.highScore }.toInt().toString()
+    )
+
+    scrollView.run {
+        updateVisualScroll()
+        scrollPercentY = 1 - (levelButtons[(levelsSavedData.findLast { it.hasCompleted }?.number
+            ?: 1) - 1].y / stage.height)
+        log.debug { "ScrollY percent: $scrollPercentY" }
     }
+
+    preferences.flush {
+        this[PrefKey.LEVEL_SAVE_DATA.key] = levelsSavedData
+    }
+}
+
+private fun setListener(levelButton: LevelButton, index: Int) {
+    levelButton.onTouchDown {
+        this.clearActions()
+        this += Animations.pulse(scale = 0.1f)
+        audioService.play(SoundAsset.BUTTON_POP)
+    }
+    levelButton.onChangeEvent {
+        preferences.flush { this[PrefKey.CURRENT_LEVEL.key] = levels[index].number }
+        transitionOut<LevelScreen>()
+    }
+}
 
     override fun debugMode() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {

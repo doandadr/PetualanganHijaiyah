@@ -64,10 +64,10 @@ class NameChangePopup(
         }
 
         setupListeners()
-        setupTutorial()
+        showTutorial()
     }
 
-    private fun setupTutorial() {
+    private fun showTutorial() {
         Gdx.app.postRunnable {
             gameEventManager.dispatchShowTutorialEvent(nameField, TutorialType.NAME_CHANGE)
         }

@@ -54,7 +54,6 @@ class HomeScreen(game: Main) : BaseScreen(game) {
     private lateinit var bookButton: ImageButton
     private var popup: Table = Table()
     private var layout: Table = Table()
-    private val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
     enum class PopupState {
         NONE,
@@ -69,7 +68,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
         setupAudio()
         setupUI()
         transitionIn()
-        setupTutorials()
+        showTutorial()
     }
 
     private fun setupAudio() {
@@ -80,6 +79,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
 
     private fun setupUI() {
         val bgHome = TextureRegionDrawable(assets[TextureAsset.HOME.descriptor])
+        val bgDim = TextureRegionDrawable(assets[TextureAsset.DIM.descriptor])
 
         stage.actors {
             image(bgHome) {
@@ -199,7 +199,7 @@ class HomeScreen(game: Main) : BaseScreen(game) {
         setPopup(PopupState.NONE)
     }
 
-    private fun setupTutorials() {
+    private fun showTutorial() {
         Gdx.app.postRunnable {
             gameEventManager.dispatchShowTutorialEvent(nameButton, TutorialType.HOME_NAME)
             gameEventManager.dispatchShowTutorialEvent(bookButton, TutorialType.HOME_PRACTICE)

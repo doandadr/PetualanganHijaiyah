@@ -31,14 +31,29 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
     }
 
     private fun setupUI() {
-        val bgPractice = assets[TextureAsset.STAGE.descriptor]
+        val bgPractice = assets[TextureAsset.PRACTICE.descriptor]
 
         stage.actors {
             table {
                 background(TextureRegionDrawable(bgPractice))
                 setFillParent(true)
 
+                add().expand()
+                row()
+
+                label("Ayo Belajar!", Labels.TEXTBOX_WHITE_SQUARE_LARGE.style) {
+                    setAlignment(Align.center)
+                    setFontScale(SCALE_BTN_MEDIUM)
+                }
+                row()
+
+                practiceStage(assets, audioService, gameEventManager) {
+                    it.grow()
+                }
+
+                row()
                 imageButton(ImageButtons.BACK.style) {
+                    it.expandX().align(Align.bottomRight).padBottom(PADDING_INNER_SCREEN).padRight(PADDING_INNER_SCREEN)
                     isTransform = true
                     setOrigin(Align.center)
                     onTouchDown {
@@ -49,19 +64,6 @@ class PracticeScreen(game: Main) : BaseScreen(game) {
                     onChange {
                         transitionOut<HomeScreen>()
                     }
-                    it.expand().align(Align.topLeft).padTop(PADDING_INNER_SCREEN).padLeft(PADDING_INNER_SCREEN)
-                }
-                row()
-
-                label("Ayo Belajar!", Labels.TEXTBOX_WHITE_SQUARE_LARGE.style) {
-                    setAlignment(Align.center)
-                    setFontScale(SCALE_BTN_MEDIUM)
-                }
-                row()
-
-                practiceStage(assets, audioService, gameEventManager) {
-                    //it.prefSize(STAGE_BOX_WIDTH, STAGE_BOX_HEIGHT)
-                    it.grow()
                 }
             }
         }

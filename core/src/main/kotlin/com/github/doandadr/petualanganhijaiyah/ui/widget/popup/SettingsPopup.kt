@@ -60,6 +60,7 @@ class SettingsPopup(
 
         row()
         table {
+            it.spaceTop(20f).spaceTop(40f).prefWidth(500f).prefHeight(600f)
             background = skin.getDrawable(Drawables.BOX_ORANGE_ROUNDED.drawable)
             align(Align.top)
 
@@ -110,7 +111,6 @@ class SettingsPopup(
                     this@SettingsPopup.audioService.play(SoundAsset.BUTTON_POP)
                 }
             }
-            it.spaceTop(20f).spaceTop(40f).prefWidth(500f).prefHeight(600f)
         }
 
         setupListeners()
