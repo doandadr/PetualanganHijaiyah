@@ -69,7 +69,7 @@ class DrawingStage(
     private val skipButton: ImageButton
     private val hijaiyahText: Label
 
-    private val hijaiyahEntries = Hijaiyah.entries.take(38)
+    private val hijaiyahEntries = Hijaiyah.entries.take(28)
     private lateinit var currentEntry: Hijaiyah
     private val textAtlas = assets[TextureAtlasAsset.HIJAIYAH.descriptor]
     private lateinit var drawer : ShapeDrawer
@@ -200,6 +200,9 @@ class DrawingStage(
     private fun setTutorials() {
         Gdx.app.postRunnable {
             gameEventManager.dispatchShowTutorialEvent(drawingBoard, TutorialType.DRAW_START)
+            gameEventManager.dispatchShowTutorialEvent(resetButton, TutorialType.DRAW_CLEAR)
+            gameEventManager.dispatchShowTutorialEvent(skipButton, TutorialType.DRAW_SKIP)
+            gameEventManager.dispatchShowTutorialEvent(submitButton, TutorialType.DRAW_ANSWER)
         }
     }
 
