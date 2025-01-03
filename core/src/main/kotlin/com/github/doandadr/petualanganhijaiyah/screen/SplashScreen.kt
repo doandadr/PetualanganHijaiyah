@@ -70,7 +70,6 @@ class SplashScreen(game: Main) : BaseScreen(game) {
             table {
                 setFillParent(true)
 
-
                 image(Drawables.BISMILLAH_WHITE.drawable) {
                     setOrigin(Align.center)
                 }
@@ -113,6 +112,6 @@ class SplashScreen(game: Main) : BaseScreen(game) {
 
     companion object {
         private val log = logger<SplashScreen>()
-        private const val SPLASH_DELAY_SECONDS = 1f
+        private const val SPLASH_DELAY_SECONDS = 0.3f
     }
 }
